@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../global';
+import i18n from '../i18n';
 
 export default function SplashScreen({ navigation }) {
   return (
@@ -18,13 +19,13 @@ export default function SplashScreen({ navigation }) {
             name="restaurant"
             type="material"
             size={120}
-            color="#FF6B35"
+            color={colors.primary}
             containerStyle={styles.iconContainer}
           />
           <View style={styles.textContainer}>
-            <Text style={styles.appName}>Good Food</Text>
+            <Text style={styles.appName}>{i18n.t('app.name')}</Text>
             <Text style={styles.appType}>Restaurant</Text>
-            <Text style={styles.tagline}>Cuisine & Gestion</Text>
+            <Text style={styles.tagline}>{i18n.t('app.slogan')}</Text>
           </View>
         </Animatable.View>
       </View>
@@ -33,15 +34,15 @@ export default function SplashScreen({ navigation }) {
         <View style={styles.button}>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <LinearGradient
-              colors={['#FF6B35', '#F7931E']}
+              colors={colors.auth.gradient1}
               style={styles.signInButton}
             >
-              <Text style={styles.signInText}>Commencer</Text>
+              <Text style={styles.signInText}>{i18n.t('common.start')}</Text>
               <Icon
                 name="navigate-next"
                 type="material"
                 size={20}
-                color="#FFFFFF"
+                color={colors.white}
               />
             </LinearGradient>
           </TouchableOpacity>
@@ -54,7 +55,7 @@ export default function SplashScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
   },
   container1: {
     flex: 2,
@@ -74,33 +75,33 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 36,
     fontWeight: 'bold',
-    color: '#FF6B35',
+    color: colors.primary,
     marginBottom: 4,
     textAlign: 'center',
   },
   appType: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#F7931E',
+    color: colors.secondary,
     marginBottom: 8,
     textAlign: 'center',
   },
   tagline: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     textAlign: 'center',
     fontStyle: 'italic',
     opacity: 0.8,
   },
   container2: {
     flex: 1,
-    backgroundColor: '#FF6B35',
+    backgroundColor: colors.primary,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },
   signInText: {
     fontWeight: "bold",
-    color: '#FFFFFF',
+    color: colors.white,
   },
   signInButton: {
     width: 180,

@@ -62,19 +62,19 @@ const AnalyticsScreen = ({ navigation }) => {
       title: 'Temps de préparation moyen',
       value: '18 min',
       subtitle: '-2 min vs hier',
-      color: '#4CAF50',
+      color: colors.success,
     },
     {
       title: 'Taux de satisfaction',
       value: `${calculatedStats?.averageRating || 0}/5`,
       subtitle: '+0.2 vs semaine dernière',
-      color: '#FFD700',
+      color: colors.accent,
     },
     {
       title: 'Commandes annulées',
       value: '2',
       subtitle: '3% du total',
-      color: '#F44336',
+      color: colors.error,
     },
   ];
 

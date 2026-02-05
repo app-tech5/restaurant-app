@@ -14,7 +14,7 @@ const ReportsScreen = ({ navigation }) => {
       title: i18n.t('reports.dailyReport'),
       description: 'Rapport détaillé de la journée',
       icon: 'today',
-      color: '#2196F3',
+      color: colors.info,
       available: true,
     },
     {
@@ -22,7 +22,7 @@ const ReportsScreen = ({ navigation }) => {
       title: i18n.t('reports.weeklyReport'),
       description: 'Analyse de la semaine écoulée',
       icon: 'date-range',
-      color: '#4CAF50',
+      color: colors.success,
       available: true,
     },
     {
@@ -30,7 +30,7 @@ const ReportsScreen = ({ navigation }) => {
       title: i18n.t('reports.monthlyReport'),
       description: 'Rapport mensuel complet',
       icon: 'calendar-month',
-      color: '#FF9800',
+      color: colors.warning,
       available: true,
     },
     {
@@ -38,7 +38,7 @@ const ReportsScreen = ({ navigation }) => {
       title: i18n.t('reports.revenueReport'),
       description: 'Analyse des revenus détaillée',
       icon: 'euro',
-      color: '#9C27B0',
+      color: colors.accent,
       available: true,
     },
     {
@@ -46,7 +46,7 @@ const ReportsScreen = ({ navigation }) => {
       title: i18n.t('reports.orderReport'),
       description: 'Statistiques des commandes',
       icon: 'restaurant',
-      color: '#FF5722',
+      color: colors.primary,
       available: true,
     },
     {
@@ -54,7 +54,7 @@ const ReportsScreen = ({ navigation }) => {
       title: i18n.t('reports.customerReport'),
       description: 'Analyse de la clientèle',
       icon: 'people',
-      color: '#795548',
+      color: colors.grey[700],
       available: false, // Sera disponible plus tard
     },
   ];

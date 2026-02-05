@@ -44,25 +44,25 @@ const DashboardScreen = ({ navigation }) => {
       title: i18n.t('dashboard.todayOrders'),
       value: calculatedStats?.todayOrders || 0,
       icon: 'shopping-cart',
-      gradient: ['#FF6B35', '#F7931E'],
+      gradient: colors.auth.gradient1,
     },
     {
       title: i18n.t('dashboard.totalRevenue'),
       value: `${calculatedStats?.totalRevenue?.toFixed(2) || '0.00'}€`,
       icon: 'euro',
-      gradient: ['#4CAF50', '#66BB6A'],
+      gradient: [colors.success, colors.success],
     },
     {
       title: i18n.t('dashboard.averageRating'),
       value: calculatedStats?.averageRating || '0.0',
       icon: 'star',
-      gradient: ['#FFD700', '#FFA000'],
+      gradient: [colors.accent, colors.rating],
     },
     {
       title: i18n.t('dashboard.activeOrders'),
       value: calculatedStats?.pendingOrders || 0,
       icon: 'restaurant',
-      gradient: ['#2196F3', '#42A5F5'],
+      gradient: [colors.info, colors.info],
     },
   ];
 
@@ -114,13 +114,13 @@ const DashboardScreen = ({ navigation }) => {
         {/* Section Actions Rapides */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            Actions rapides
+            {i18n.t('dashboard.quickActions')}
           </Text>
 
           <View style={styles.quickActions}>
             <StatCard
-              title="Voir les commandes"
-              value="actives"
+              title={i18n.t('dashboard.viewOrders')}
+              value={i18n.t('dashboard.active')}
               icon="restaurant"
               color={colors.primary}
               size="medium"
@@ -129,20 +129,20 @@ const DashboardScreen = ({ navigation }) => {
             />
 
             <StatCard
-              title="Gérer le menu"
-              value="modifier"
+              title={i18n.t('dashboard.manageMenu')}
+              value={i18n.t('dashboard.edit')}
               icon="list"
-              color="#4CAF50"
+              color={colors.success}
               size="medium"
               style={styles.quickActionCard}
               onPress={() => navigation.navigate('Menu')}
             />
 
             <StatCard
-              title="Voir les analyses"
-              value="détails"
+              title={i18n.t('dashboard.viewAnalytics')}
+              value={i18n.t('dashboard.details')}
               icon="bar-chart"
-              color="#FF9800"
+              color={colors.warning}
               size="medium"
               style={styles.quickActionCard}
               onPress={() => navigation.navigate('Analytics')}
@@ -153,24 +153,24 @@ const DashboardScreen = ({ navigation }) => {
         {/* Section Commandes Récentes */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            Commandes récentes
+            {i18n.t('dashboard.recentOrders')}
           </Text>
 
           {orders && orders.length > 0 ? (
             <View style={styles.recentOrders}>
               <Text style={styles.recentOrdersText}>
-                {orders.slice(0, 3).length} commandes récentes
+                {orders.slice(0, 3).length} {i18n.t('dashboard.recentOrdersCount')}
               </Text>
               <Text style={styles.viewAllText}
                     onPress={() => navigation.navigate('Orders')}>
-                Voir tout →
+                {i18n.t('common.viewAll')} →
               </Text>
             </View>
           ) : (
             <EmptyState
               icon="receipt"
-              title="Aucune commande"
-              subtitle="Les nouvelles commandes apparaîtront ici"
+              title={i18n.t('orders.noOrders')}
+              subtitle={i18n.t('orders.noOrdersSubtitle')}
             />
           )}
         </View>
@@ -178,24 +178,24 @@ const DashboardScreen = ({ navigation }) => {
         {/* Section État du Restaurant */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            État du restaurant
+            {i18n.t('dashboard.restaurantStatus')}
           </Text>
 
           <View style={styles.restaurantStatus}>
             <StatCard
-              title="Articles actifs"
+              title={i18n.t('dashboard.activeItems')}
               value={calculatedStats?.activeMenuItems || 0}
               icon="check-circle"
-              color="#4CAF50"
+              color={colors.success}
               size="medium"
               style={styles.statusCard}
             />
 
             <StatCard
-              title="Commandes en attente"
+              title={i18n.t('dashboard.pendingOrders')}
               value={calculatedStats?.pendingOrders || 0}
               icon="schedule"
-              color="#FF9800"
+              color={colors.warning}
               size="medium"
               style={styles.statusCard}
             />

@@ -11,8 +11,8 @@ const i18n = new I18n({
 });
 
 // Configuration par défaut
-i18n.defaultLocale = 'fr';
-i18n.locale = 'fr';
+i18n.defaultLocale = 'en';
+i18n.locale = 'en';
 
 // Fonction utilitaire pour changer de langue
 export const changeLanguage = (language) => {

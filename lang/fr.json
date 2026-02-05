@@ -44,7 +44,18 @@
     "averageRating": "Note moyenne",
     "activeOrders": "Commandes actives",
     "pendingOrders": "Commandes en attente",
-    "completedOrders": "Commandes terminées"
+    "completedOrders": "Commandes terminées",
+    "quickActions": "Actions rapides",
+    "viewOrders": "Voir les commandes",
+    "manageMenu": "Gérer le menu",
+    "viewAnalytics": "Voir les analyses",
+    "active": "actives",
+    "edit": "modifier",
+    "details": "détails",
+    "recentOrders": "Commandes récentes",
+    "recentOrdersCount": "commandes récentes",
+    "restaurantStatus": "État du restaurant",
+    "activeItems": "Articles actifs"
   },
 
   "orders": {
@@ -152,10 +163,12 @@
     "filter": "Filtrer",
     "sort": "Trier",
     "view": "Voir",
+    "viewAll": "Voir tout",
     "hide": "Masquer",
     "show": "Afficher",
     "enable": "Activer",
     "disable": "Désactiver",
+    "start": "Commencer",
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer ?",
     "noData": "Aucune donnée disponible",
     "noResults": "Aucun résultat trouvé"

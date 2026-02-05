@@ -18,6 +18,7 @@ import { config } from '../config';
 import apiClient from '../api';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { ScreenHeader } from '../components';
+import i18n from '../i18n';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState(config.DEMO_MODE ? config.DEMO_EMAIL : '');
@@ -46,7 +47,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      Alert.alert(i18n.t('common.error'), i18n.t('auth.fillAllFields'));
       return;
     }
 
@@ -59,7 +60,7 @@ export default function LoginScreen({ navigation }) {
         if (result.success) {
           navigation.replace('DrawerNavigator');
         } else {
-          Alert.alert('Erreur', result.message || 'Erreur de connexion');
+          Alert.alert(i18n.t('common.error'), result.message || i18n.t('auth.networkError'));
         }
       } else {
         // Mode production - appel API réel
@@ -72,20 +73,20 @@ export default function LoginScreen({ navigation }) {
 
           navigation.replace('DrawerNavigator');
         } else {
-          Alert.alert('Erreur', response.message || 'Erreur de connexion');
+          Alert.alert(i18n.t('common.error'), response.message || i18n.t('auth.networkError'));
         }
       }
     } catch (error) {
       console.error('Login error:', error);
-      Alert.alert('Erreur', 'Erreur de connexion. Vérifiez votre connexion internet.');
+      Alert.alert(i18n.t('common.error'), i18n.t('auth.connectionError'));
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <LinearGradient colors={['#FF6B35', '#F7931E']} style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#FF6B35" />
+    <LinearGradient colors={colors.auth.gradient1} style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -102,12 +103,12 @@ export default function LoginScreen({ navigation }) {
               delay={500}
               style={styles.logoContainer}
             >
-              <Icon
-                name="restaurant"
-                type="material"
-                color="#FFFFFF"
-                size={80}
-              />
+          <Icon
+            name="restaurant"
+            type="material"
+            color={colors.white}
+            size={80}
+          />
               <Text style={styles.appTitle}>Good Food</Text>
               <Text style={styles.appSubtitle}>Restaurant</Text>
             </Animatable.View>
@@ -118,16 +119,16 @@ export default function LoginScreen({ navigation }) {
               delay={800}
               style={styles.formContainer}
             >
-              <Text style={styles.welcomeText}>Bienvenue !</Text>
-              <Text style={styles.subtitleText}>Connectez-vous à votre espace restaurant</Text>
+              <Text style={styles.welcomeText}>{i18n.t('auth.welcome')}</Text>
+              <Text style={styles.subtitleText}>{i18n.t('auth.loginSubtitle')}</Text>
 
               <Input
-                placeholder="Email"
+                placeholder={i18n.t('auth.email')}
                 leftIcon={
                   <Icon
                     name="email"
                     type="material"
-                    color="#FF6B35"
+                    color={colors.primary}
                     size={20}
                   />
                 }
@@ -142,12 +143,12 @@ export default function LoginScreen({ navigation }) {
               />
 
               <Input
-                placeholder="Mot de passe"
+                placeholder={i18n.t('auth.password')}
                 leftIcon={
                   <Icon
                     name="lock"
                     type="material"
-                    color="#FF6B35"
+                    color={colors.primary}
                     size={20}
                   />
                 }
@@ -162,19 +163,19 @@ export default function LoginScreen({ navigation }) {
               />
 
               <Button
-                title="Se connecter"
+                title={i18n.t('auth.loginButton')}
                 loading={isLoading}
                 disabled={isLoading}
-                buttonStyle={styles.loginButton}
+                buttonStyle={[styles.loginButton, { backgroundColor: colors.primary }]}
                 containerStyle={styles.loginButtonContainer}
-                titleStyle={styles.loginButtonText}
+                titleStyle={[styles.loginButtonText, { color: colors.white }]}
                 onPress={handleLogin}
                 raised
               />
 
               {config.DEMO_MODE && (
                 <Text style={styles.demoText}>
-                  Mode démo activé - Utilisez les identifiants de démonstration
+                  {i18n.t('auth.demoMode')}
                 </Text>
               )}
             </Animatable.View>
@@ -207,19 +208,19 @@ const styles = StyleSheet.create({
   appTitle: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.white,
     marginTop: 10,
   },
   appSubtitle: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: colors.white,
     opacity: 0.9,
   },
   formContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderRadius: 20,
     padding: 30,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -231,13 +232,13 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.text.primary,
     textAlign: 'center',
     marginBottom: 8,
   },
   subtitleText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     textAlign: 'center',
     marginBottom: 30,
   },
@@ -245,11 +246,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   inputText: {
-    color: '#333',
+    color: colors.text.primary,
     fontSize: 16,
   },
   loginButton: {
-    backgroundColor: '#FF6B35',
     borderRadius: 10,
     paddingVertical: 12,
   },
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   },
   demoText: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
     textAlign: 'center',
     marginTop: 20,
     fontStyle: 'italic',

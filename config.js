@@ -60,13 +60,6 @@ export const config = {
   PAYMENT_CURRENCIES: ['EUR', 'USD', 'GBP'],
   DEFAULT_CURRENCY: 'EUR',
 
-  // === THÈME ===
-  THEME: {
-    primary: '#FF6B35',
-    secondary: '#F7931E',
-    accent: '#FFD700',
-  },
-
   // === VALIDATION ===
   VALIDATION: {
     email: {

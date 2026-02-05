@@ -52,11 +52,11 @@ const NotificationsScreen = ({ navigation }) => {
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'order':
-        return { name: 'restaurant', color: '#FF6B35' };
+        return { name: 'restaurant', color: colors.primary };
       case 'system':
-        return { name: 'info', color: '#2196F3' };
+        return { name: 'info', color: colors.info };
       case 'review':
-        return { name: 'star', color: '#FFD700' };
+        return { name: 'star', color: colors.accent };
       default:
         return { name: 'notifications', color: colors.primary };
     }

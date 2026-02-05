@@ -34,7 +34,10 @@
     "createAccount": "Create account",
     "invalidCredentials": "Invalid email or password",
     "networkError": "Network connection error",
-    "confirmLogout": "Are you sure you want to logout?"
+    "confirmLogout": "Are you sure you want to logout?",
+    "fillAllFields": "Please fill in all fields",
+    "connectionError": "Connection error. Check your internet connection.",
+    "demoMode": "Demo mode enabled - Use demo credentials"
   },
 
   "dashboard": {
@@ -44,7 +47,18 @@
     "averageRating": "Average rating",
     "activeOrders": "Active orders",
     "pendingOrders": "Pending orders",
-    "completedOrders": "Completed orders"
+    "completedOrders": "Completed orders",
+    "quickActions": "Quick actions",
+    "viewOrders": "View orders",
+    "manageMenu": "Manage menu",
+    "viewAnalytics": "View analytics",
+    "active": "active",
+    "edit": "edit",
+    "details": "details",
+    "recentOrders": "Recent orders",
+    "recentOrdersCount": "recent orders",
+    "restaurantStatus": "Restaurant status",
+    "activeItems": "Active items"
   },
 
   "orders": {
@@ -65,7 +79,9 @@
     "total": "Total",
     "preparationTime": "Preparation time",
     "estimatedTime": "Estimated time",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "noOrders": "No orders",
+    "noOrdersSubtitle": "New orders will appear here"
   },
 
   "menu": {
@@ -152,10 +168,12 @@
     "filter": "Filter",
     "sort": "Sort",
     "view": "View",
+    "viewAll": "View all",
     "hide": "Hide",
     "show": "Show",
     "enable": "Enable",
     "disable": "Disable",
+    "start": "Start",
     "confirmDelete": "Are you sure you want to delete?",
     "noData": "No data available",
     "noResults": "No results found"
