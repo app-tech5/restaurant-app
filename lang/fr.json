@@ -1,0 +1,185 @@
+{
+  "app": {
+    "name": "Good Food Restaurant",
+    "slogan": "Cuisine & Gestion",
+    "version": "Version"
+  },
+
+  "navigation": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "orders": "Commandes",
+    "menu": "Menu",
+    "analytics": "Analyses",
+    "reports": "Rapports",
+    "notifications": "Notifications",
+    "support": "Support",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "email": "Email",
+    "password": "Mot de passe",
+    "loginButton": "Se connecter",
+    "loggingIn": "Connexion...",
+    "welcome": "Bienvenue !",
+    "welcomeBack": "Bon retour !",
+    "loginSubtitle": "Connectez-vous à votre espace restaurant",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas de compte ?",
+    "createAccount": "Créer un compte",
+    "invalidCredentials": "Email ou mot de passe incorrect",
+    "networkError": "Erreur de connexion réseau",
+    "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter ?"
+  },
+
+  "dashboard": {
+    "title": "Tableau de bord",
+    "todayOrders": "Commandes du jour",
+    "totalRevenue": "Revenus totaux",
+    "averageRating": "Note moyenne",
+    "activeOrders": "Commandes actives",
+    "pendingOrders": "Commandes en attente",
+    "completedOrders": "Commandes terminées"
+  },
+
+  "orders": {
+    "title": "Commandes",
+    "activeOrders": "Commandes actives",
+    "orderHistory": "Historique des commandes",
+    "orderDetails": "Détails de la commande",
+    "acceptOrder": "Accepter la commande",
+    "prepareOrder": "Commencer la préparation",
+    "readyForPickup": "Prêt pour le retrait",
+    "orderAccepted": "Commande acceptée",
+    "orderPreparing": "Commande en préparation",
+    "orderReady": "Commande prête",
+    "orderDelivered": "Commande livrée",
+    "orderCancelled": "Commande annulée",
+    "customerInfo": "Informations client",
+    "orderItems": "Articles commandés",
+    "total": "Total",
+    "preparationTime": "Temps de préparation",
+    "estimatedTime": "Temps estimé",
+    "minutes": "minutes"
+  },
+
+  "menu": {
+    "title": "Gestion du menu",
+    "addItem": "Ajouter un plat",
+    "editItem": "Modifier le plat",
+    "deleteItem": "Supprimer le plat",
+    "itemName": "Nom du plat",
+    "itemDescription": "Description",
+    "itemPrice": "Prix",
+    "itemCategory": "Catégorie",
+    "itemImage": "Photo du plat",
+    "available": "Disponible",
+    "unavailable": "Indisponible",
+    "categories": "Catégories",
+    "addCategory": "Ajouter une catégorie",
+    "deleteCategory": "Supprimer la catégorie"
+  },
+
+  "analytics": {
+    "title": "Analyses",
+    "revenue": "Revenus",
+    "orders": "Commandes",
+    "customers": "Clients",
+    "popularItems": "Plats populaires",
+    "salesByDay": "Ventes par jour",
+    "salesByHour": "Ventes par heure",
+    "averageOrderValue": "Panier moyen",
+    "customerRetention": "Fidélisation client"
+  },
+
+  "reports": {
+    "title": "Rapports",
+    "dailyReport": "Rapport quotidien",
+    "weeklyReport": "Rapport hebdomadaire",
+    "monthlyReport": "Rapport mensuel",
+    "revenueReport": "Rapport des revenus",
+    "orderReport": "Rapport des commandes",
+    "customerReport": "Rapport clients",
+    "exportReport": "Exporter le rapport",
+    "printReport": "Imprimer le rapport"
+  },
+
+  "settings": {
+    "title": "Paramètres",
+    "profile": "Profil restaurant",
+    "notifications": "Notifications",
+    "openingHours": "Horaires d'ouverture",
+    "delivery": "Livraison",
+    "payment": "Paiement",
+    "language": "Langue",
+    "theme": "Thème",
+    "about": "À propos",
+    "help": "Aide",
+    "contact": "Contact",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
+
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "confirm": "Confirmer",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Avertissement",
+    "info": "Information",
+    "retry": "Réessayer",
+    "refresh": "Actualiser",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "view": "Voir",
+    "hide": "Masquer",
+    "show": "Afficher",
+    "enable": "Activer",
+    "disable": "Désactiver",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ?",
+    "noData": "Aucune donnée disponible",
+    "noResults": "Aucun résultat trouvé"
+  },
+
+  "errors": {
+    "networkError": "Erreur de réseau",
+    "serverError": "Erreur du serveur",
+    "timeoutError": "Délai d'attente dépassé",
+    "validationError": "Erreur de validation",
+    "permissionDenied": "Permission refusée",
+    "fileTooLarge": "Fichier trop volumineux",
+    "invalidFormat": "Format invalide",
+    "requiredField": "Champ obligatoire",
+    "invalidEmail": "Email invalide",
+    "invalidPhone": "Numéro de téléphone invalide",
+    "weakPassword": "Mot de passe trop faible"
+  },
+
+  "success": {
+    "saved": "Enregistré avec succès",
+    "deleted": "Supprimé avec succès",
+    "updated": "Mis à jour avec succès",
+    "created": "Créé avec succès",
+    "sent": "Envoyé avec succès"
+  }
+}

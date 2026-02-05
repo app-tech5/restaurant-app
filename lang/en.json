@@ -1,0 +1,185 @@
+{
+  "app": {
+    "name": "Good Food Restaurant",
+    "slogan": "Cooking & Management",
+    "version": "Version"
+  },
+
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "orders": "Orders",
+    "menu": "Menu",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "notifications": "Notifications",
+    "support": "Support",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Sign In",
+    "loggingIn": "Signing in...",
+    "welcome": "Welcome!",
+    "welcomeBack": "Welcome back!",
+    "loginSubtitle": "Sign in to your restaurant space",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "No account?",
+    "createAccount": "Create account",
+    "invalidCredentials": "Invalid email or password",
+    "networkError": "Network connection error",
+    "confirmLogout": "Are you sure you want to logout?"
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "todayOrders": "Today's orders",
+    "totalRevenue": "Total revenue",
+    "averageRating": "Average rating",
+    "activeOrders": "Active orders",
+    "pendingOrders": "Pending orders",
+    "completedOrders": "Completed orders"
+  },
+
+  "orders": {
+    "title": "Orders",
+    "activeOrders": "Active orders",
+    "orderHistory": "Order history",
+    "orderDetails": "Order details",
+    "acceptOrder": "Accept order",
+    "prepareOrder": "Start preparation",
+    "readyForPickup": "Ready for pickup",
+    "orderAccepted": "Order accepted",
+    "orderPreparing": "Order preparing",
+    "orderReady": "Order ready",
+    "orderDelivered": "Order delivered",
+    "orderCancelled": "Order cancelled",
+    "customerInfo": "Customer information",
+    "orderItems": "Ordered items",
+    "total": "Total",
+    "preparationTime": "Preparation time",
+    "estimatedTime": "Estimated time",
+    "minutes": "minutes"
+  },
+
+  "menu": {
+    "title": "Menu Management",
+    "addItem": "Add dish",
+    "editItem": "Edit dish",
+    "deleteItem": "Delete dish",
+    "itemName": "Dish name",
+    "itemDescription": "Description",
+    "itemPrice": "Price",
+    "itemCategory": "Category",
+    "itemImage": "Dish photo",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "categories": "Categories",
+    "addCategory": "Add category",
+    "deleteCategory": "Delete category"
+  },
+
+  "analytics": {
+    "title": "Analytics",
+    "revenue": "Revenue",
+    "orders": "Orders",
+    "customers": "Customers",
+    "popularItems": "Popular items",
+    "salesByDay": "Sales by day",
+    "salesByHour": "Sales by hour",
+    "averageOrderValue": "Average order value",
+    "customerRetention": "Customer retention"
+  },
+
+  "reports": {
+    "title": "Reports",
+    "dailyReport": "Daily report",
+    "weeklyReport": "Weekly report",
+    "monthlyReport": "Monthly report",
+    "revenueReport": "Revenue report",
+    "orderReport": "Order report",
+    "customerReport": "Customer report",
+    "exportReport": "Export report",
+    "printReport": "Print report"
+  },
+
+  "settings": {
+    "title": "Settings",
+    "profile": "Restaurant profile",
+    "notifications": "Notifications",
+    "openingHours": "Opening hours",
+    "delivery": "Delivery",
+    "payment": "Payment",
+    "language": "Language",
+    "theme": "Theme",
+    "about": "About",
+    "help": "Help",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms of service"
+  },
+
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "view": "View",
+    "hide": "Hide",
+    "show": "Show",
+    "enable": "Enable",
+    "disable": "Disable",
+    "confirmDelete": "Are you sure you want to delete?",
+    "noData": "No data available",
+    "noResults": "No results found"
+  },
+
+  "errors": {
+    "networkError": "Network error",
+    "serverError": "Server error",
+    "timeoutError": "Timeout error",
+    "validationError": "Validation error",
+    "permissionDenied": "Permission denied",
+    "fileTooLarge": "File too large",
+    "invalidFormat": "Invalid format",
+    "requiredField": "Required field",
+    "invalidEmail": "Invalid email",
+    "invalidPhone": "Invalid phone number",
+    "weakPassword": "Weak password"
+  },
+
+  "success": {
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully",
+    "created": "Created successfully",
+    "sent": "Sent successfully"
+  }
+}

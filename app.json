@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Good Food Restaurant",
+    "icon": "./assets/images/logo512.png",
+    "splash": {
+      "image": "./assets/images/splash-screen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "version": "1.0.0",
+    "slug": "good-food-restaurant",
+    "ios": {
+      "bundleIdentifier": "com.goodfood.restaurant",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "package": "com.goodfood.restaurant",
+      "versionCode": 1
+    },
+    "plugins": [
+      "expo-font",
+      "expo-localization",
+      "expo-location"
+    ]
+  }
+}

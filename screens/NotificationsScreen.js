@@ -1,0 +1,374 @@
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { ListItem, Badge, Icon } from 'react-native-elements';
+import { ScreenHeader, EmptyState } from '../components';
+import { colors, constants } from '../global';
+import i18n from '../i18n';
+
+const NotificationsScreen = ({ navigation }) => {
+  const [notifications, setNotifications] = useState([
+    {
+      id: '1',
+      type: 'order',
+      title: 'Nouvelle commande',
+      message: 'Commande #1234 reçue pour 2 pizzas',
+      timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
+      read: false,
+      action: 'view_order',
+      actionData: { orderId: '1234' }
+    },
+    {
+      id: '2',
+      type: 'system',
+      title: 'Maintenance programmée',
+      message: 'Le système sera en maintenance demain de 2h à 4h',
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+      read: true,
+      action: null
+    },
+    {
+      id: '3',
+      type: 'review',
+      title: 'Nouvel avis client',
+      message: 'Note 5/5 pour votre restaurant',
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
+      read: false,
+      action: 'view_reviews'
+    },
+    {
+      id: '4',
+      type: 'order',
+      title: 'Commande prête',
+      message: 'La commande #1230 est prête pour le retrait',
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), // 6 hours ago
+      read: true,
+      action: 'view_order',
+      actionData: { orderId: '1230' }
+    }
+  ]);
+
+  const [filter, setFilter] = useState('all'); // 'all', 'unread', 'orders', 'system'
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'order':
+        return { name: 'restaurant', color: '#FF6B35' };
+      case 'system':
+        return { name: 'info', color: '#2196F3' };
+      case 'review':
+        return { name: 'star', color: '#FFD700' };
+      default:
+        return { name: 'notifications', color: colors.primary };
+    }
+  };
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (minutes < 60) {
+      return `Il y a ${minutes} min`;
+    } else if (hours < 24) {
+      return `Il y a ${hours}h`;
+    } else {
+      return `Il y a ${days}j`;
+    }
+  };
+
+  const markAsRead = (notificationId) => {
+    setNotifications(prev =>
+      prev.map(notif =>
+        notif.id === notificationId ? { ...notif, read: true } : notif
+      )
+    );
+  };
+
+  const handleNotificationPress = (notification) => {
+    // Marquer comme lu
+    if (!notification.read) {
+      markAsRead(notification.id);
+    }
+
+    // Gérer l'action associée
+    switch (notification.action) {
+      case 'view_order':
+        navigation.navigate('OrderDetails', {
+          orderId: notification.actionData.orderId
+        });
+        break;
+      case 'view_reviews':
+        navigation.navigate('Reviews');
+        break;
+      default:
+        // Pas d'action spécifique
+        break;
+    }
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev =>
+      prev.map(notif => ({ ...notif, read: true }))
+    );
+  };
+
+  const clearAllNotifications = () => {
+    Alert.alert(
+      'Supprimer toutes les notifications',
+      'Êtes-vous sûr de vouloir supprimer toutes les notifications ?',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: () => setNotifications([])
+        }
+      ]
+    );
+  };
+
+  const getFilteredNotifications = () => {
+    let filtered = notifications;
+
+    switch (filter) {
+      case 'unread':
+        filtered = filtered.filter(n => !n.read);
+        break;
+      case 'orders':
+        filtered = filtered.filter(n => n.type === 'order');
+        break;
+      case 'system':
+        filtered = filtered.filter(n => n.type === 'system');
+        break;
+      default:
+        break;
+    }
+
+    return filtered.sort((a, b) => b.timestamp - a.timestamp);
+  };
+
+  const filteredNotifications = getFilteredNotifications();
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const filterOptions = [
+    { key: 'all', label: 'Toutes', count: notifications.length },
+    { key: 'unread', label: 'Non lues', count: unreadCount },
+    { key: 'orders', label: 'Commandes', count: notifications.filter(n => n.type === 'order').length },
+    { key: 'system', label: 'Système', count: notifications.filter(n => n.type === 'system').length },
+  ];
+
+  const renderFilterTab = (option) => (
+    <TouchableOpacity
+      key={option.key}
+      style={[
+        styles.filterTab,
+        filter === option.key && styles.activeFilterTab
+      ]}
+      onPress={() => setFilter(option.key)}
+    >
+      <Text style={[
+        styles.filterTabText,
+        filter === option.key && styles.activeFilterTabText
+      ]}>
+        {option.label}
+      </Text>
+      <Badge
+        value={option.count}
+        containerStyle={styles.filterBadge}
+        badgeStyle={[
+          styles.filterBadgeStyle,
+          filter === option.key && styles.activeFilterBadge
+        ]}
+        textStyle={styles.filterBadgeText}
+      />
+    </TouchableOpacity>
+  );
+
+  const renderNotification = ({ item }) => {
+    const iconConfig = getNotificationIcon(item.type);
+
+    return (
+      <ListItem
+        onPress={() => handleNotificationPress(item)}
+        containerStyle={[
+          styles.notificationItem,
+          !item.read && styles.unreadNotification
+        ]}
+      >
+        <Icon
+          name={iconConfig.name}
+          type="material"
+          color={iconConfig.color}
+          size={24}
+          containerStyle={styles.notificationIcon}
+        />
+
+        <ListItem.Content>
+          <View style={styles.notificationContent}>
+            <ListItem.Title style={styles.notificationTitle}>
+              {item.title}
+            </ListItem.Title>
+            <ListItem.Subtitle style={styles.notificationMessage}>
+              {item.message}
+            </ListItem.Subtitle>
+            <Text style={styles.notificationTime}>
+              {formatTimeAgo(item.timestamp)}
+            </Text>
+          </View>
+        </ListItem.Content>
+
+        {!item.read && <View style={styles.unreadIndicator} />}
+
+        <ListItem.Chevron />
+      </ListItem>
+    );
+  };
+
+  const renderEmpty = () => (
+    <EmptyState
+      icon="notifications-off"
+      title="Aucune notification"
+      subtitle={
+        filter === 'all'
+          ? "Vous n'avez pas de notifications pour le moment"
+          : `Aucune notification dans la catégorie "${filter}"`
+      }
+    />
+  );
+
+  return (
+    <View style={styles.container}>
+      <ScreenHeader
+        title={i18n.t('navigation.notifications')}
+        showBackButton
+        onLeftPress={() => navigation.goBack()}
+        rightComponent={
+          unreadCount > 0 ? (
+            <TouchableOpacity onPress={markAllAsRead}>
+              <Icon name="done-all" type="material" color={colors.primary} size={24} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={clearAllNotifications}>
+              <Icon name="delete-sweep" type="material" color={colors.grey[500]} size={24} />
+            </TouchableOpacity>
+          )
+        }
+      />
+
+      {/* Filtres */}
+      <View style={styles.filtersContainer}>
+        {filterOptions.map(renderFilterTab)}
+      </View>
+
+      {/* Liste des notifications */}
+      <FlatList
+        data={filteredNotifications}
+        renderItem={renderNotification}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContainer}
+        ListEmptyComponent={renderEmpty}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.grey[50],
+  },
+  filtersContainer: {
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+    paddingHorizontal: constants.SPACING.md,
+    paddingVertical: constants.SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grey[200],
+  },
+  filterTab: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: constants.SPACING.xs,
+    marginHorizontal: 2,
+    borderRadius: constants.BORDER_RADIUS,
+  },
+  activeFilterTab: {
+    backgroundColor: colors.primary,
+  },
+  filterTabText: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    fontWeight: '500',
+    marginRight: constants.SPACING.xs,
+  },
+  activeFilterTabText: {
+    color: colors.white,
+  },
+  filterBadge: {
+    position: 'relative',
+  },
+  filterBadgeStyle: {
+    backgroundColor: colors.grey[300],
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+  },
+  activeFilterBadge: {
+    backgroundColor: colors.white,
+  },
+  filterBadgeText: {
+    fontSize: 10,
+    color: colors.text.primary,
+    fontWeight: 'bold',
+  },
+  listContainer: {
+    padding: constants.SPACING.md,
+    flexGrow: 1,
+  },
+  notificationItem: {
+    backgroundColor: colors.white,
+    borderRadius: constants.BORDER_RADIUS,
+    marginBottom: constants.SPACING.sm,
+    padding: constants.SPACING.md,
+  },
+  unreadNotification: {
+    borderLeftWidth: 4,
+    borderLeftColor: colors.primary,
+  },
+  notificationIcon: {
+    marginRight: constants.SPACING.md,
+  },
+  notificationContent: {
+    flex: 1,
+  },
+  notificationTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: 4,
+  },
+  notificationMessage: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  notificationTime: {
+    fontSize: 12,
+    color: colors.grey[500],
+  },
+  unreadIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.primary,
+    alignSelf: 'center',
+  },
+});
+
+export default NotificationsScreen;
