@@ -236,9 +236,11 @@ const styles = StyleSheet.create({
   quickActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
+
   },
   quickActionCard: {
-    width: '31%',
+    width: '49%',
   },
   recentOrders: {
     flexDirection: 'row',

@@ -10,41 +10,16 @@ const ActionCard = ({
   iconType = 'material',
   color = colors.primary,
   backgroundColor = colors.white,
-  size = 'medium',
   style = {},
   onPress,
   disabled = false,
   ...props
 }) => {
-  // Configuration des tailles
-  const sizeConfig = {
-    small: {
-      container: styles.smallContainer,
-      iconSize: 20,
-      titleSize: 14,
-      subtitleSize: 12,
-    },
-    medium: {
-      container: styles.mediumContainer,
-      iconSize: 24,
-      titleSize: 16,
-      subtitleSize: 14,
-    },
-    large: {
-      container: styles.largeContainer,
-      iconSize: 32,
-      titleSize: 18,
-      subtitleSize: 16,
-    },
-  };
-
-  const config = sizeConfig[size] || sizeConfig.medium;
 
   return (
     <TouchableOpacity
       style={[
         styles.card,
-        config.container,
         { backgroundColor },
         style
       ]}
@@ -58,7 +33,7 @@ const ActionCard = ({
         <Icon
           name={icon}
           type={iconType}
-          size={config.iconSize}
+          size={24}
           color={color}
         />
       </View>
@@ -68,7 +43,7 @@ const ActionCard = ({
         <Text
           style={[
             styles.title,
-            { fontSize: config.titleSize, color: colors.text.primary }
+            { fontSize: 16, color: colors.text.primary }
           ]}
         >
           {title}
@@ -78,7 +53,7 @@ const ActionCard = ({
           <Text
             style={[
               styles.subtitle,
-              { fontSize: config.subtitleSize, color: colors.text.secondary }
+              { fontSize: 14, color: colors.text.secondary }
             ]}
           >
             {subtitle}
@@ -112,18 +87,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: constants.SPACING.sm,
-  },
-  smallContainer: {
-    minHeight: 60,
-    padding: constants.SPACING.sm,
-  },
-  mediumContainer: {
-    minHeight: 80,
-    padding: constants.SPACING.md,
-  },
-  largeContainer: {
-    minHeight: 100,
-    padding: constants.SPACING.lg,
   },
   iconContainer: {
     marginRight: constants.SPACING.md,
