@@ -17,6 +17,9 @@ export { default as OrderStatusBadge } from './OrderStatusBadge';
 
 // Composants de menu
 export { default as MenuItemCard } from './MenuItemCard';
+export { default as MenuSearchBar } from './MenuSearchBar';
+export { default as MenuCategoriesTabs } from './MenuCategoriesTabs';
+export { default as MenuList } from './MenuList';
 
 // Composants de paramètres
 export { default as SettingRow } from './SettingRow';

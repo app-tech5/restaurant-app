@@ -7,6 +7,8 @@ export { useRestaurantAuth } from './useRestaurantAuth';
 export { useRestaurantStats } from './useRestaurantStats';
 export { useRestaurantOrders } from './useRestaurantOrders';
 export { useRestaurantMenu } from './useRestaurantMenu';
+export { useMenuFilters } from './useMenuFilters';
+export { useMenuActions } from './useMenuActions';
 
 // Paramètres
 export { useSettingsManager } from './useSettingsManager';
