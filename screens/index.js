@@ -13,3 +13,4 @@ export { default as ReportsScreen } from './ReportsScreen';
 export { default as NotificationsScreen } from './NotificationsScreen';
 export { default as SupportScreen } from './SupportScreen';
 export { default as SettingsScreen } from './SettingsScreen';
+export { default as RestaurantProfileScreen } from './RestaurantProfileScreen';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SettingsScreen } from '../screens';
+import { SettingsScreen, RestaurantProfileScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
@@ -70,6 +70,13 @@ const SettingsStackNavigator = () => {
         component={NotificationSettingsScreen}
         options={{
           title: 'Paramètres de notifications',
+        }}
+      />
+      <Stack.Screen
+        name="RestaurantProfile"
+        component={RestaurantProfileScreen}
+        options={{
+          title: 'Profil restaurant',
         }}
       />
     </Stack.Navigator>

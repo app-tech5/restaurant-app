@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ScreenHeader from '../components/ScreenHeader';
+import { RestaurantProfileScreen } from '../screens';
 import { colors } from '../global';
 import i18n from '../i18n';
 
@@ -108,17 +109,7 @@ const EditProfileScreen = ({ navigation }) => {
   );
 };
 
-const RestaurantProfileScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Informations du restaurant</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+// RestaurantProfileScreen importé depuis screens
 
 const ChangePasswordScreen = ({ navigation }) => {
   return (
