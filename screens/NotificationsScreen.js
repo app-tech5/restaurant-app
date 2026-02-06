@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Alert, Text } from 'react-native';
 import { ListItem, Badge, Icon } from 'react-native-elements';
 import { ScreenHeader, EmptyState } from '../components';
 import { colors, constants } from '../global';
