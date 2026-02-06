@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
-import { StatCard, Loading, EmptyState, ScreenHeader } from '../components';
+import { StatCard, ActionCard, StatusCard, Loading, EmptyState, ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import { calculateRestaurantStats } from '../utils/restaurantUtils';
 import i18n from '../i18n';
@@ -118,9 +119,9 @@ const DashboardScreen = ({ navigation }) => {
           </Text>
 
           <View style={styles.quickActions}>
-            <StatCard
+            <ActionCard
               title={i18n.t('dashboard.viewOrders')}
-              value={i18n.t('dashboard.active')}
+              subtitle={i18n.t('dashboard.active')}
               icon="restaurant"
               color={colors.primary}
               size="medium"
@@ -128,9 +129,9 @@ const DashboardScreen = ({ navigation }) => {
               onPress={() => navigation.navigate('Orders')}
             />
 
-            <StatCard
+            <ActionCard
               title={i18n.t('dashboard.manageMenu')}
-              value={i18n.t('dashboard.edit')}
+              subtitle={i18n.t('dashboard.edit')}
               icon="list"
               color={colors.success}
               size="medium"
@@ -138,9 +139,9 @@ const DashboardScreen = ({ navigation }) => {
               onPress={() => navigation.navigate('Menu')}
             />
 
-            <StatCard
+            <ActionCard
               title={i18n.t('dashboard.viewAnalytics')}
-              value={i18n.t('dashboard.details')}
+              subtitle={i18n.t('dashboard.details')}
               icon="bar-chart"
               color={colors.warning}
               size="medium"
@@ -182,7 +183,7 @@ const DashboardScreen = ({ navigation }) => {
           </Text>
 
           <View style={styles.restaurantStatus}>
-            <StatCard
+            <StatusCard
               title={i18n.t('dashboard.activeItems')}
               value={calculatedStats?.activeMenuItems || 0}
               icon="check-circle"
@@ -191,7 +192,7 @@ const DashboardScreen = ({ navigation }) => {
               style={styles.statusCard}
             />
 
-            <StatCard
+            <StatusCard
               title={i18n.t('dashboard.pendingOrders')}
               value={calculatedStats?.pendingOrders || 0}
               icon="schedule"

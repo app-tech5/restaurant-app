@@ -1,68 +1,85 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { LinearGradient } from 'expo-linear-gradient';
 import { colors, constants } from '../global';
 
-const StatCard = ({
+const StatusCard = ({
   title,
   value,
-  subtitle = null,
   icon,
   iconType = 'material',
   color = colors.primary,
   backgroundColor = colors.white,
-  gradient = null,
   size = 'medium',
   style = {},
-  onPress = null,
   ...props
 }) => {
+  // Configuration des tailles
+  const sizeConfig = {
+    small: {
+      container: styles.smallContainer,
+      iconSize: 20,
+      titleSize: 12,
+      valueSize: 16,
+    },
+    medium: {
+      container: styles.mediumContainer,
+      iconSize: 24,
+      titleSize: 14,
+      valueSize: 20,
+    },
+    large: {
+      container: styles.largeContainer,
+      iconSize: 32,
+      titleSize: 16,
+      valueSize: 28,
+    },
+  };
 
-  const CardContent = () => (
-    <View style={[styles.card, styles.mediumContainer, { backgroundColor }, 
-    // style
-    ]} {...props}>
-      <View style={styles.iconContainer}>
+  const config = sizeConfig[size] || sizeConfig.medium;
+
+  return (
+    <View
+      style={[
+        styles.card,
+        config.container,
+        { backgroundColor },
+        style
+      ]}
+      {...props}
+    >
+      {/* Icône */}
+      <View style={[styles.iconContainer, { backgroundColor: color + '15' }]}>
         <Icon
           name={icon}
           type={iconType}
-          size={24}
+          size={config.iconSize}
           color={color}
         />
       </View>
 
+      {/* Contenu texte */}
       <View style={styles.content}>
-        <Text style={[styles.title, { fontSize: 14 }]}>
+        <Text
+          style={[
+            styles.title,
+            { fontSize: config.titleSize, color: colors.text.secondary }
+          ]}
+        >
           {title}
         </Text>
 
-        <Text style={[styles.value, { fontSize: 20, color }]}>
+        <Text
+          style={[
+            styles.value,
+            { fontSize: config.valueSize, color: colors.text.primary }
+          ]}
+        >
           {value}
         </Text>
-
-        {subtitle && (
-          <Text style={[styles.subtitle, { fontSize: 11 }]}>
-            {subtitle}
-          </Text>
-        )}
       </View>
     </View>
   );
-
-  if (gradient) {
-    return (
-      <LinearGradient
-        colors={gradient}
-        style={[styles.card, styles.mediumContainer, style]}
-        {...props}
-      >
-        <CardContent />
-      </LinearGradient>
-    );
-  }
-
-  return <CardContent />;
 };
 
 const styles = StyleSheet.create({
@@ -94,23 +111,22 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginRight: constants.SPACING.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   content: {
     flex: 1,
   },
   title: {
     fontWeight: '500',
-    color: colors.text.secondary,
     marginBottom: 4,
   },
   value: {
     fontWeight: 'bold',
-    marginBottom: 2,
-  },
-  subtitle: {
-    color: colors.text.secondary,
-    fontStyle: 'italic',
   },
 });
 
-export default StatCard;
+export default StatusCard;

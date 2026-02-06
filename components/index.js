@@ -7,6 +7,8 @@ export { default as ScreenHeader } from './ScreenHeader';
 
 // Composants de données
 export { default as StatCard } from './StatCard';
+export { default as ActionCard } from './ActionCard';
+export { default as StatusCard } from './StatusCard';
 export { default as AnalyticsCard } from './AnalyticsCard';
 
 // Composants de commandes
