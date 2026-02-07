@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { OrdersScreen } from '../screens';
+import { OrdersScreen, OrderDetailsScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
@@ -56,19 +56,6 @@ const OrdersStackNavigator = () => {
 };
 
 // Écrans temporaires - à remplacer par les vrais composants
-const OrderDetailsScreen = ({ route, navigation }) => {
-  const { orderId } = route.params || {};
-
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Détails de la commande #{orderId}</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 const OrderHistoryScreen = ({ navigation }) => {
   return (

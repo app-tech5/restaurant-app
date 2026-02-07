@@ -77,6 +77,7 @@ const SettingsStackNavigator = () => {
         component={RestaurantProfileScreen}
         options={{
           title: 'Profil restaurant',
+          headerShown: false, // Utilise ScreenHeader dans le composant
         }}
       />
     </Stack.Navigator>
