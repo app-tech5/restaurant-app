@@ -15,3 +15,4 @@ export { default as SupportScreen } from './SupportScreen';
 export { default as SettingsScreen } from './SettingsScreen';
 export { default as RestaurantProfileScreen } from './RestaurantProfileScreen';
 export { default as OrderDetailsScreen } from './OrderDetailsScreen';
+export { default as AddEditMenuItemScreen } from './AddEditMenuItemScreen';

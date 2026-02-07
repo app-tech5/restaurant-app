@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MenuScreen } from '../screens';
+import { MenuScreen, AddEditMenuItemScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
@@ -65,39 +65,6 @@ const MenuStackNavigator = () => {
 };
 
 // Écrans temporaires - à remplacer par les vrais composants
-const AddEditMenuItemScreen = ({ route, navigation }) => {
-  const { mode, item } = route.params || {};
-
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-      <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>
-        {mode === 'add' ? 'Ajouter un plat' : 'Modifier le plat'}
-      </Text>
-
-      {item && (
-        <Text style={{ marginBottom: 20 }}>
-          Plat sélectionné: {item.name}
-        </Text>
-      )}
-
-      <Text style={{ textAlign: 'center', color: '#666', marginBottom: 30 }}>
-        Formulaire d'ajout/modification de plat à implémenter...
-      </Text>
-
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={{
-          backgroundColor: colors.primary,
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-          borderRadius: 8,
-        }}
-      >
-        <Text style={{ color: 'white', fontWeight: 'bold' }}>Retour</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 const MenuCategoriesScreen = ({ navigation }) => {
   return (
