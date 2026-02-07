@@ -5,7 +5,7 @@ import DashboardScreen from '../screens/DashboardScreen';
 import OrdersStackNavigator from './OrdersStackNavigator';
 import MenuStackNavigator from './MenuStackNavigator';
 import AnalyticsScreen from '../screens/AnalyticsScreen';
-import ReportsScreen from '../screens/ReportsScreen';
+import ReportsStackNavigator from './ReportsStackNavigator';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import ProfileStackNavigator from './ProfileStackNavigator';
 import SettingsStackNavigator from './SettingsStackNavigator';
@@ -171,7 +171,7 @@ export default function DrawerNavigator() {
       {/* 📈 RAPPORTS */}
       <Drawer.Screen
         name="Reports"
-        component={ReportsScreen}
+        component={ReportsStackNavigator}
         options={{
           title: i18n.t('navigation.reports'),
           drawerIcon: ({ focused, size }) => (
