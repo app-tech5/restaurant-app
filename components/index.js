@@ -10,6 +10,8 @@ export { default as StatCard } from './StatCard';
 export { default as ActionCard } from './ActionCard';
 export { default as StatusCard } from './StatusCard';
 export { default as AnalyticsCard } from './AnalyticsCard';
+export { default as ReportMetricsCards } from './ReportMetricsCards';
+export { default as ReportCharts } from './ReportCharts';
 
 // Composants de commandes
 export { default as OrderCard } from './OrderCard';

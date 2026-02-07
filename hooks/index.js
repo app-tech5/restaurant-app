@@ -9,6 +9,8 @@ export { useRestaurantOrders } from './useRestaurantOrders';
 export { useRestaurantMenu } from './useRestaurantMenu';
 export { useMenuFilters } from './useMenuFilters';
 export { useMenuActions } from './useMenuActions';
+export { useReportData } from './useReportData';
+export { useReportCalculations } from './useReportCalculations';
 
 // Paramètres
 export { useSettingsManager } from './useSettingsManager';
