@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { Card, Text } from 'react-native-elements';
 import { colors, constants } from '../global';
 import { formatPrice } from '../utils/restaurantUtils';
