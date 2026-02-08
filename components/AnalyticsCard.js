@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     marginBottom: constants.SPACING.sm,
   },
   header: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    // alignItems: 'center',
     marginBottom: constants.SPACING.sm,
   },
   titleContainer: {
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.text.secondary,
+    flexShrink: 1, 
   },
   changeContainer: {
     flexDirection: 'row',

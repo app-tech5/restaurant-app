@@ -16,6 +16,7 @@ import { useRestaurant } from '../contexts/RestaurantContext';
 import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AddEditMenuItemScreen = ({ route, navigation }) => {
   const { mode, item } = route.params || {};
@@ -134,149 +135,151 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
   ];
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScreenHeader
-        title={isEditMode ? 'Modifier le plat' : 'Ajouter un plat'}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
-        rightComponent={
-          <TouchableOpacity
-            onPress={handleSave}
-            disabled={isLoading}
-            style={styles.saveButton}
-          >
-            <Text style={[styles.saveButtonText, isLoading && styles.saveButtonDisabled]}>
-              {isLoading ? 'Sauvegarde...' : 'Sauvegarder'}
-            </Text>
-          </TouchableOpacity>
-        }
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScreenHeader
+          title={isEditMode ? 'Modifier le plat' : 'Ajouter un plat'}
+          showBackButton
+          onLeftPress={() => navigation.goBack()}
+          rightComponent={
+            <TouchableOpacity
+              onPress={handleSave}
+              disabled={isLoading}
+              style={styles.saveButton}
+            >
+              <Text style={[styles.saveButtonText, isLoading && styles.saveButtonDisabled]}>
+                {isLoading ? 'Sauvegarde...' : 'Sauvegarder'}
+              </Text>
+            </TouchableOpacity>
+          }
+        />
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          {/* Nom du plat */}
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Nom du plat *</Text>
-            <TextInput
-              style={[styles.textInput, errors.name && styles.textInputError]}
-              value={formData.name}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
-              placeholder="Ex: Salade César, Burger Gourmet..."
-              maxLength={100}
-            />
-            {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-          </View>
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            {/* Nom du plat */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Nom du plat *</Text>
+              <TextInput
+                style={[styles.textInput, errors.name && styles.textInputError]}
+                value={formData.name}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
+                placeholder="Ex: Salade César, Burger Gourmet..."
+                maxLength={100}
+              />
+              {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+            </View>
 
-          {/* Description */}
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Description *</Text>
-            <TextInput
-              style={[styles.textInput, styles.textArea, errors.description && styles.textInputError]}
-              value={formData.description}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, description: text }))}
-              placeholder="Décrivez les ingrédients, la préparation..."
-              multiline
-              numberOfLines={4}
-              maxLength={500}
-            />
-            {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
-          </View>
+            {/* Description */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Description *</Text>
+              <TextInput
+                style={[styles.textInput, styles.textArea, errors.description && styles.textInputError]}
+                value={formData.description}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, description: text }))}
+                placeholder="Décrivez les ingrédients, la préparation..."
+                multiline
+                numberOfLines={4}
+                maxLength={500}
+              />
+              {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
+            </View>
 
-          {/* Prix */}
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Prix (€) *</Text>
-            <TextInput
-              style={[styles.textInput, errors.price && styles.textInputError]}
-              value={formData.price}
-              onChangeText={handlePriceChange}
-              placeholder="0.00"
-              keyboardType="decimal-pad"
-              maxLength={10}
-            />
-            {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
-          </View>
+            {/* Prix */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Prix (€) *</Text>
+              <TextInput
+                style={[styles.textInput, errors.price && styles.textInputError]}
+                value={formData.price}
+                onChangeText={handlePriceChange}
+                placeholder="0.00"
+                keyboardType="decimal-pad"
+                maxLength={10}
+              />
+              {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
+            </View>
 
-          {/* Catégorie */}
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Catégorie *</Text>
-            <TextInput
-              style={[styles.textInput, errors.category && styles.textInputError]}
-              value={formData.category}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, category: text }))}
-              placeholder="Ex: Plats principaux, Desserts..."
-              maxLength={50}
-            />
-            {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
+            {/* Catégorie */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Catégorie *</Text>
+              <TextInput
+                style={[styles.textInput, errors.category && styles.textInputError]}
+                value={formData.category}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, category: text }))}
+                placeholder="Ex: Plats principaux, Desserts..."
+                maxLength={50}
+              />
+              {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
 
-            {/* Suggestions de catégories */}
-            <View style={styles.categorySuggestions}>
-              <Text style={styles.suggestionsLabel}>Suggestions :</Text>
-              <View style={styles.suggestionsContainer}>
-                {commonCategories.map((cat) => (
-                  <TouchableOpacity
-                    key={cat}
-                    style={[
-                      styles.categoryChip,
-                      formData.category === cat && styles.categoryChipSelected
-                    ]}
-                    onPress={() => setFormData(prev => ({ ...prev, category: cat }))}
-                  >
-                    <Text style={[
-                      styles.categoryChipText,
-                      formData.category === cat && styles.categoryChipTextSelected
-                    ]}>
-                      {cat}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+              {/* Suggestions de catégories */}
+              <View style={styles.categorySuggestions}>
+                <Text style={styles.suggestionsLabel}>Suggestions :</Text>
+                <View style={styles.suggestionsContainer}>
+                  {commonCategories.map((cat) => (
+                    <TouchableOpacity
+                      key={cat}
+                      style={[
+                        styles.categoryChip,
+                        formData.category === cat && styles.categoryChipSelected
+                      ]}
+                      onPress={() => setFormData(prev => ({ ...prev, category: cat }))}
+                    >
+                      <Text style={[
+                        styles.categoryChipText,
+                        formData.category === cat && styles.categoryChipTextSelected
+                      ]}>
+                        {cat}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
             </View>
-          </View>
 
-          {/* Disponibilité */}
-          <View style={styles.field}>
-            <View style={styles.switchRow}>
-              <View style={styles.switchLabel}>
-                <Text style={styles.fieldLabel}>Disponible</Text>
-                <Text style={styles.switchDescription}>
-                  Le plat sera visible par les clients
-                </Text>
+            {/* Disponibilité */}
+            <View style={styles.field}>
+              <View style={styles.switchRow}>
+                <View style={styles.switchLabel}>
+                  <Text style={styles.fieldLabel}>Disponible</Text>
+                  <Text style={styles.switchDescription}>
+                    Le plat sera visible par les clients
+                  </Text>
+                </View>
+                <Switch
+                  value={formData.available}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, available: value }))}
+                  trackColor={{ false: colors.grey[300], true: colors.primary }}
+                  thumbColor={formData.available ? colors.white : colors.grey[400]}
+                />
               </View>
-              <Switch
-                value={formData.available}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, available: value }))}
-                trackColor={{ false: colors.grey[300], true: colors.primary }}
-                thumbColor={formData.available ? colors.white : colors.grey[400]}
+            </View>
+
+            {/* Bouton de sauvegarde */}
+            <View style={styles.buttonContainer}>
+              <Button
+                title={isEditMode ? 'Modifier le plat' : 'Ajouter le plat'}
+                buttonStyle={styles.saveButtonLarge}
+                onPress={handleSave}
+                loading={isLoading}
+                disabled={isLoading}
               />
             </View>
-          </View>
 
-          {/* Bouton de sauvegarde */}
-          <View style={styles.buttonContainer}>
-            <Button
-              title={isEditMode ? 'Modifier le plat' : 'Ajouter le plat'}
-              buttonStyle={styles.saveButtonLarge}
-              onPress={handleSave}
-              loading={isLoading}
-              disabled={isLoading}
-            />
+            {/* Informations */}
+            <View style={styles.infoContainer}>
+              <Text style={styles.infoText}>
+                * Champs obligatoires
+              </Text>
+              <Text style={styles.infoText}>
+                Les modifications seront visibles immédiatement par vos clients.
+              </Text>
+            </View>
           </View>
-
-          {/* Informations */}
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoText}>
-              * Champs obligatoires
-            </Text>
-            <Text style={styles.infoText}>
-              Les modifications seront visibles immédiatement par vos clients.
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

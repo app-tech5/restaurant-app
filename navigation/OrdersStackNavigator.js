@@ -42,6 +42,7 @@ const OrdersStackNavigator = () => {
         component={OrderDetailsScreen}
         options={{
           title: i18n.t('orders.orderDetails'),
+          headerShown: false, // Utilise ScreenHeader dans le composant
         }}
       />
       <Stack.Screen

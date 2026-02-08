@@ -6,6 +6,7 @@ import { Loading, ScreenHeader, MenuSearchBar, MenuCategoriesTabs, MenuList } fr
 import { useMenuFilters, useMenuActions } from '../hooks';
 import { colors } from '../global';
 import i18n from '../i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MenuScreen = ({ navigation }) => {
   const { menu, isAuthenticated } = useRestaurant();
@@ -33,7 +34,7 @@ const MenuScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.menu')}
         showBackButton
@@ -69,7 +70,7 @@ const MenuScreen = ({ navigation }) => {
         placement="right"
         onPress={menuActions.handleAddMenuItem}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -44,6 +44,7 @@ const MenuStackNavigator = () => {
           title: route.params?.mode === 'add'
             ? i18n.t('menu.addItem')
             : i18n.t('menu.editItem'),
+          headerShown: false, // Utilise ScreenHeader dans le composant
         })}
       />
       <Stack.Screen

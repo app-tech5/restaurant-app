@@ -4,6 +4,7 @@ import { useRestaurant } from '../contexts/RestaurantContext';
 import { OrderCard, Loading, EmptyState, ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OrdersScreen = ({ navigation }) => {
   const {
@@ -140,7 +141,7 @@ const OrdersScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.orders')}
         showBackButton
@@ -199,7 +200,7 @@ const OrdersScreen = ({ navigation }) => {
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

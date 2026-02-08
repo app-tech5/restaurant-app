@@ -14,6 +14,7 @@ import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import { getOrderStatusLabel, getOrderStatusColor, formatPrice } from '../utils/restaurantUtils';
 import i18n from '../i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OrderDetailsScreen = ({ route, navigation }) => {
   const { order } = route.params;
@@ -28,7 +29,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
 
   if (!order) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ScreenHeader
           title="Détails commande"
           showBackButton
@@ -43,7 +44,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
             <Text style={styles.backButtonText}>Retour</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -219,7 +220,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   const orderDateTime = formatDateTime(createdAt);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScreenHeader
         title={`Commande #${_id.slice(-6)}`}
         showBackButton
@@ -325,7 +326,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           </Card>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

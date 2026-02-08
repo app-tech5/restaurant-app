@@ -5,6 +5,7 @@ import { AnalyticsCard, Loading, ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import { calculateRestaurantStats } from '../utils/restaurantUtils';
 import i18n from '../i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -92,7 +93,7 @@ const AnalyticsScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.analytics')}
         showBackButton
@@ -202,7 +203,7 @@ const AnalyticsScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -251,10 +252,10 @@ const styles = StyleSheet.create({
   metricsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   metricCard: {
-    width: '48%',
+    width: '45%',
     marginBottom: constants.SPACING.md,
   },
   chartContainer: {
