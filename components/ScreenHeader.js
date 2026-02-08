@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { colors } from '../global';
+import HamburgerButton from './HamburgerButton';
 
 const ScreenHeader = ({
   title,
@@ -15,9 +16,16 @@ const ScreenHeader = ({
   containerStyle = {},
   titleStyle = {},
   subtitleStyle = {},
-  centerContainerStyle = {}
+  centerContainerStyle = {},
+  showDrawerMenu = false,
 }) => {
   const renderLeftComponent = () => {
+
+    if (showDrawerMenu) {
+      return (
+        <HamburgerButton />
+      )
+    }
     if (leftComponent) {
       return leftComponent;
     }

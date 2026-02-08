@@ -6,6 +6,7 @@ import { StatCard, ActionCard, StatusCard, Loading, EmptyState, ScreenHeader } f
 import { colors, constants } from '../global';
 import { calculateRestaurantStats } from '../utils/restaurantUtils';
 import i18n from '../i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DashboardScreen = ({ navigation }) => {
   const { stats, loadRestaurantStats, orders, isAuthenticated } = useRestaurant();
@@ -77,8 +78,8 @@ const DashboardScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <ScreenHeader title={i18n.t('navigation.dashboard')} />
+    <SafeAreaView style={styles.container}>
+      <ScreenHeader title={i18n.t('navigation.dashboard')} showDrawerMenu/>
 
       <ScrollView
         style={styles.scrollView}
@@ -203,7 +204,7 @@ const DashboardScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

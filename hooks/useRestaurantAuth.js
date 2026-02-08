@@ -11,7 +11,8 @@ import { updateRestaurantCache, clearRestaurantCache } from '../utils/restaurant
  * @param {Function} onMenuLoaded - Callback appelé quand le menu est chargé
  * @returns {Object} État et fonctions d'authentification
  */
-export const useRestaurantAuth = (onRestaurantLoaded, onStatsLoaded, onOrdersLoaded, onMenuLoaded) => {
+export const useRestaurantAuth = () => {
+// export const useRestaurantAuth = (onRestaurantLoaded = () => {}, onStatsLoaded = () => {}, onOrdersLoaded = () => {}, onMenuLoaded = () => {}) => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,9 +45,9 @@ export const useRestaurantAuth = (onRestaurantLoaded, onStatsLoaded, onOrdersLoa
           }
 
           // Charger les stats, commandes et menu
-          if (onStatsLoaded) await onStatsLoaded();
-          if (onOrdersLoaded) await onOrdersLoaded();
-          if (onMenuLoaded) await onMenuLoaded();
+          // if (onStatsLoaded) await onStatsLoaded();
+          // if (onOrdersLoaded) await onOrdersLoaded();
+          // if (onMenuLoaded) await onMenuLoaded();
         }
       } catch (error) {
         console.error('Error initializing restaurant:', error);
@@ -56,7 +57,10 @@ export const useRestaurantAuth = (onRestaurantLoaded, onStatsLoaded, onOrdersLoa
     };
 
     initializeRestaurant();
-  }, [onRestaurantLoaded, onStatsLoaded, onOrdersLoaded, onMenuLoaded]);
+  }, 
+  // [onRestaurantLoaded, onStatsLoaded, onOrdersLoaded, onMenuLoaded]
+  []
+);
 
   // Connexion du restaurant
   const login = async (email, password) => {
@@ -96,9 +100,9 @@ export const useRestaurantAuth = (onRestaurantLoaded, onStatsLoaded, onOrdersLoa
           await updateRestaurantCache(restaurantData, response.token);
 
           // Charger les données initiales
-          if (onStatsLoaded) await onStatsLoaded();
-          if (onOrdersLoaded) await onOrdersLoaded();
-          if (onMenuLoaded) await onMenuLoaded();
+          // if (onStatsLoaded) await onStatsLoaded();
+          // if (onOrdersLoaded) await onOrdersLoaded();
+          // if (onMenuLoaded) await onMenuLoaded();
 
           // Essayer de rafraîchir les données restaurant en arrière-plan (sans bloquer)
           if (!config.DEMO_MODE) {
