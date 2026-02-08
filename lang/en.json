@@ -110,7 +110,28 @@
     "salesByDay": "Sales by day",
     "salesByHour": "Sales by hour",
     "averageOrderValue": "Average order value",
-    "customerRetention": "Customer retention"
+    "customerRetention": "Customer retention",
+    "periods": {
+      "today": "Today",
+      "week": "This week",
+      "month": "This month"
+    },
+    "mainMetrics": "Main metrics",
+    "evolution": "Evolution",
+    "performance": "Performance",
+    "detailedStats": "Detailed statistics",
+    "preparationTime": "Preparation time",
+    "rating": "Rating",
+    "cancelledOrders": "Cancelled orders",
+    "trends": {
+      "vsYesterday": "vs yesterday",
+      "vsLastWeek": "vs last week",
+      "perTotal": "of total"
+    },
+    "completedOrders": "Completed orders",
+    "activeItems": "Active items",
+    "averageRevenuePerDay": "Average revenue per day",
+    "responseTime": "Response time"
   },
 
   "reports": {

@@ -13,6 +13,13 @@ export { default as AnalyticsCard } from './AnalyticsCard';
 export { default as ReportMetricsCards } from './ReportMetricsCards';
 export { default as ReportCharts } from './ReportCharts';
 
+// Composants d'analytics
+export { default as PeriodSelector } from './PeriodSelector';
+export { default as AnalyticsGrid } from './AnalyticsGrid';
+export { default as PerformanceMetrics } from './PerformanceMetrics';
+export { default as DetailedStats } from './DetailedStats';
+export { default as ChartSection } from './ChartSection';
+
 // Composants de commandes
 export { default as OrderCard } from './OrderCard';
 export { default as OrderStatusBadge } from './OrderStatusBadge';

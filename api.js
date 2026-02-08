@@ -354,6 +354,67 @@ class ApiClient {
 
     return await this.apiCall('/settings');
   }
+
+  // === ANALYTICS ===
+
+  // Récupérer les analytics du restaurant
+  async getRestaurantAnalytics(period = 'today') {
+    if (isDemoMode()) {
+      // Données de démo pour les analytics
+      const baseData = {
+        today: {
+          totalRevenue: 245.50,
+          totalOrders: 12,
+          completedOrders: 11,
+          averageOrderValue: 20.46,
+          averageRating: 4.2,
+          averagePreparationTime: 18,
+          activeCustomers: 8,
+          cancellationRate: 8.3,
+          onTimeDeliveryRate: 91.7,
+          totalDeliveries: 11
+        },
+        week: {
+          totalRevenue: 1523.80,
+          totalOrders: 78,
+          completedOrders: 74,
+          averageOrderValue: 19.54,
+          averageRating: 4.1,
+          averagePreparationTime: 16,
+          activeCustomers: 45,
+          cancellationRate: 5.1,
+          onTimeDeliveryRate: 94.6,
+          totalDeliveries: 74
+        },
+        month: {
+          totalRevenue: 6842.30,
+          totalOrders: 342,
+          completedOrders: 328,
+          averageOrderValue: 20.01,
+          averageRating: 4.3,
+          averagePreparationTime: 15,
+          activeCustomers: 156,
+          cancellationRate: 4.1,
+          onTimeDeliveryRate: 95.2,
+          totalDeliveries: 328
+        }
+      };
+
+      return {
+        ...baseData[period],
+        period,
+        generatedAt: new Date().toISOString(),
+        trends: {
+          revenue: 12.5,
+          orders: 8.2,
+          customers: -2.1,
+          rating: 0.3
+        }
+      };
+    }
+
+    return await this.apiCall(`/restaurant/analytics?period=${period}`);
+  }
 }
 
 // Instance unique de l'API client

@@ -98,7 +98,7 @@ const getFromCache = async (key, ttl = CACHE_CONFIG.DEFAULT_TTL) => {
  * @param {Function} onLoadingStateChange - Callback pour état de chargement
  * @param {Function} onError - Callback d'erreur
  */
-const loadWithSmartCache = async (
+export const loadWithSmartCache = async (
   restaurantId,
   cacheKey,
   apiFetcher,

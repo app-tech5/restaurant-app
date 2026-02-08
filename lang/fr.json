@@ -105,7 +105,30 @@
     "salesByDay": "Ventes par jour",
     "salesByHour": "Ventes par heure",
     "averageOrderValue": "Panier moyen",
-    "customerRetention": "Fidélisation client"
+    "customerRetention": "Fidélisation client",
+    "mainMetrics": "Métriques principales",
+    "evolution": "Évolution",
+    "performance": "Performance",
+    "detailedStats": "Statistiques détaillées",
+    "preparationTime": "Temps de préparation moyen",
+    "rating": "Note moyenne",
+    "cancelledOrders": "Commandes annulées",
+    "completedOrders": "Commandes livrées",
+    "activeItems": "Articles actifs",
+    "averageRevenuePerDay": "Revenus moyens/jour",
+    "responseTime": "Temps réponse moyen",
+    "periods": {
+      "today": "Aujourd'hui",
+      "week": "Cette semaine",
+      "month": "Ce mois"
+    },
+    "trends": {
+      "positive": "hausse",
+      "negative": "baisse",
+      "vsYesterday": "vs hier",
+      "vsLastWeek": "vs semaine dernière",
+      "perTotal": "du total"
+    }
   },
 
   "reports": {
