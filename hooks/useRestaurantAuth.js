@@ -71,7 +71,7 @@ export const useRestaurantAuth = (onRestaurantLoaded, onStatsLoaded, onOrdersLoa
         // Mode démo - simulation de connexion
         response = {
           user: {
-            id: 'demo-restaurant-1',
+            _id: 'demo-restaurant-1',
             name: 'Demo Restaurant',
             email: email,
             type: 'restaurant',
@@ -112,12 +112,14 @@ export const useRestaurantAuth = (onRestaurantLoaded, onStatsLoaded, onOrdersLoa
               console.log('Could not refresh restaurant data, using existing data');
             }
           }
+
+          return { success: true, restaurant: restaurantData };
         } else {
           throw new Error('Données restaurant non disponibles');
         }
+      } else {
+        throw new Error('Réponse de connexion invalide');
       }
-
-      return { success: true, restaurant: restaurantData };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, message: error.message || 'Erreur de connexion' };

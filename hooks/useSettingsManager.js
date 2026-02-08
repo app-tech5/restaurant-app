@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getSettings } from '../api';
+import apiClient from '../api';
 import { loadSettingsWithSmartCache, clearSettingsCache, saveSettingsToCache } from '../utils/cacheUtils';
 import {
   getCurrency,
@@ -24,7 +24,7 @@ export const useSettingsManager = (isAuthenticated) => {
       console.log('🔄 Chargement des settings car restaurant authentifié');
       // Charger les settings avec le système de cache intelligent
       loadSettingsWithSmartCache(
-        getSettings, // apiFetcher
+        () => apiClient.getSettings(), // apiFetcher
         (data, fromCache) => {
           // onDataLoaded - appelé quand les données sont prêtes (cache ou API)
           setSettings(data);
@@ -68,7 +68,7 @@ export const useSettingsManager = (isAuthenticated) => {
     // Forcer le rechargement depuis l'API (sans cache)
     try {
       setLoading(true);
-      const settingsData = await getSettings();
+      const settingsData = await apiClient.getSettings();
       const appSettings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
       setSettings(appSettings);
       setError(null);

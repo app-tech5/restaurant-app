@@ -25,7 +25,12 @@ export const RestaurantProvider = ({ children }) => {
     logout: authLogout,
     setRestaurant,
     setIsAuthenticated
-  } = useRestaurantAuth();
+  } = useRestaurantAuth(
+    () => {}, // onRestaurantLoaded - callback vide pour éviter les erreurs
+    () => {}, // onStatsLoaded - callback vide pour éviter les erreurs
+    () => {}, // onOrdersLoaded - callback vide pour éviter les erreurs
+    () => {}  // onMenuLoaded - callback vide pour éviter les erreurs
+  );
 
   // Hook des statistiques
   const {

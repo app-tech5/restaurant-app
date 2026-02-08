@@ -54,27 +54,13 @@ export default function LoginScreen({ navigation }) {
     setIsLoading(true);
 
     try {
-      if (config.DEMO_MODE) {
-        // Mode démo - connexion simulée
-        const result = await login(email, password);
-        if (result.success) {
-          navigation.replace('DrawerNavigator');
-        } else {
-          Alert.alert(i18n.t('common.error'), result.message || i18n.t('auth.networkError'));
-        }
+      // Utiliser toujours la fonction login du hook qui gère le mode démo et production
+      const result = await login(email, password);
+
+      if (result.success) {
+        navigation.replace('DrawerNavigator');
       } else {
-        // Mode production - appel API réel
-        const response = await apiClient.login(email, password);
-
-        if (response.success) {
-          // Sauvegarder les données de connexion
-          await AsyncStorage.setItem('restaurantToken', response.token);
-          await AsyncStorage.setItem('restaurantData', JSON.stringify(response.restaurant));
-
-          navigation.replace('DrawerNavigator');
-        } else {
-          Alert.alert(i18n.t('common.error'), response.message || i18n.t('auth.networkError'));
-        }
+        Alert.alert(i18n.t('common.error'), result.message || i18n.t('auth.networkError'));
       }
     } catch (error) {
       console.error('Login error:', error);
