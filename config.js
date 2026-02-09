@@ -6,12 +6,16 @@ export const config = {
 
   // === DONNÉES DÉMO ===
   DEMO_EMAIL: 'demo@restaurant.com',
-  DEMO_PASSWORD: 'demo123',
+  DEMO_PASSWORD: 'password123',
 
   // === API CONFIGURATION ===
+  // API_BASE_URL: __DEV__
+  //   ? 'http://localhost:3000/api'  // Développement
+  //   : 'https://api.goodfood.com/api', // Production
+
   API_BASE_URL: __DEV__
-    ? 'http://localhost:3000/api'  // Développement
-    : 'https://api.goodfood.com/api', // Production
+  ? 'https://deshawn-athermanous-indefensibly.ngrok-free.dev/api'  // Développement
+  : 'https://api.goodfood.com/api', // Production
 
   API_TIMEOUT: 10000, // 10 secondes
 

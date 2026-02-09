@@ -71,22 +71,8 @@ export const useRestaurantAuth = () => {
       const config = require('../config').default || require('../config');
       let response;
 
-      if (config.DEMO_MODE) {
-        // Mode démo - simulation de connexion
-        response = {
-          user: {
-            _id: 'demo-restaurant-1',
-            name: 'Demo Restaurant',
-            email: email,
-            type: 'restaurant',
-            status: 'active'
-          },
-          token: 'demo-token-' + Date.now()
-        };
-      } else {
-        // Mode production - appel API réel
-        response = await apiClient.restaurantLogin(email, password);
-      }
+      // Appel API réel même en mode démo (les données de démo sont dans le backend)
+      response = await apiClient.restaurantLogin(email, password);
 
       if (response.user && response.token) {
         // Le restaurant a été chargé dans apiClient lors du login
