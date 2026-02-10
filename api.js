@@ -204,6 +204,7 @@ class ApiClient {
   // Liste des commandes
   async getRestaurantOrders(status = null) {
     const endpoint = status ? `/restaurant/orders?status=${status}` : '/restaurant/orders';
+    console.log('TTTTTTTTTTTTTTTTTT')
     return await this.apiCall(endpoint);
   }
 

@@ -13,9 +13,17 @@ export const config = {
   //   ? 'http://localhost:3000/api'  // Développement
   //   : 'https://api.goodfood.com/api', // Production
 
+  // API_BASE_URL: __DEV__
+  // ? 'https://deshawn-athermanous-indefensibly.ngrok-free.dev/api'  // Développement
+  // : 'https://api.goodfood.com/api', // Production
+
+  // API_BASE_URL: __DEV__
+  // ? 'http://144.91.97.29:5001/api'  // Développement
+  // : 'https://api.goodfood.com/api', // Production
+
   API_BASE_URL: __DEV__
-  ? 'https://deshawn-athermanous-indefensibly.ngrok-free.dev/api'  // Développement
-  : 'https://api.goodfood.com/api', // Production
+    ? 'http://localhost:5000/api'  // Développement
+    : 'https://api.goodfood.com/api', // Production
 
   API_TIMEOUT: 10000, // 10 secondes
 
