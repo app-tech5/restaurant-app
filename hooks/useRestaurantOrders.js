@@ -28,7 +28,7 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
         () => apiClient.getRestaurantOrders(status), // apiFetcher
         (data, fromCache) => {
           // onDataLoaded - appelé quand les données sont prêtes (cache ou API)
-          setOrders(data);
+          setOrders(data.data);
           if (fromCache) {
             console.log('🔄 Commandes chargées depuis le cache dans RestaurantContext');
           }

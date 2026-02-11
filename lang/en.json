@@ -58,7 +58,8 @@
     "recentOrders": "Recent orders",
     "recentOrdersCount": "recent orders",
     "restaurantStatus": "Restaurant status",
-    "activeItems": "Active items"
+    "activeItems": "Active items",
+    "totalOrders": "Total Orders"
   },
 
   "orders": {

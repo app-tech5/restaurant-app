@@ -124,6 +124,8 @@ export const loadWithSmartCache = async (
     try {
       const freshData = await apiFetcher();
 
+      // console.log("FreshData", freshData)
+
       if (freshData) {
         // Sauvegarder dans le cache
         await saveToCache(fullCacheKey, freshData);

@@ -9,7 +9,9 @@ import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DashboardScreen = ({ navigation }) => {
-  const { stats, loadRestaurantStats, orders, isAuthenticated } = useRestaurant();
+  const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated } = useRestaurant();
+
+  console.log("orders dans DashboardScreen", orders)
   const [refreshing, setRefreshing] = useState(false);
   const [calculatedStats, setCalculatedStats] = useState(null);
 
@@ -21,17 +23,24 @@ const DashboardScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Calculer les statistiques quand orders ou stats changent
-    if (orders && stats) {
+    console.log("stats dans Dashboard", stats)
+    // console.log("Array.isArray(orders)", Array.isArray(orders))
+    if (Array.isArray(orders) && stats) {
+      console.log("orders dans Dashboard", orders)
       const calcStats = calculateRestaurantStats(orders, []);
+      console.log('Calculated Stats:', calcStats);
       setCalculatedStats(calcStats);
     }
   }, [orders, stats]);
 
   const loadStats = async () => {
     try {
-      await loadRestaurantStats();
+      await Promise.all([
+        loadRestaurantStats(),
+        loadRestaurantOrders()
+      ]);
     } catch (error) {
-      console.error('Erreur chargement stats:', error);
+      console.error('Erreur chargement stats et commandes:', error);
     }
   };
 
@@ -55,9 +64,9 @@ const DashboardScreen = ({ navigation }) => {
       gradient: [colors.success, colors.success],
     },
     {
-      title: i18n.t('dashboard.averageRating'),
-      value: calculatedStats?.averageRating || '0.0',
-      icon: 'star',
+      title: i18n.t('dashboard.totalOrders'),
+      value: calculatedStats?.totalOrders || 0,
+      icon: 'receipt',
       gradient: [colors.accent, colors.rating],
     },
     {

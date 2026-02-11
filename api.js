@@ -68,7 +68,8 @@ class ApiClient {
       }
 
       const data = await response.json();
-      console.log(`✅ API Success: ${endpoint}`, data);
+      console.log(`✅ API Success: ${endpoint}`)
+      // console.log(`✅ API Success: ${endpoint}`, data);
       return data;
 
     } catch (error) {

@@ -83,31 +83,29 @@ export const getOrderStatusColor = (status) => {
  * @returns {Object} Statistiques calculées
  */
 export const calculateRestaurantStats = (orders = [], menu = []) => {
+  console.log("orders dans calculateRestaurantStats", orders)
+  // Gérer le cas où orders est undefined ou null
+  const safeOrders = Array.isArray(orders) ? orders : [];
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
   // Commandes du jour
-  const todayOrders = orders.filter(order =>
+  const todayOrders = safeOrders.filter(order =>
     new Date(order.createdAt) >= today
   );
 
   // Revenus totaux
-  const totalRevenue = orders
+  const totalRevenue = safeOrders
     .filter(order => order.status === ORDER_STATUSES.DELIVERED)
-    .reduce((sum, order) => sum + (order.total || 0), 0);
+    .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
 
-  // Note moyenne
-  const ratedOrders = orders.filter(order => order.rating);
-  const averageRating = ratedOrders.length > 0
-    ? ratedOrders.reduce((sum, order) => sum + order.rating, 0) / ratedOrders.length
-    : 0;
 
   // Commandes par statut
-  const completedOrders = orders.filter(order =>
+  const completedOrders = safeOrders.filter(order =>
     order.status === ORDER_STATUSES.DELIVERED
   ).length;
 
-  const pendingOrders = orders.filter(order =>
+  const pendingOrders = safeOrders.filter(order =>
     [ORDER_STATUSES.PENDING, ORDER_STATUSES.ACCEPTED, ORDER_STATUSES.PREPARING].includes(order.status)
   ).length;
 
@@ -117,11 +115,10 @@ export const calculateRestaurantStats = (orders = [], menu = []) => {
   return {
     todayOrders: todayOrders.length,
     totalRevenue,
-    averageRating: Math.round(averageRating * 10) / 10, // 1 décimale
     completedOrders,
     pendingOrders,
     activeMenuItems,
-    totalOrders: orders.length
+    totalOrders: safeOrders.length
   };
 };
 

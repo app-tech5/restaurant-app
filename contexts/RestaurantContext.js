@@ -45,6 +45,8 @@ export const RestaurantProvider = ({ children }) => {
     invalidateOrdersCache
   } = useRestaurantOrders(restaurant, isAuthenticated);
 
+  console.log("Orders in RestaurantContext", orders)
+
   // Hook du menu
   const {
     menu,
