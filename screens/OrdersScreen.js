@@ -69,10 +69,10 @@ const OrdersScreen = ({ navigation }) => {
     navigation.navigate('OrderDetails', { order });
   };
 
-  const getFilteredOrders = () => {
+  const getFilteredOrders = (status) => {
     if (!orders) return [];
 
-    switch (activeTab) {
+    switch (status) {
       case 'pending':
         return orders.filter(order => order.status === 'pending');
       case 'preparing':
@@ -84,9 +84,7 @@ const OrdersScreen = ({ navigation }) => {
     }
   };
 
-  const filteredOrders = getFilteredOrders();
-
-  console.log("filteredOrders dans OrdersScreen", filteredOrders)
+  const filteredOrders = getFilteredOrders(activeTab);
 
   const renderOrder = ({ item }) => (
     <OrderCard
@@ -178,7 +176,7 @@ const OrdersScreen = ({ navigation }) => {
                 activeTab === tab.key && styles.activeTabBadge
               ]}>
                 <Text style={styles.tabBadgeText}>
-                  {getFilteredOrders().length}
+                  {getFilteredOrders(tab.key).length}
                 </Text>
               </View>
             )}
