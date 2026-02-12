@@ -19,7 +19,7 @@ const OrderCard = ({
     customerName,
     customerPhone,
     items = [],
-    total,
+    totalPrice: total,
     status,
     createdAt,
     estimatedTime
