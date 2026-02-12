@@ -86,6 +86,8 @@ const OrdersScreen = ({ navigation }) => {
 
   const filteredOrders = getFilteredOrders();
 
+  console.log("filteredOrders dans OrdersScreen", filteredOrders)
+
   const renderOrder = ({ item }) => (
     <OrderCard
       order={item}

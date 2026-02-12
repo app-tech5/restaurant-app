@@ -35,7 +35,7 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
         },
         (data) => {
           // onDataUpdated - appelé quand les données sont mises à jour depuis l'API
-          setOrders(data);
+          setOrders(data.data);
           console.log('🔄 Commandes mises à jour depuis l\'API dans RestaurantContext');
         },
         (loading) => {
