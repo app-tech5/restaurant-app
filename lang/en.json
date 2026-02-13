@@ -67,10 +67,10 @@
     "prepareOrder": "Start preparation",
     "readyForPickup": "Ready for pickup",
     "orderAccepted": "Order accepted",
-    "orderPreparing": "Order preparing",
+    "orderPreparing": "Preparing",
     "orderReady": "Order ready",
-    "orderDelivered": "Order delivered",
-    "orderCancelled": "Order cancelled",
+    "orderDelivered": "Delivered",
+    "orderCancelled": "Cancelled",
     "customerInfo": "Customer information",
     "orderItems": "Ordered items",
     "total": "Total",
@@ -78,6 +78,8 @@
     "estimatedTime": "Estimated time",
     "minutes": "minutes",
     "noOrders": "No orders",
+    "orderPending": "Pending",
+
     "noOrdersSubtitle": "New orders will appear here",
     "tabs": {
       "all": "All",

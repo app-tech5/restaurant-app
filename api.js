@@ -318,15 +318,15 @@ class ApiClient {
 
   // Récupérer les paramètres
   async getSettings() {
-    if (isDemoMode()) {
-      return {
-        currency: { code: 'EUR', symbol: '€', name: 'Euro' },
-        language: { code: 'fr', name: 'Français' },
-        appName: 'Good Food Restaurant'
-      };
-    }
+    // if (isDemoMode()) {
+    //   return {
+    //     currency: { code: 'EUR', symbol: '€', name: 'Euro' },
+    //     language: { code: 'fr', name: 'Français' },
+    //     appName: 'Good Food Restaurant'
+    //   };
+    // }
 
-    return await this.apiCall('/settings');
+    return await this.apiCall('resource/settings');
   }
 
   // === ANALYTICS ===

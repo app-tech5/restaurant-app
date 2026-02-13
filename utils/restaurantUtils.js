@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateRestaurantCache, clearRestaurantCache } from './storageUtils';
+import i18n from '../i18n';
 
 /**
  * État initial des statistiques du restaurant
@@ -29,14 +30,13 @@ export const ORDER_STATUSES = {
  * Labels pour les statuts de commande
  */
 export const ORDER_STATUS_LABELS = {
-  [ORDER_STATUSES.PENDING]: 'En attente',
-  [ORDER_STATUSES.ACCEPTED]: 'Acceptée',
-  [ORDER_STATUSES.PREPARING]: 'En préparation',
-  [ORDER_STATUSES.READY]: 'Prête',
-  [ORDER_STATUSES.DELIVERED]: 'Livrée',
-  [ORDER_STATUSES.CANCELLED]: 'Annulée'
+  [ORDER_STATUSES.PENDING]: i18n.t('orders.orderPending'),
+  [ORDER_STATUSES.ACCEPTED]: i18n.t('orders.orderAccepted'),
+  [ORDER_STATUSES.PREPARING]: i18n.t('orders.orderPreparing'),
+  [ORDER_STATUSES.READY]: i18n.t('orders.orderReady'),
+  [ORDER_STATUSES.DELIVERED]: i18n.t('orders.orderDelivered'),
+  [ORDER_STATUSES.CANCELLED]: i18n.t('orders.orderCancelled')
 };
-
 /**
  * Couleurs pour les statuts de commande
  */

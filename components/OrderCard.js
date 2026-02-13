@@ -4,6 +4,7 @@ import { Card, Icon } from 'react-native-elements';
 import { colors, constants } from '../global';
 import { getOrderStatusLabel, getOrderStatusColor, formatPrice } from '../utils/restaurantUtils';
 import i18n from '../i18n';
+import { useSettings } from '../contexts/SettingContext';
 
 const OrderCard = ({
   order,
@@ -25,12 +26,15 @@ const OrderCard = ({
     estimatedTime
   } = order;
 
+  const { currency } = useSettings();
+  console.log("currency in OrderCard", currency)
+
   const statusLabel = getOrderStatusLabel(status);
   const statusColor = getOrderStatusColor(status);
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('fr-FR', {
+    return date.toLocaleTimeString(i18n.locale, {
       hour: '2-digit',
       minute: '2-digit'
     });

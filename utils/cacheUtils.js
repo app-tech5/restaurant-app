@@ -117,7 +117,7 @@ export const loadWithSmartCache = async (
 
     if (cachedData) {
       // Données trouvées en cache
-      onDataLoaded?.(cachedData.data, true);
+      onDataLoaded?.(cachedData.data.data, true);
     }
 
     // Étape 2: Charger depuis l'API en arrière-plan
@@ -132,10 +132,10 @@ export const loadWithSmartCache = async (
 
         // Notifier que les données ont été mises à jour
         if (cachedData) {
-          onDataUpdated?.(freshData);
+          onDataUpdated?.(freshData.data);
         } else {
           // Pas de cache, première fois
-          onDataLoaded?.(freshData, false);
+          onDataLoaded?.(freshData.data, false);
         }
       }
     } catch (apiError) {
