@@ -22,7 +22,8 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     updateOrderStatus,
     acceptOrder,
     prepareOrder,
-    readyForPickup
+    readyForPickup,
+    formatCurrency
   } = useRestaurant();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -308,13 +309,13 @@ const OrderDetailsScreen = ({ route, navigation }) => {
                 )}
                 <Text style={styles.itemQuantity}>Quantité: {item.quantity}</Text>
               </View>
-              <Text style={styles.itemPrice}>{formatPrice(item.price * item.quantity)}</Text>
+              <Text style={styles.itemPrice}>{formatCurrency(item.price * item.quantity)}</Text>
             </View>
           ))}
 
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalAmount}>{formatPrice(total)}</Text>
+            <Text style={styles.totalAmount}>{formatCurrency(total)}</Text>
           </View>
         </Card>
 
