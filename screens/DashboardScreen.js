@@ -9,7 +9,7 @@ import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DashboardScreen = ({ navigation }) => {
-  const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated } = useRestaurant();
+  const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated, formatCurrency } = useRestaurant();
 
   console.log("orders dans DashboardScreen", orders)
   const [refreshing, setRefreshing] = useState(false);
@@ -59,8 +59,8 @@ const DashboardScreen = ({ navigation }) => {
     },
     {
       title: i18n.t('dashboard.totalRevenue'),
-      value: `${calculatedStats?.totalRevenue?.toFixed(2) || '0.00'}€`,
-      icon: 'euro',
+      value: formatCurrency(calculatedStats?.totalRevenue || 0),
+      icon: 'attach-money',
       gradient: [colors.success, colors.success],
     },
     {

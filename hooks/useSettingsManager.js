@@ -25,16 +25,18 @@ export const useSettingsManager = (isAuthenticated) => {
       // Charger les settings avec le système de cache intelligent
       loadSettingsWithSmartCache(
         () => apiClient.getSettings(), // apiFetcher
-        (data, fromCache) => {
+        (response, fromCache) => {
           // onDataLoaded - appelé quand les données sont prêtes (cache ou API)
+          const data = response.data || response;
           setSettings(data);
           setError(null);
           if (fromCache) {
             console.log('🔄 Settings chargés depuis le cache');
           }
         },
-        (data) => {
+        (response) => {
           // onDataUpdated - appelé quand les données sont mises à jour depuis l'API
+          const data = response.data || response;
           setSettings(data);
           console.log('🔄 Settings mis à jour depuis l\'API');
         },
@@ -68,8 +70,8 @@ export const useSettingsManager = (isAuthenticated) => {
     // Forcer le rechargement depuis l'API (sans cache)
     try {
       setLoading(true);
-      const settingsData = await apiClient.getSettings();
-      const appSettings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
+      const response = await apiClient.getSettings();
+      const appSettings = response.data || response;
       setSettings(appSettings);
       setError(null);
 

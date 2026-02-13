@@ -128,9 +128,9 @@ export const calculateRestaurantStats = (orders = [], menu = []) => {
  * @param {string} currency - Devise (par défaut '€')
  * @returns {string} Prix formaté
  */
-export const formatPrice = (price, currency = '€') => {
-  if (typeof price !== 'number') return '0' + currency;
-  return `${price.toFixed(2)}${currency}`;
+export const formatPrice = (price, currencySymbol = '€') => {
+  if (typeof price !== 'number') return '0' + currencySymbol;
+  return `${price.toFixed(2)}${currencySymbol}`;
 };
 
 /**

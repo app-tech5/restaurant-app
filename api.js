@@ -320,13 +320,16 @@ class ApiClient {
   async getSettings() {
     // if (isDemoMode()) {
     //   return {
-    //     currency: { code: 'EUR', symbol: '€', name: 'Euro' },
-    //     language: { code: 'fr', name: 'Français' },
-    //     appName: 'Good Food Restaurant'
+    //     success: true,
+    //     data: {
+    //       currency: { code: 'EUR', symbol: '€', name: 'Euro', value: 'EUR', label: 'EUR - Euro' },
+    //       language: { code: 'fr', name: 'Français', isDefault: true },
+    //       appName: 'Good Food Restaurant'
+    //     }
     //   };
     // }
 
-    return await this.apiCall('resource/settings');
+    return await this.apiCall('/settings');
   }
 
   // === ANALYTICS ===

@@ -3,6 +3,7 @@ import { useRestaurantAuth } from '../hooks/useRestaurantAuth';
 import { useRestaurantStats } from '../hooks/useRestaurantStats';
 import { useRestaurantOrders } from '../hooks/useRestaurantOrders';
 import { useRestaurantMenu } from '../hooks/useRestaurantMenu';
+import { useSettings } from '../hooks/useSettings';
 import { INITIAL_STATS } from '../utils/restaurantUtils';
 
 const RestaurantContext = createContext();
@@ -26,6 +27,17 @@ export const RestaurantProvider = ({ children }) => {
     setRestaurant,
     setIsAuthenticated
   } = useRestaurantAuth();
+
+  // Hook des paramètres
+  const {
+    settings,
+    isLoading: settingsLoading,
+    error: settingsError,
+    loadSettings,
+    formatCurrency,
+    getCurrencySymbol,
+    getCurrencyCode
+  } = useSettings();
 
   // Hook des statistiques
   const {
@@ -83,6 +95,15 @@ export const RestaurantProvider = ({ children }) => {
     logout,
     setRestaurant,
     setIsAuthenticated,
+
+    // Paramètres
+    settings,
+    settingsLoading,
+    settingsError,
+    loadSettings,
+    formatCurrency,
+    getCurrencySymbol,
+    getCurrencyCode,
 
     // Statistiques
     stats,

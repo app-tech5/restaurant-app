@@ -135,7 +135,7 @@ const OrderCard = ({
           <View style={styles.totalContainer}>
             <Text style={styles.totalLabel}>{i18n.t('orders.total')}</Text>
             <Text style={styles.totalAmount}>
-              {formatPrice(total)}
+              {formatPrice(total, currency?.symbol || '€')}
             </Text>
           </View>
 
