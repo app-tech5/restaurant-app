@@ -4,7 +4,6 @@
     "slogan": "Cooking & Management",
     "version": "Version"
   },
-
   "navigation": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -18,7 +17,6 @@
     "settings": "Settings",
     "logout": "Logout"
   },
-
   "auth": {
     "login": "Login",
     "logout": "Logout",
@@ -39,7 +37,6 @@
     "connectionError": "Connection error. Check your internet connection.",
     "demoMode": "Demo mode enabled - Use demo credentials"
   },
-
   "dashboard": {
     "title": "Dashboard",
     "todayOrders": "Today's orders",
@@ -61,7 +58,6 @@
     "activeItems": "Active items",
     "totalOrders": "Total Orders"
   },
-
   "orders": {
     "title": "Orders",
     "activeOrders": "Active orders",
@@ -82,9 +78,32 @@
     "estimatedTime": "Estimated time",
     "minutes": "minutes",
     "noOrders": "No orders",
-    "noOrdersSubtitle": "New orders will appear here"
+    "noOrdersSubtitle": "New orders will appear here",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "preparing": "Preparing",
+      "ready": "Ready"
+    },
+    "empty": {
+      "all": {
+        "title": "No orders",
+        "subtitle": "New orders will appear here"
+      },
+      "pending": {
+        "title": "No pending orders",
+        "subtitle": "All orders have been processed"
+      },
+      "preparing": {
+        "title": "No orders being prepared",
+        "subtitle": "Orders currently being prepared will appear here"
+      },
+      "ready": {
+        "title": "No ready orders",
+        "subtitle": "Orders ready for pickup will appear here"
+      }
+    }
   },
-
   "menu": {
     "title": "Menu Management",
     "addItem": "Add dish",
@@ -101,7 +120,6 @@
     "addCategory": "Add category",
     "deleteCategory": "Delete category"
   },
-
   "analytics": {
     "title": "Analytics",
     "revenue": "Revenue",
@@ -134,7 +152,6 @@
     "averageRevenuePerDay": "Average revenue per day",
     "responseTime": "Response time"
   },
-
   "reports": {
     "title": "Reports",
     "dailyReport": "Daily report",
@@ -146,7 +163,6 @@
     "exportReport": "Export report",
     "printReport": "Print report"
   },
-
   "settings": {
     "title": "Settings",
     "profile": "Restaurant profile",
@@ -162,7 +178,6 @@
     "privacy": "Privacy",
     "terms": "Terms of service"
   },
-
   "common": {
     "save": "Save",
     "cancel": "Cancel",
@@ -200,7 +215,6 @@
     "noData": "No data available",
     "noResults": "No results found"
   },
-
   "errors": {
     "networkError": "Network error",
     "serverError": "Server error",
@@ -214,7 +228,6 @@
     "invalidPhone": "Invalid phone number",
     "weakPassword": "Weak password"
   },
-
   "success": {
     "saved": "Saved successfully",
     "deleted": "Deleted successfully",

@@ -44,7 +44,7 @@ const OrdersScreen = ({ navigation }) => {
     try {
       await acceptOrder(orderId);
     } catch (error) {
-      console.error('Erreur acceptation commande:', error);
+      console.error(i18n.t('errors.acceptOrder'), error);
     }
   };
 
@@ -52,7 +52,7 @@ const OrdersScreen = ({ navigation }) => {
     try {
       await prepareOrder(orderId);
     } catch (error) {
-      console.error('Erreur préparation commande:', error);
+      console.error(i18n.t('errors.prepareOrder'), error);
     }
   };
 
@@ -60,7 +60,7 @@ const OrdersScreen = ({ navigation }) => {
     try {
       await readyForPickup(orderId);
     } catch (error) {
-      console.error('Erreur commande prête:', error);
+      console.error(i18n.t('errors.readyOrder'), error);
     }
   };
 
@@ -99,22 +99,23 @@ const OrdersScreen = ({ navigation }) => {
   const renderEmpty = () => {
     const emptyMessages = {
       all: {
-        title: "Aucune commande",
-        subtitle: "Les nouvelles commandes apparaîtront ici"
+        title: i18n.t('orders.empty.all.title'),
+        subtitle: i18n.t('orders.empty.all.subtitle')
       },
       pending: {
-        title: "Aucune commande en attente",
-        subtitle: "Toutes les commandes ont été traitées"
+        title: i18n.t('orders.empty.pending.title'),
+        subtitle: i18n.t('orders.empty.pending.subtitle')
       },
       preparing: {
-        title: "Aucune commande en préparation",
-        subtitle: "Les commandes en cours de préparation apparaîtront ici"
+        title: i18n.t('orders.empty.preparing.title'),
+        subtitle: i18n.t('orders.empty.preparing.subtitle')
       },
       ready: {
-        title: "Aucune commande prête",
-        subtitle: "Les commandes prêtes pour le retrait apparaîtront ici"
+        title: i18n.t('orders.empty.ready.title'),
+        subtitle: i18n.t('orders.empty.ready.subtitle')
       }
     };
+
 
     const message = emptyMessages[activeTab];
 
@@ -151,10 +152,10 @@ const OrdersScreen = ({ navigation }) => {
       {/* Onglets de filtrage */}
       <View style={styles.tabsContainer}>
         {[
-          { key: 'all', label: 'Toutes' },
-          { key: 'pending', label: 'En attente' },
-          { key: 'preparing', label: 'Préparation' },
-          { key: 'ready', label: 'Prêtes' }
+          { key: 'all', label: i18n.t('orders.tabs.all') },
+          { key: 'pending', label: i18n.t('orders.tabs.pending') },
+          { key: 'preparing', label: i18n.t('orders.tabs.preparing') },
+          { key: 'ready', label: i18n.t('orders.tabs.ready') }
         ].map(tab => (
           <TouchableOpacity
             key={tab.key}
