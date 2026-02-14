@@ -257,9 +257,9 @@ class ApiClient {
 
   // Récupérer le menu
   async getRestaurantMenu() {
-    if (isDemoMode()) {
-      return this.getMockData('/menu');
-    }
+    // if (isDemoMode()) {
+    //   return this.getMockData('/menu');
+    // }
 
     return await this.apiCall('/restaurant/menu');
   }

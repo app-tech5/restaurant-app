@@ -32,20 +32,21 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
         <ScreenHeader
-          title="Détails commande"
+          title={i18n.t('orderDetails.title')}
           showBackButton
           onLeftPress={() => navigation.goBack()}
         />
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Commande introuvable</Text>
+          <Text style={styles.errorText}>{i18n.t('orderDetails.notFound')}</Text>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={styles.backButtonText}>Retour</Text>
+            <Text style={styles.backButtonText}>{i18n.t('orderDetails.back')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+
     );
   }
 
@@ -69,8 +70,8 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     return {
-      date: date.toLocaleDateString('fr-FR'),
-      time: date.toLocaleTimeString('fr-FR', {
+      date: date.toLocaleDateString(i18n.locale),
+      time: date.toLocaleTimeString(i18n.locale, {
         hour: '2-digit',
         minute: '2-digit'
       })
@@ -89,20 +90,26 @@ const OrderDetailsScreen = ({ route, navigation }) => {
 
   const handleStatusChange = async (newStatus) => {
     Alert.alert(
-      'Confirmer le changement',
-      `Voulez-vous changer le statut de cette commande à "${getOrderStatusLabel(newStatus)}" ?`,
+      i18n.t('alerts.confirmStatusChangeTitle'),
+      i18n.t('alerts.confirmStatusChangeMessage', { status: getOrderStatusLabel(newStatus) }),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: i18n.t('alerts.cancel'), style: 'cancel' },
         {
-          text: 'Confirmer',
+          text: i18n.t('alerts.confirm'),
           onPress: async () => {
             try {
               setIsLoading(true);
               await updateOrderStatus(_id, newStatus);
-              Alert.alert('Succès', 'Statut de la commande mis à jour');
+              Alert.alert(
+                i18n.t('alerts.success'),
+                i18n.t('alerts.statusUpdated')
+              );
             } catch (error) {
               console.error('Erreur mise à jour statut:', error);
-              Alert.alert('Erreur', 'Impossible de mettre à jour le statut');
+              Alert.alert(
+                i18n.t('alerts.error'),
+                i18n.t('alerts.statusUpdateFailed')
+              );
             } finally {
               setIsLoading(false);
             }
@@ -111,46 +118,47 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       ]
     );
   };
+  
 
   const handleAccept = async () => {
     try {
       setIsLoading(true);
       await acceptOrder(_id);
-      Alert.alert('Succès', 'Commande acceptée');
+      Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderAccepted'));
     } catch (error) {
       console.error('Erreur acceptation:', error);
-      Alert.alert('Erreur', 'Impossible d\'accepter la commande');
+      Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.acceptFailed'));
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   const handlePrepare = async () => {
     try {
       setIsLoading(true);
       await prepareOrder(_id);
-      Alert.alert('Succès', 'Commande en préparation');
+      Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderPreparing'));
     } catch (error) {
       console.error('Erreur préparation:', error);
-      Alert.alert('Erreur', 'Impossible de commencer la préparation');
+      Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.prepareFailed'));
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   const handleReady = async () => {
     try {
       setIsLoading(true);
       await readyForPickup(_id);
-      Alert.alert('Succès', 'Commande prête pour le retrait');
+      Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderReady'));
     } catch (error) {
       console.error('Erreur prêt:', error);
-      Alert.alert('Erreur', 'Impossible de marquer comme prête');
+      Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.readyFailed'));
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   const getActionButtons = () => {
     const buttons = [];
 
@@ -159,7 +167,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         buttons.push(
           <Button
             key="accept"
-            title="Accepter"
+            title={i18n.t('orders.accept')}
             buttonStyle={[styles.actionButton, { backgroundColor: colors.success }]}
             onPress={handleAccept}
             loading={isLoading}
@@ -169,7 +177,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         buttons.push(
           <Button
             key="reject"
-            title="Refuser"
+            title={i18n.t('orders.reject')}
             buttonStyle={[styles.actionButton, { backgroundColor: colors.error }]}
             onPress={() => handleStatusChange('cancelled')}
             disabled={isLoading}
@@ -181,7 +189,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         buttons.push(
           <Button
             key="prepare"
-            title="Commencer préparation"
+            title={i18n.t('orders.startPreparation')}
             buttonStyle={[styles.actionButton, { backgroundColor: colors.primary }]}
             onPress={handlePrepare}
             loading={isLoading}
@@ -194,7 +202,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         buttons.push(
           <Button
             key="ready"
-            title="Marquer comme prête"
+            title={i18n.t('orders.markReady')}
             buttonStyle={[styles.actionButton, { backgroundColor: colors.success }]}
             onPress={handleReady}
             loading={isLoading}
@@ -206,7 +214,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       case 'ready':
         buttons.push(
           <Text key="ready-text" style={styles.readyText}>
-            Commande prête pour le retrait
+            {i18n.t('orders.readyText')}
           </Text>
         );
         break;
@@ -222,112 +230,113 @@ const OrderDetailsScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenHeader
-        title={`Commande #${_id.slice(-6)}`}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
-      />
+  <ScreenHeader
+    title={`${i18n.t('orderDetails.title')} #${_id.slice(-6)}`}
+    showBackButton
+    onLeftPress={() => navigation.goBack()}
+  />
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Statut de la commande */}
-        <Card containerStyle={styles.statusCard}>
-          <View style={styles.statusHeader}>
-            <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
-              <Text style={[styles.statusText, { color: statusColor }]}>
-                {statusLabel}
-              </Text>
-            </View>
-            <Text style={styles.orderId}>#{_id.slice(-6)}</Text>
+  <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+    {/* Statut de la commande */}
+    <Card containerStyle={styles.statusCard}>
+      <View style={styles.statusHeader}>
+        <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
+          <Text style={[styles.statusText, { color: statusColor }]}>
+            {statusLabel}
+          </Text>
+        </View>
+        <Text style={styles.orderId}>#{_id.slice(-6)}</Text>
+      </View>
+
+      <View style={styles.orderInfo}>
+        <Text style={styles.orderDate}>
+          {orderDateTime.date} {i18n.t('orderDetails.at')} {orderDateTime.time}
+        </Text>
+        {estimatedTime && (
+          <Text style={styles.estimatedTime}>
+            {i18n.t('orderDetails.estimatedTime')}: {formatEstimatedTime(estimatedTime)}
+          </Text>
+        )}
+      </View>
+    </Card>
+
+    {/* Actions disponibles */}
+    {getActionButtons().length > 0 && (
+      <Card containerStyle={styles.actionsCard}>
+        <Text style={styles.actionsTitle}>{i18n.t('orderDetails.actions')}</Text>
+        <View style={styles.actionsContainer}>
+          {getActionButtons()}
+        </View>
+      </Card>
+    )}
+
+    {/* Informations client */}
+    <Card containerStyle={styles.customerCard}>
+      <Text style={styles.cardTitle}>{i18n.t('orderDetails.customerInfo')}</Text>
+
+      <View style={styles.customerInfo}>
+        <View style={styles.infoRow}>
+          <Icon name="person" size={20} color={colors.grey[600]} />
+          <Text style={styles.infoText}>{customerName}</Text>
+        </View>
+
+        <View style={styles.infoRow}>
+          <Icon name="phone" size={20} color={colors.grey[600]} />
+          <Text style={styles.infoText}>{customerPhone}</Text>
+        </View>
+
+        {customerAddress && (
+          <View style={styles.infoRow}>
+            <Icon name="location-on" size={20} color={colors.grey[600]} />
+            <Text style={styles.infoText}>{customerAddress}</Text>
           </View>
+        )}
 
-          <View style={styles.orderInfo}>
-            <Text style={styles.orderDate}>
-              {orderDateTime.date} à {orderDateTime.time}
+        {paymentMethod && (
+          <View style={styles.infoRow}>
+            <Icon name="payment" size={20} color={colors.grey[600]} />
+            <Text style={styles.infoText}>
+              {i18n.t('orderDetails.payment')}: {paymentMethod === 'card' ? i18n.t('orderDetails.paymentCard') :
+                paymentMethod === 'cash' ? i18n.t('orderDetails.paymentCash') : paymentMethod}
             </Text>
-            {estimatedTime && (
-              <Text style={styles.estimatedTime}>
-                Temps estimé: {formatEstimatedTime(estimatedTime)}
-              </Text>
-            )}
           </View>
-        </Card>
-
-        {/* Actions disponibles */}
-        {getActionButtons().length > 0 && (
-          <Card containerStyle={styles.actionsCard}>
-            <Text style={styles.actionsTitle}>Actions</Text>
-            <View style={styles.actionsContainer}>
-              {getActionButtons()}
-            </View>
-          </Card>
         )}
+      </View>
+    </Card>
 
-        {/* Informations client */}
-        <Card containerStyle={styles.customerCard}>
-          <Text style={styles.cardTitle}>Informations client</Text>
+    {/* Articles commandés */}
+    <Card containerStyle={styles.itemsCard}>
+      <Text style={styles.cardTitle}>{i18n.t('orderDetails.orderedItems')}</Text>
 
-          <View style={styles.customerInfo}>
-            <View style={styles.infoRow}>
-              <Icon name="person" size={20} color={colors.grey[600]} />
-              <Text style={styles.infoText}>{customerName}</Text>
-            </View>
-
-            <View style={styles.infoRow}>
-              <Icon name="phone" size={20} color={colors.grey[600]} />
-              <Text style={styles.infoText}>{customerPhone}</Text>
-            </View>
-
-            {customerAddress && (
-              <View style={styles.infoRow}>
-                <Icon name="location-on" size={20} color={colors.grey[600]} />
-                <Text style={styles.infoText}>{customerAddress}</Text>
-              </View>
+      {items.map((item, index) => (
+        <View key={index} style={styles.itemRow}>
+          <View style={styles.itemInfo}>
+            <Text style={styles.itemName}>{item.name}</Text>
+            {item.description && (
+              <Text style={styles.itemDescription}>{item.description}</Text>
             )}
-
-            {paymentMethod && (
-              <View style={styles.infoRow}>
-                <Icon name="payment" size={20} color={colors.grey[600]} />
-                <Text style={styles.infoText}>
-                  Paiement: {paymentMethod === 'card' ? 'Carte bancaire' :
-                           paymentMethod === 'cash' ? 'Espèces' : paymentMethod}
-                </Text>
-              </View>
-            )}
+            <Text style={styles.itemQuantity}>{i18n.t('orderDetails.quantity')}: {item.quantity}</Text>
           </View>
-        </Card>
+          <Text style={styles.itemPrice}>{formatCurrency(item.price * item.quantity)}</Text>
+        </View>
+      ))}
 
-        {/* Articles commandés */}
-        <Card containerStyle={styles.itemsCard}>
-          <Text style={styles.cardTitle}>Articles commandés</Text>
+      <View style={styles.totalRow}>
+        <Text style={styles.totalLabel}>{i18n.t('orderDetails.total')}</Text>
+        <Text style={styles.totalAmount}>{formatCurrency(total)}</Text>
+      </View>
+    </Card>
 
-          {items.map((item, index) => (
-            <View key={index} style={styles.itemRow}>
-              <View style={styles.itemInfo}>
-                <Text style={styles.itemName}>{item.name}</Text>
-                {item.description && (
-                  <Text style={styles.itemDescription}>{item.description}</Text>
-                )}
-                <Text style={styles.itemQuantity}>Quantité: {item.quantity}</Text>
-              </View>
-              <Text style={styles.itemPrice}>{formatCurrency(item.price * item.quantity)}</Text>
-            </View>
-          ))}
+    {/* Notes spéciales */}
+    {notes && (
+      <Card containerStyle={styles.notesCard}>
+        <Text style={styles.cardTitle}>{i18n.t('orderDetails.specialNotes')}</Text>
+        <Text style={styles.notesText}>{notes}</Text>
+      </Card>
+    )}
+  </ScrollView>
+</SafeAreaView>
 
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalAmount}>{formatCurrency(total)}</Text>
-          </View>
-        </Card>
-
-        {/* Notes spéciales */}
-        {notes && (
-          <Card containerStyle={styles.notesCard}>
-            <Text style={styles.cardTitle}>Notes spéciales</Text>
-            <Text style={styles.notesText}>{notes}</Text>
-          </Card>
-        )}
-      </ScrollView>
-    </SafeAreaView>
   );
 };
 

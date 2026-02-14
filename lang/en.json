@@ -79,6 +79,11 @@
     "minutes": "minutes",
     "noOrders": "No orders",
     "orderPending": "Pending",
+    "accept": "Accept",
+    "reject": "Reject",
+    "startPreparation": "Start preparation",
+    "markReady": "Mark as ready",
+    "readyText": "Order ready for pickup",
 
     "noOrdersSubtitle": "New orders will appear here",
     "tabs": {
@@ -105,6 +110,38 @@
         "subtitle": "Orders ready for pickup will appear here"
       }
     }
+  },
+  "orderDetails": {
+    "title": "Order Details",
+    "notFound": "Order not found",
+    "back": "Back",
+    "at": "at",
+    "estimatedTime": "Estimated time",
+    "actions": "Actions",
+    "customerInfo": "Customer information",
+    "payment": "Payment",
+    "paymentCard": "Credit Card",
+    "paymentCash": "Cash",
+    "orderedItems": "Ordered items",
+    "quantity": "Quantity",
+    "total": "Total",
+    "specialNotes": "Special Notes"
+  },
+  "alerts": {
+    "confirmStatusChangeTitle": "Confirm Change",
+    "confirmStatusChangeMessage": "Do you want to change the order status to \"{{status}}\"?",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "success": "Success",
+    "error": "Error",
+    "statusUpdated": "Order status updated",
+    "statusUpdateFailed": "Unable to update order status",
+    "orderAccepted": "Order accepted",
+    "acceptFailed": "Unable to accept order",
+    "orderPreparing": "Order in preparation",
+    "prepareFailed": "Unable to start preparation",
+    "orderReady": "Order ready for pickup",
+    "readyFailed": "Unable to mark as ready"
   },
   "menu": {
     "title": "Menu Management",
