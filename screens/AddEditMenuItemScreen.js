@@ -28,7 +28,11 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     description: '',
     price: '',
     category: '',
-    available: true
+    available: true,
+    image: '',
+    preparation_time: '15',
+    ingredients: '',
+    tags: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -41,7 +45,11 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         description: item.description || '',
         price: item.price ? item.price.toString() : '',
         category: item.category || '',
-        available: item.available !== false
+        available: item.available !== false,
+        image: item.image || '',
+        preparation_time: item.preparation_time ? item.preparation_time.toString() : '15',
+        ingredients: Array.isArray(item.ingredients) ? item.ingredients.join(', ') : '',
+        tags: Array.isArray(item.tags) ? item.tags.join(', ') : ''
       });
     }
   }, [isEditMode, item]);
@@ -70,6 +78,19 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
       newErrors.category = 'La catégorie est requise';
     }
 
+    if (!formData.image.trim()) {
+      newErrors.image = 'L\'image est requise';
+    }
+
+    if (!formData.preparation_time.trim()) {
+      newErrors.preparation_time = 'Le temps de préparation est requis';
+    } else {
+      const prepTime = parseInt(formData.preparation_time);
+      if (isNaN(prepTime) || prepTime <= 0) {
+        newErrors.preparation_time = 'Le temps de préparation doit être un nombre positif';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -87,7 +108,11 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         description: formData.description.trim(),
         price: parseFloat(formData.price.replace(',', '.')),
         category: formData.category.trim(),
-        available: formData.available
+        available: formData.available,
+        image: formData.image.trim(),
+        preparation_time: parseInt(formData.preparation_time),
+        ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()).filter(i => i) : [],
+        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t) : []
       };
 
       if (isEditMode) {
@@ -126,12 +151,12 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
   };
 
   const commonCategories = [
-    'Entrées',
-    'Plats principaux',
-    'Desserts',
-    'Boissons',
-    'Accompagnements',
-    'Spécialités'
+    i18n.t('menu.categoryTypes.appetizers'),
+    i18n.t('menu.categoryTypes.mainCourses'),
+    i18n.t('menu.categoryTypes.desserts'),
+    i18n.t('menu.categoryTypes.beverages'),
+    i18n.t('menu.categoryTypes.sides'),
+    i18n.t('menu.categoryTypes.specialties')
   ];
 
   return (
@@ -141,7 +166,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScreenHeader
-          title={isEditMode ? 'Modifier le plat' : 'Ajouter un plat'}
+          title={isEditMode ? i18n.t('menu.editItem') : i18n.t('menu.addItem')}
           showBackButton
           onLeftPress={() => navigation.goBack()}
           rightComponent={
@@ -151,7 +176,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               style={styles.saveButton}
             >
               <Text style={[styles.saveButtonText, isLoading && styles.saveButtonDisabled]}>
-                {isLoading ? 'Sauvegarde...' : 'Sauvegarder'}
+                {isLoading ? i18n.t('common.saving') : i18n.t('common.save')}
               </Text>
             </TouchableOpacity>
           }
@@ -161,12 +186,12 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
           <View style={styles.content}>
             {/* Nom du plat */}
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Nom du plat *</Text>
+            <Text style={styles.fieldLabel}>{i18n.t('menu.itemNameLabel')}</Text>
               <TextInput
                 style={[styles.textInput, errors.name && styles.textInputError]}
                 value={formData.name}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
-                placeholder="Ex: Salade César, Burger Gourmet..."
+                placeholder={i18n.t('menu.namePlaceholder')}
                 maxLength={100}
               />
               {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
@@ -174,12 +199,12 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
 
             {/* Description */}
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Description *</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('menu.itemDescriptionLabel')}</Text>
               <TextInput
                 style={[styles.textInput, styles.textArea, errors.description && styles.textInputError]}
                 value={formData.description}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, description: text }))}
-                placeholder="Décrivez les ingrédients, la préparation..."
+                placeholder={i18n.t('menu.descriptionPlaceholder')}
                 multiline
                 numberOfLines={4}
                 maxLength={500}
@@ -187,9 +212,22 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
             </View>
 
+            {/* Image */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('menu.imageUrl')} *</Text>
+              <TextInput
+                style={[styles.textInput, errors.image && styles.textInputError]}
+                value={formData.image}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, image: text }))}
+                placeholder="https://exemple.com/image.jpg"
+                maxLength={500}
+              />
+              {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
+            </View>
+
             {/* Prix */}
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Prix (€) *</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('menu.price')} *</Text>
               <TextInput
                 style={[styles.textInput, errors.price && styles.textInputError]}
                 value={formData.price}
@@ -201,9 +239,23 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
             </View>
 
+            {/* Temps de préparation */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('menu.preparationTime')} *</Text>
+              <TextInput
+                style={[styles.textInput, errors.preparation_time && styles.textInputError]}
+                value={formData.preparation_time}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, preparation_time: text.replace(/[^0-9]/g, '') }))}
+                placeholder="15"
+                keyboardType="numeric"
+                maxLength={3}
+              />
+              {errors.preparation_time && <Text style={styles.errorText}>{errors.preparation_time}</Text>}
+            </View>
+
             {/* Catégorie */}
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Catégorie *</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('menu.category')} *</Text>
               <TextInput
                 style={[styles.textInput, errors.category && styles.textInputError]}
                 value={formData.category}
@@ -215,7 +267,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
 
               {/* Suggestions de catégories */}
               <View style={styles.categorySuggestions}>
-                <Text style={styles.suggestionsLabel}>Suggestions :</Text>
+                <Text style={styles.suggestionsLabel}>{i18n.t('menu.suggestions')} :</Text>
                 <View style={styles.suggestionsContainer}>
                   {commonCategories.map((cat) => (
                     <TouchableOpacity
@@ -242,9 +294,9 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
             <View style={styles.field}>
               <View style={styles.switchRow}>
                 <View style={styles.switchLabel}>
-                  <Text style={styles.fieldLabel}>Disponible</Text>
+                  <Text style={styles.fieldLabel}>{i18n.t('menu.available')}</Text>
                   <Text style={styles.switchDescription}>
-                    Le plat sera visible par les clients
+                    {i18n.t('menu.availableDescription')}
                   </Text>
                 </View>
                 <Switch
@@ -256,10 +308,42 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               </View>
             </View>
 
+            {/* Ingrédients */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('menu.ingredients')}</Text>
+              <TextInput
+                style={[styles.textInput, styles.textArea]}
+                value={formData.ingredients}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, ingredients: text }))}
+                placeholder={i18n.t('menu.ingredientsPlaceholder')}
+                multiline
+                numberOfLines={3}
+                maxLength={300}
+              />
+              <Text style={styles.fieldHint}>
+                {i18n.t('menu.ingredientsHint')}
+              </Text>
+            </View>
+
+            {/* Tags */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Tags</Text>
+              <TextInput
+                style={[styles.textInput]}
+                value={formData.tags}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, tags: text }))}
+                placeholder={i18n.t('menu.tagsPlaceholder')}
+                maxLength={200}
+              />
+              <Text style={styles.fieldHint}>
+                {i18n.t('menu.tagsHint')}
+              </Text>
+            </View>
+
             {/* Bouton de sauvegarde */}
             <View style={styles.buttonContainer}>
               <Button
-                title={isEditMode ? 'Modifier le plat' : 'Ajouter le plat'}
+                title={isEditMode ? i18n.t('menu.editItem') : i18n.t('menu.addItem')}
                 buttonStyle={styles.saveButtonLarge}
                 onPress={handleSave}
                 loading={isLoading}
@@ -270,10 +354,10 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
             {/* Informations */}
             <View style={styles.infoContainer}>
               <Text style={styles.infoText}>
-                * Champs obligatoires
+                {i18n.t('menu.requiredFields')}
               </Text>
               <Text style={styles.infoText}>
-                Les modifications seront visibles immédiatement par vos clients.
+                {i18n.t('menu.visibilityNote')}
               </Text>
             </View>
           </View>
@@ -331,6 +415,11 @@ const styles = StyleSheet.create({
   textArea: {
     textAlignVertical: 'top',
     minHeight: 100,
+  },
+  fieldHint: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    marginTop: constants.SPACING.xs,
   },
   errorText: {
     fontSize: 14,

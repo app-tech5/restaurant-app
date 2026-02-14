@@ -84,7 +84,6 @@
     "startPreparation": "Start preparation",
     "markReady": "Mark as ready",
     "readyText": "Order ready for pickup",
-
     "noOrdersSubtitle": "New orders will appear here",
     "tabs": {
       "all": "All",
@@ -149,6 +148,8 @@
     "editItem": "Edit dish",
     "deleteItem": "Delete dish",
     "itemName": "Dish name",
+    "itemNameLabel": "Dish name *",
+    "itemDescriptionLabel": "Description *",
     "itemDescription": "Description",
     "itemPrice": "Price",
     "itemCategory": "Category",
@@ -156,8 +157,31 @@
     "available": "Available",
     "unavailable": "Unavailable",
     "categories": "Categories",
+    "price": "Price",
+    "category": "Category",
     "addCategory": "Add category",
-    "deleteCategory": "Delete category"
+    "deleteCategory": "Delete category",
+    "namePlaceholder": "Enter dish name",
+    "descriptionPlaceholder": "Describe the dish, ingredients, taste...",
+    "imageUrl": "Image URL",
+    "preparationTime": "Preparation time (minutes)",
+    "availableDescription": "Customers can order this dish",
+    "ingredients": "Ingredients",
+    "ingredientsPlaceholder": "e.g. chicken, rice, spices",
+    "ingredientsHint": "Separate ingredients with commas",
+    "tagsPlaceholder": "e.g. spicy, vegetarian, popular",
+    "tagsHint": "Separate tags with commas",
+    "suggestions": "Suggestions",
+    "requiredFields": "* Required fields",
+    "visibilityNote": "Only available dishes are visible to customers",
+    "categoryTypes": {
+      "appetizers": "Appetizers",
+      "mainCourses": "Main courses",
+      "desserts": "Desserts",
+      "beverages": "Beverages",
+      "sides": "Sides",
+      "specialties": "Specialties"
+    }
   },
   "analytics": {
     "title": "Analytics",
@@ -219,6 +243,7 @@
   },
   "common": {
     "save": "Save",
+    "saving": "Saving...",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
