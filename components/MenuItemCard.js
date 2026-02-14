@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { colors, constants } from '../global';
-import { formatPrice } from '../utils/restaurantUtils';
+import { formatCurrency } from '../utils/currencyUtils';
+import { useSettings } from '../contexts/SettingContext';
 import i18n from '../i18n';
 
 const MenuItemCard = ({
@@ -14,6 +15,8 @@ const MenuItemCard = ({
   showActions = true,
   style = {}
 }) => {
+  const { currency } = useSettings();
+
   const {
     _id,
     name,
@@ -73,7 +76,7 @@ const MenuItemCard = ({
               {name}
             </Text>
             <Text style={styles.price}>
-              {formatPrice(price)}
+              {formatCurrency(price, currency)}
             </Text>
           </View>
 
@@ -96,7 +99,7 @@ const MenuItemCard = ({
               </Text>
             </View>
 
-            <View style={[styles.availabilityBadge, { backgroundColor: available ? '#4CAF50' : '#F44336' }]}>
+            <View style={[styles.availabilityBadge, { backgroundColor: available ? colors.success : colors.error }]}>
               <Text style={styles.availabilityText}>
                 {available ? i18n.t('menu.available') : i18n.t('menu.unavailable')}
               </Text>
@@ -111,7 +114,7 @@ const MenuItemCard = ({
           {onToggleAvailability && (
             <TouchableOpacity
               onPress={handleToggleAvailability}
-              style={[styles.actionButton, { backgroundColor: available ? '#F44336' : '#4CAF50' }]}
+              style={[styles.actionButton, { backgroundColor: available ? colors.error : colors.success }]}
             >
               <Icon
                 name={available ? 'visibility-off' : 'visibility'}
@@ -128,7 +131,7 @@ const MenuItemCard = ({
           {onEdit && (
             <TouchableOpacity
               onPress={() => onEdit(item)}
-              style={[styles.actionButton, { backgroundColor: '#2196F3' }]}
+              style={[styles.actionButton, { backgroundColor: colors.info }]}
             >
               <Icon
                 name="edit"
@@ -145,7 +148,7 @@ const MenuItemCard = ({
           {onDelete && (
             <TouchableOpacity
               onPress={handleDelete}
-              style={[styles.actionButton, { backgroundColor: '#F44336' }]}
+              style={[styles.actionButton, { backgroundColor: colors.error }]}
             >
               <Icon
                 name="delete"
