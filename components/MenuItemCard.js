@@ -92,7 +92,7 @@ const MenuItemCard = ({
                 color={colors.grey[600]}
               />
               <Text style={styles.category}>
-                {category}
+                {category.name}
               </Text>
             </View>
 

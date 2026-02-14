@@ -7,7 +7,7 @@ export const useMenuFilters = (menu) => {
   // Obtenir les catégories uniques
   const categories = useMemo(() => {
     if (!menu) return ['all'];
-    const uniqueCategories = [...new Set(menu.map(item => item.category))];
+    const uniqueCategories = [...new Set(menu.map(item => item.category.name))];
     return ['all', ...uniqueCategories];
   }, [menu]);
 
