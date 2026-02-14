@@ -27,7 +27,7 @@ export const useMenuFilters = (menu) => {
 
     // Filtre par catégorie
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(item => item.category === selectedCategory);
+      filtered = filtered.filter(item => item.category.name === selectedCategory);
     }
 
     return filtered;
