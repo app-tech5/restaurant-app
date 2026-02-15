@@ -205,6 +205,76 @@
     }
   },
 
+  "reviews": {
+    "title": "Avis clients",
+    "averageRating": "Note moyenne",
+    "totalReviews": "{{count}} avis",
+    "totalReviews_plural": "{{count}} avis",
+    "rating": {
+      "excellent": "Excellent",
+      "veryGood": "Très bien",
+      "good": "Bien",
+      "average": "Moyen",
+      "poor": "Médiocre"
+    },
+    "filters": {
+      "all": "Tous les avis",
+      "recent": "Récents",
+      "positive": "Positifs (4-5★)",
+      "negative": "Négatifs (1-2★)"
+    },
+    "sort": {
+      "newest": "Plus récent",
+      "oldest": "Plus ancien",
+      "highest": "Meilleure note",
+      "lowest": "Note la plus basse"
+    },
+    "empty": {
+      "title": "Aucun avis",
+      "subtitle": "Vous n'avez pas encore reçu d'avis clients"
+    },
+    "reviewItem": {
+      "anonymous": "Anonyme",
+      "verified": "Achat vérifié",
+      "stars": "{{count}} étoile",
+      "stars_plural": "{{count}} étoiles",
+      "helpful": "Utile",
+      "notHelpful": "Pas utile"
+    },
+    "sampleReviews": {
+      "review1": {
+        "customer": "Marie Dupont",
+        "rating": 5,
+        "comment": "Excellent restaurant ! La nourriture était délicieuse et le service impeccable. Je recommande vivement !",
+        "date": "2024-01-15"
+      },
+      "review2": {
+        "customer": "Pierre Martin",
+        "rating": 4,
+        "comment": "Très bon restaurant, plats savoureux. Seul bémol : attente un peu longue mais ça valait le coup.",
+        "date": "2024-01-12"
+      },
+      "review3": {
+        "customer": "Sophie Leroy",
+        "rating": 5,
+        "comment": "Cuisine exceptionnelle ! Le chef maîtrise parfaitement ses recettes. Ambiance agréable et personnel attentionné.",
+        "date": "2024-01-10"
+      },
+      "review4": {
+        "customer": "Jean-François Moreau",
+        "rating": 3,
+        "comment": "Plats corrects mais rien d'exceptionnel. Prix un peu élevés pour la qualité proposée.",
+        "date": "2024-01-08"
+      },
+      "review5": {
+        "customer": "Isabelle Roux",
+        "rating": 4,
+        "comment": "Bon restaurant avec une belle carte des vins. Service efficace et plats bien présentés.",
+        "date": "2024-01-05"
+      }
+    }
+  },
+
   "settings": {
     "title": "Paramètres",
     "profile": "Profil restaurant",

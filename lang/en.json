@@ -288,6 +288,76 @@
       "clearAllConfirm": "Delete"
     }
   },
+
+  "reviews": {
+    "title": "Customer reviews",
+    "averageRating": "Average rating",
+    "totalReviews": "{{count}} review",
+    "totalReviews_plural": "{{count}} reviews",
+    "rating": {
+      "excellent": "Excellent",
+      "veryGood": "Very good",
+      "good": "Good",
+      "average": "Average",
+      "poor": "Poor"
+    },
+    "filters": {
+      "all": "All reviews",
+      "recent": "Recent",
+      "positive": "Positive (4-5★)",
+      "negative": "Negative (1-2★)"
+    },
+    "sort": {
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "highest": "Highest rating",
+      "lowest": "Lowest rating"
+    },
+    "empty": {
+      "title": "No reviews",
+      "subtitle": "You haven't received any customer reviews yet"
+    },
+    "reviewItem": {
+      "anonymous": "Anonymous",
+      "verified": "Verified purchase",
+      "stars": "{{count}} star",
+      "stars_plural": "{{count}} stars",
+      "helpful": "Helpful",
+      "notHelpful": "Not helpful"
+    },
+    "sampleReviews": {
+      "review1": {
+        "customer": "Marie Dupont",
+        "rating": 5,
+        "comment": "Excellent restaurant! The food was delicious and the service impeccable. Highly recommend!",
+        "date": "2024-01-15"
+      },
+      "review2": {
+        "customer": "Pierre Martin",
+        "rating": 4,
+        "comment": "Very good restaurant, tasty dishes. Only downside: a bit long wait but it was worth it.",
+        "date": "2024-01-12"
+      },
+      "review3": {
+        "customer": "Sophie Leroy",
+        "rating": 5,
+        "comment": "Exceptional cuisine! The chef masters his recipes perfectly. Pleasant atmosphere and attentive staff.",
+        "date": "2024-01-10"
+      },
+      "review4": {
+        "customer": "Jean-François Moreau",
+        "rating": 3,
+        "comment": "Decent dishes but nothing exceptional. Price a bit high for the quality offered.",
+        "date": "2024-01-08"
+      },
+      "review5": {
+        "customer": "Isabelle Roux",
+        "rating": 4,
+        "comment": "Good restaurant with a nice wine list. Efficient service and well-presented dishes.",
+        "date": "2024-01-05"
+      }
+    }
+  },
   "settings": {
     "title": "Settings",
     "profile": "Restaurant profile",

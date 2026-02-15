@@ -6,6 +6,7 @@ import OrdersStackNavigator from './OrdersStackNavigator';
 import MenuStackNavigator from './MenuStackNavigator';
 import AnalyticsScreen from '../screens/AnalyticsScreen';
 import ReportsStackNavigator from './ReportsStackNavigator';
+import ReviewsStackNavigator from './ReviewsStackNavigator';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import ProfileStackNavigator from './ProfileStackNavigator';
 import SettingsStackNavigator from './SettingsStackNavigator';
@@ -161,6 +162,22 @@ export default function DrawerNavigator() {
           drawerIcon: ({ focused, size }) => (
             <Ionicons
               name="bar-chart-outline"
+              color={focused ? '#FF6B35' : '#666'}
+              size={size}
+            />
+          ),
+        }}
+      />
+
+      {/* ⭐ AVIS CLIENTS */}
+      <Drawer.Screen
+        name="Reviews"
+        component={ReviewsStackNavigator}
+        options={{
+          title: i18n.t('reviews.title'),
+          drawerIcon: ({ focused, size }) => (
+            <Ionicons
+              name="star-outline"
               color={focused ? '#FF6B35' : '#666'}
               size={size}
             />

@@ -100,7 +100,7 @@ const NotificationsScreen = ({ navigation }) => {
         });
         break;
       case 'view_reviews':
-        navigation.navigate('Reviews');
+        navigation.navigate('Reviews', { screen: 'ReviewsMain' });
         break;
       default:
         // Pas d'action spécifique
