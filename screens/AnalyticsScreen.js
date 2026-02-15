@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import {
   Loading,
@@ -67,6 +67,12 @@ const AnalyticsScreen = ({ navigation }) => {
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={refreshAnalytics}
+          />
+        }
       >
         {/* Sélecteur de période */}
         <PeriodSelector
