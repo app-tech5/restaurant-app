@@ -218,13 +218,75 @@
   "reports": {
     "title": "Reports",
     "dailyReport": "Daily report",
+    "dailyReportDescription": "Detailed daily report",
     "weeklyReport": "Weekly report",
+    "weeklyReportDescription": "Week analysis",
     "monthlyReport": "Monthly report",
+    "monthlyReportDescription": "Complete monthly report",
     "revenueReport": "Revenue report",
+    "revenueReportDescription": "Detailed revenue analysis",
     "orderReport": "Order report",
+    "orderReportDescription": "Order statistics",
     "customerReport": "Customer report",
+    "customerReportDescription": "Customer analysis",
+    "periodTitle": "Period",
+    "periodWeek": "Week",
+    "periodMonth": "Month",
+    "periodQuarter": "Quarter",
+    "periodYear": "Year",
+    "availableReports": "Available reports",
+    "comingSoon": "Coming soon",
+    "generate": "Generate",
+    "export": "Export",
+    "exportTitle": "Export report",
+    "exportMessage": "Choose export format:",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "cancel": "Cancel",
+    "reportGeneratedTitle": "Report generated",
+    "reportGeneratedMessage": "The report \"{reportTitle}\" for the period \"{period}\" has been generated successfully.",
+    "featureComingSoonTitle": "Coming feature",
+    "featureComingSoonMessage": "This report will be available soon.",
+    "aboutReportsTitle": "About reports",
+    "aboutReportsDescription": "Reports are automatically generated from your sales and order data. They help you analyze your restaurant's performance.",
+    "view": "View",
     "exportReport": "Export report",
     "printReport": "Print report"
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "newOrder": "New order",
+    "newOrderMessage": "Order #{{orderNumber}} received for {{items}}",
+    "maintenanceScheduled": "Scheduled maintenance",
+    "maintenanceMessage": "The system will be under maintenance tomorrow from 2am to 4am",
+    "newReview": "New customer review",
+    "newReviewMessage": "{{rating}}/5 rating for your restaurant",
+    "orderReady": "Order ready",
+    "orderReadyMessage": "Order #{{orderNumber}} is ready for pickup",
+    "timeAgo": {
+      "minutes": "{{count}} min ago",
+      "hours": "{{count}}h ago",
+      "days": "{{count}}d ago"
+    },
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "orders": "Orders",
+      "system": "System"
+    },
+    "empty": {
+      "title": "No notifications",
+      "all": "You don't have any notifications at the moment",
+      "filter": "No notifications in the \"{{filter}}\" category"
+    },
+    "actions": {
+      "markAllRead": "Mark all as read",
+      "clearAll": "Clear all notifications",
+      "clearAllTitle": "Clear all notifications",
+      "clearAllMessage": "Are you sure you want to delete all notifications?",
+      "clearAllConfirm": "Delete"
+    }
   },
   "settings": {
     "title": "Settings",

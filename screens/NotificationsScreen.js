@@ -10,8 +10,8 @@ const NotificationsScreen = ({ navigation }) => {
     {
       id: '1',
       type: 'order',
-      title: 'Nouvelle commande',
-      message: 'Commande #1234 reçue pour 2 pizzas',
+      title: i18n.t('notifications.newOrder'),
+      message: i18n.t('notifications.newOrderMessage', { orderNumber: '1234', items: '2 pizzas' }),
       timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
       read: false,
       action: 'view_order',
@@ -20,8 +20,8 @@ const NotificationsScreen = ({ navigation }) => {
     {
       id: '2',
       type: 'system',
-      title: 'Maintenance programmée',
-      message: 'Le système sera en maintenance demain de 2h à 4h',
+      title: i18n.t('notifications.maintenanceScheduled'),
+      message: i18n.t('notifications.maintenanceMessage'),
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
       read: true,
       action: null
@@ -29,8 +29,8 @@ const NotificationsScreen = ({ navigation }) => {
     {
       id: '3',
       type: 'review',
-      title: 'Nouvel avis client',
-      message: 'Note 5/5 pour votre restaurant',
+      title: i18n.t('notifications.newReview'),
+      message: i18n.t('notifications.newReviewMessage', { rating: '5' }),
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
       read: false,
       action: 'view_reviews'
@@ -38,8 +38,8 @@ const NotificationsScreen = ({ navigation }) => {
     {
       id: '4',
       type: 'order',
-      title: 'Commande prête',
-      message: 'La commande #1230 est prête pour le retrait',
+      title: i18n.t('notifications.orderReady'),
+      message: i18n.t('notifications.orderReadyMessage', { orderNumber: '1230' }),
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), // 6 hours ago
       read: true,
       action: 'view_order',
@@ -70,11 +70,11 @@ const NotificationsScreen = ({ navigation }) => {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
     if (minutes < 60) {
-      return `Il y a ${minutes} min`;
+      return i18n.t('notifications.timeAgo.minutes', { count: minutes });
     } else if (hours < 24) {
-      return `Il y a ${hours}h`;
+      return i18n.t('notifications.timeAgo.hours', { count: hours });
     } else {
-      return `Il y a ${days}j`;
+      return i18n.t('notifications.timeAgo.days', { count: days });
     }
   };
 
@@ -116,12 +116,12 @@ const NotificationsScreen = ({ navigation }) => {
 
   const clearAllNotifications = () => {
     Alert.alert(
-      'Supprimer toutes les notifications',
-      'Êtes-vous sûr de vouloir supprimer toutes les notifications ?',
+      i18n.t('notifications.actions.clearAllTitle'),
+      i18n.t('notifications.actions.clearAllMessage'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: i18n.t('common.cancel'), style: 'cancel' },
         {
-          text: 'Supprimer',
+          text: i18n.t('notifications.actions.clearAllConfirm'),
           style: 'destructive',
           onPress: () => setNotifications([])
         }
@@ -153,10 +153,10 @@ const NotificationsScreen = ({ navigation }) => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const filterOptions = [
-    { key: 'all', label: 'Toutes', count: notifications.length },
-    { key: 'unread', label: 'Non lues', count: unreadCount },
-    { key: 'orders', label: 'Commandes', count: notifications.filter(n => n.type === 'order').length },
-    { key: 'system', label: 'Système', count: notifications.filter(n => n.type === 'system').length },
+    { key: 'all', label: i18n.t('notifications.filters.all'), count: notifications.length },
+    { key: 'unread', label: i18n.t('notifications.filters.unread'), count: unreadCount },
+    { key: 'orders', label: i18n.t('notifications.filters.orders'), count: notifications.filter(n => n.type === 'order').length },
+    { key: 'system', label: i18n.t('notifications.filters.system'), count: notifications.filter(n => n.type === 'system').length },
   ];
 
   const renderFilterTab = (option) => (
@@ -229,11 +229,11 @@ const NotificationsScreen = ({ navigation }) => {
   const renderEmpty = () => (
     <EmptyState
       icon="notifications-off"
-      title="Aucune notification"
+      title={i18n.t('notifications.empty.title')}
       subtitle={
         filter === 'all'
-          ? "Vous n'avez pas de notifications pour le moment"
-          : `Aucune notification dans la catégorie "${filter}"`
+          ? i18n.t('notifications.empty.all')
+          : i18n.t('notifications.empty.filter', { filter: filter })
       }
     />
   );

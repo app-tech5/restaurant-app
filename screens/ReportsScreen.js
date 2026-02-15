@@ -12,7 +12,7 @@ const ReportsScreen = ({ navigation }) => {
     {
       id: 'daily',
       title: i18n.t('reports.dailyReport'),
-      description: 'Rapport détaillé de la journée',
+      description: i18n.t('reports.dailyReportDescription'),
       icon: 'today',
       color: colors.info,
       available: true,
@@ -20,7 +20,7 @@ const ReportsScreen = ({ navigation }) => {
     {
       id: 'weekly',
       title: i18n.t('reports.weeklyReport'),
-      description: 'Analyse de la semaine écoulée',
+      description: i18n.t('reports.weeklyReportDescription'),
       icon: 'date-range',
       color: colors.success,
       available: true,
@@ -28,7 +28,7 @@ const ReportsScreen = ({ navigation }) => {
     {
       id: 'monthly',
       title: i18n.t('reports.monthlyReport'),
-      description: 'Rapport mensuel complet',
+      description: i18n.t('reports.monthlyReportDescription'),
       icon: 'calendar-month',
       color: colors.warning,
       available: true,
@@ -36,7 +36,7 @@ const ReportsScreen = ({ navigation }) => {
     {
       id: 'revenue',
       title: i18n.t('reports.revenueReport'),
-      description: 'Analyse des revenus détaillée',
+      description: i18n.t('reports.revenueReportDescription'),
       icon: 'euro',
       color: colors.accent,
       available: true,
@@ -44,7 +44,7 @@ const ReportsScreen = ({ navigation }) => {
     {
       id: 'orders',
       title: i18n.t('reports.orderReport'),
-      description: 'Statistiques des commandes',
+      description: i18n.t('reports.orderReportDescription'),
       icon: 'restaurant',
       color: colors.primary,
       available: true,
@@ -52,7 +52,7 @@ const ReportsScreen = ({ navigation }) => {
     {
       id: 'customers',
       title: i18n.t('reports.customerReport'),
-      description: 'Analyse de la clientèle',
+      description: i18n.t('reports.customerReportDescription'),
       icon: 'people',
       color: colors.grey[700],
       available: false, // Sera disponible plus tard
@@ -60,42 +60,42 @@ const ReportsScreen = ({ navigation }) => {
   ];
 
   const periodOptions = [
-    { key: 'week', label: 'Semaine' },
-    { key: 'month', label: 'Mois' },
-    { key: 'quarter', label: 'Trimestre' },
-    { key: 'year', label: 'Année' },
+    { key: 'week', label: i18n.t('reports.periodWeek') },
+    { key: 'month', label: i18n.t('reports.periodMonth') },
+    { key: 'quarter', label: i18n.t('reports.periodQuarter') },
+    { key: 'year', label: i18n.t('reports.periodYear') },
   ];
 
   const handleGenerateReport = (reportType) => {
     if (!reportType.available) {
       Alert.alert(
-        'Fonctionnalité à venir',
-        'Ce rapport sera bientôt disponible.',
-        [{ text: 'OK' }]
+        i18n.t('reports.featureComingSoonTitle'),
+        i18n.t('reports.featureComingSoonMessage'),
+        [{ text: i18n.t('common.ok') }]
       );
       return;
     }
 
     // Simulation de génération de rapport
     Alert.alert(
-      'Rapport généré',
-      `Le rapport "${reportType.title}" pour la période "${selectedPeriod}" a été généré avec succès.`,
+      i18n.t('reports.reportGeneratedTitle'),
+      i18n.t('reports.reportGeneratedMessage', { reportTitle: reportType.title, period: selectedPeriod }),
       [
-        { text: 'Voir', onPress: () => navigation.navigate('ReportDetails', { reportType, period: selectedPeriod }) },
-        { text: 'Exporter', style: 'default' },
-        { text: 'Fermer', style: 'cancel' }
+        { text: i18n.t('reports.view'), onPress: () => navigation.navigate('ReportDetails', { reportType, period: selectedPeriod }) },
+        { text: i18n.t('reports.export'), style: 'default' },
+        { text: i18n.t('common.close'), style: 'cancel' }
       ]
     );
   };
 
   const handleExportReport = (reportType) => {
     Alert.alert(
-      'Export du rapport',
-      'Choisissez le format d\'export :',
+      i18n.t('reports.exportTitle'),
+      i18n.t('reports.exportMessage'),
       [
-        { text: 'PDF', onPress: () => Alert.alert('Succès', 'Rapport exporté en PDF') },
-        { text: 'Excel', onPress: () => Alert.alert('Succès', 'Rapport exporté en Excel') },
-        { text: 'Annuler', style: 'cancel' }
+        { text: i18n.t('reports.pdf'), onPress: () => Alert.alert(i18n.t('common.success'), i18n.t('success.sent')) },
+        { text: i18n.t('reports.excel'), onPress: () => Alert.alert(i18n.t('common.success'), i18n.t('success.sent')) },
+        { text: i18n.t('common.cancel'), style: 'cancel' }
       ]
     );
   };
@@ -122,7 +122,7 @@ const ReportsScreen = ({ navigation }) => {
 
         {!report.available && (
           <View style={styles.comingSoonBadge}>
-            <Text style={styles.comingSoonText}>Bientôt</Text>
+            <Text style={styles.comingSoonText}>{i18n.t('reports.comingSoon')}</Text>
           </View>
         )}
       </View>
@@ -141,7 +141,7 @@ const ReportsScreen = ({ navigation }) => {
           style={styles.actionButton}
           onPress={() => handleGenerateReport(report)}
         >
-          <Text style={styles.actionButtonText}>Générer</Text>
+          <Text style={styles.actionButtonText}>{i18n.t('reports.generate')}</Text>
         </TouchableOpacity>
 
         {report.available && (
@@ -170,7 +170,7 @@ const ReportsScreen = ({ navigation }) => {
       >
         {/* Sélecteur de période */}
         <View style={styles.periodSection}>
-          <Text style={styles.sectionTitle}>Période</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('reports.periodTitle')}</Text>
           <View style={styles.periodSelector}>
             {periodOptions.map(option => (
               <TouchableOpacity
@@ -194,7 +194,7 @@ const ReportsScreen = ({ navigation }) => {
 
         {/* Liste des rapports */}
         <View style={styles.reportsSection}>
-          <Text style={styles.sectionTitle}>Rapports disponibles</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('reports.availableReports')}</Text>
           <View style={styles.reportsGrid}>
             {reportTypes.map(renderReportCard)}
           </View>
@@ -211,10 +211,9 @@ const ReportsScreen = ({ navigation }) => {
               containerStyle={styles.infoIcon}
             />
             <View style={styles.infoContent}>
-              <Text style={styles.infoTitle}>À propos des rapports</Text>
+              <Text style={styles.infoTitle}>{i18n.t('reports.aboutReportsTitle')}</Text>
               <Text style={styles.infoText}>
-                Les rapports sont générés automatiquement à partir de vos données de ventes et commandes.
-                Ils vous permettent d'analyser la performance de votre restaurant.
+                {i18n.t('reports.aboutReportsDescription')}
               </Text>
             </View>
           </View>

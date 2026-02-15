@@ -134,13 +134,75 @@
   "reports": {
     "title": "Rapports",
     "dailyReport": "Rapport quotidien",
+    "dailyReportDescription": "Rapport détaillé de la journée",
     "weeklyReport": "Rapport hebdomadaire",
+    "weeklyReportDescription": "Analyse de la semaine écoulée",
     "monthlyReport": "Rapport mensuel",
+    "monthlyReportDescription": "Rapport mensuel complet",
     "revenueReport": "Rapport des revenus",
+    "revenueReportDescription": "Analyse des revenus détaillée",
     "orderReport": "Rapport des commandes",
+    "orderReportDescription": "Statistiques des commandes",
     "customerReport": "Rapport clients",
+    "customerReportDescription": "Analyse de la clientèle",
+    "periodTitle": "Période",
+    "periodWeek": "Semaine",
+    "periodMonth": "Mois",
+    "periodQuarter": "Trimestre",
+    "periodYear": "Année",
+    "availableReports": "Rapports disponibles",
+    "comingSoon": "Bientôt",
+    "generate": "Générer",
+    "export": "Exporter",
+    "exportTitle": "Export du rapport",
+    "exportMessage": "Choisissez le format d'export :",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "cancel": "Annuler",
+    "reportGeneratedTitle": "Rapport généré",
+    "reportGeneratedMessage": "Le rapport \"{reportTitle}\" pour la période \"{period}\" a été généré avec succès.",
+    "featureComingSoonTitle": "Fonctionnalité à venir",
+    "featureComingSoonMessage": "Ce rapport sera bientôt disponible.",
+    "aboutReportsTitle": "À propos des rapports",
+    "aboutReportsDescription": "Les rapports sont générés automatiquement à partir de vos données de ventes et commandes. Ils vous permettent d'analyser la performance de votre restaurant.",
+    "view": "Voir",
     "exportReport": "Exporter le rapport",
     "printReport": "Imprimer le rapport"
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "newOrder": "Nouvelle commande",
+    "newOrderMessage": "Commande #{{orderNumber}} reçue pour {{items}}",
+    "maintenanceScheduled": "Maintenance programmée",
+    "maintenanceMessage": "Le système sera en maintenance demain de 2h à 4h",
+    "newReview": "Nouvel avis client",
+    "newReviewMessage": "Note {{rating}}/5 pour votre restaurant",
+    "orderReady": "Commande prête",
+    "orderReadyMessage": "La commande #{{orderNumber}} est prête pour le retrait",
+    "timeAgo": {
+      "minutes": "Il y a {{count}} min",
+      "hours": "Il y a {{count}}h",
+      "days": "Il y a {{count}}j"
+    },
+    "filters": {
+      "all": "Toutes",
+      "unread": "Non lues",
+      "orders": "Commandes",
+      "system": "Système"
+    },
+    "empty": {
+      "title": "Aucune notification",
+      "all": "Vous n'avez pas de notifications pour le moment",
+      "filter": "Aucune notification dans la catégorie \"{{filter}}\""
+    },
+    "actions": {
+      "markAllRead": "Marquer tout comme lu",
+      "clearAll": "Supprimer toutes les notifications",
+      "clearAllTitle": "Supprimer toutes les notifications",
+      "clearAllMessage": "Êtes-vous sûr de vouloir supprimer toutes les notifications ?",
+      "clearAllConfirm": "Supprimer"
+    }
   },
 
   "settings": {
