@@ -26,7 +26,21 @@ const RestaurantProfileScreen = ({ navigation }) => {
     email: '',
     phone: '',
     address: '',
-    description: ''
+    description: '',
+    country: '',
+    city: '',
+    latitude: '',
+    longitude: '',
+    openingTime: '',
+    closingTime: '',
+    collectTime: '',
+    serviceModes: '',
+    image: '',
+    theme: '',
+    commission_rate: '',
+    reward: '',
+    is_closed: false,
+    isActivated: true
   });
 
   useEffect(() => {
@@ -36,7 +50,21 @@ const RestaurantProfileScreen = ({ navigation }) => {
         email: restaurant.email || '',
         phone: restaurant.phone || '',
         address: restaurant.address || '',
-        description: restaurant.description || ''
+        description: restaurant.description || '',
+        country: restaurant.country || '',
+        city: restaurant.city || '',
+        latitude: restaurant.latitude || '',
+        longitude: restaurant.longitude || '',
+        openingTime: restaurant.openingTime || '',
+        closingTime: restaurant.closingTime || '',
+        collectTime: restaurant.collectTime?.toString() || '',
+        serviceModes: restaurant.serviceModes || '',
+        image: restaurant.image || restaurant.image_url || '',
+        theme: restaurant.theme || '',
+        commission_rate: restaurant.commission_rate?.toString() || '',
+        reward: restaurant.reward || '',
+        is_closed: restaurant.is_closed || false,
+        isActivated: restaurant.isActivated !== undefined ? restaurant.isActivated : true
       });
     }
   }, [restaurant]);
@@ -90,7 +118,21 @@ const RestaurantProfileScreen = ({ navigation }) => {
         email: restaurant.email || '',
         phone: restaurant.phone || '',
         address: restaurant.address || '',
-        description: restaurant.description || ''
+        description: restaurant.description || '',
+        country: restaurant.country || '',
+        city: restaurant.city || '',
+        latitude: restaurant.latitude || '',
+        longitude: restaurant.longitude || '',
+        openingTime: restaurant.openingTime || '',
+        closingTime: restaurant.closingTime || '',
+        collectTime: restaurant.collectTime?.toString() || '',
+        serviceModes: restaurant.serviceModes || '',
+        image: restaurant.image || restaurant.image_url || '',
+        theme: restaurant.theme || '',
+        commission_rate: restaurant.commission_rate?.toString() || '',
+        reward: restaurant.reward || '',
+        is_closed: restaurant.is_closed || false,
+        isActivated: restaurant.isActivated !== undefined ? restaurant.isActivated : true
       });
     }
     setIsEditing(false);
@@ -216,6 +258,170 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
+          {/* Informations de localisation */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.locationInfo')}</Text>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.country')}</Text>
+              <TextInput
+                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                value={formData.country}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, country: text }))}
+                placeholder={i18n.t('restaurantProfile.countryPlaceholder')}
+                editable={isEditing}
+              />
+            </View>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.city')}</Text>
+              <TextInput
+                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                value={formData.city}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, city: text }))}
+                placeholder={i18n.t('restaurantProfile.cityPlaceholder')}
+                editable={isEditing}
+              />
+            </View>
+
+            <View style={styles.rowField}>
+              <View style={[styles.field, styles.halfField]}>
+                <Text style={styles.fieldLabel}>Latitude</Text>
+                <TextInput
+                  style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                  value={formData.latitude}
+                  onChangeText={(text) => setFormData(prev => ({ ...prev, latitude: text }))}
+                  placeholder="48.8566"
+                  keyboardType="numeric"
+                  editable={isEditing}
+                />
+              </View>
+              <View style={[styles.field, styles.halfField]}>
+                <Text style={styles.fieldLabel}>Longitude</Text>
+                <TextInput
+                  style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                  value={formData.longitude}
+                  onChangeText={(text) => setFormData(prev => ({ ...prev, longitude: text }))}
+                  placeholder="2.3522"
+                  keyboardType="numeric"
+                  editable={isEditing}
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Horaires d'ouverture */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
+
+            <View style={styles.rowField}>
+              <View style={[styles.field, styles.halfField]}>
+                <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.openingTime')}</Text>
+                <TextInput
+                  style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                  value={formData.openingTime}
+                  onChangeText={(text) => setFormData(prev => ({ ...prev, openingTime: text }))}
+                  placeholder="09:00"
+                  editable={isEditing}
+                />
+              </View>
+              <View style={[styles.field, styles.halfField]}>
+                <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.closingTime')}</Text>
+                <TextInput
+                  style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                  value={formData.closingTime}
+                  onChangeText={(text) => setFormData(prev => ({ ...prev, closingTime: text }))}
+                  placeholder="21:00"
+                  editable={isEditing}
+                />
+              </View>
+            </View>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.collectTime')}</Text>
+              <TextInput
+                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                value={formData.collectTime}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, collectTime: text }))}
+                placeholder="15"
+                keyboardType="numeric"
+                editable={isEditing}
+              />
+            </View>
+          </View>
+
+          {/* Options de service */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.serviceOptions')}</Text>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.serviceModes')}</Text>
+              <TextInput
+                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                value={formData.serviceModes}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, serviceModes: text }))}
+                placeholder={`${i18n.t('restaurantProfile.deliveryMode')} / ${i18n.t('restaurantProfile.pickupMode')}`}
+                editable={isEditing}
+              />
+            </View>
+          </View>
+
+          {/* Image du restaurant */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.restaurantImage')}</Text>
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.imageUrl')}</Text>
+              <TextInput
+                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                value={formData.image}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, image: text }))}
+                placeholder={i18n.t('restaurantProfile.imageUrlPlaceholder')}
+                editable={isEditing}
+              />
+            </View>
+          </View>
+
+          {/* Informations business */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.businessInfo')}</Text>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.theme')}</Text>
+              <TextInput
+                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                value={formData.theme}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, theme: text }))}
+                placeholder={i18n.t('restaurantProfile.themePlaceholder')}
+                editable={isEditing}
+              />
+            </View>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.commissionRate')}</Text>
+              <TextInput
+                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
+                value={formData.commission_rate}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, commission_rate: text }))}
+                placeholder="10"
+                keyboardType="numeric"
+                editable={isEditing}
+              />
+            </View>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.rewards')}</Text>
+              <TextInput
+                style={[styles.textInput, styles.textArea, !isEditing && styles.textInputDisabled]}
+                value={formData.reward}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, reward: text }))}
+                placeholder={i18n.t('restaurantProfile.rewardsPlaceholder')}
+                multiline
+                numberOfLines={3}
+                editable={isEditing}
+              />
+            </View>
+          </View>
+
           {/* Informations système (lecture seule) */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
@@ -233,6 +439,40 @@ const RestaurantProfileScreen = ({ navigation }) => {
                   restaurant.status === 'inactive' && styles.statusTextInactive
                 ]}>
                   {restaurant.status === 'active' ? i18n.t('restaurantProfile.active') : i18n.t('restaurantProfile.inactive')}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.infoField}>
+              <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.isClosed')}</Text>
+              <View style={[
+                styles.statusBadge,
+                !restaurant.is_closed && styles.statusActive,
+                restaurant.is_closed && styles.statusInactive
+              ]}>
+                <Text style={[
+                  styles.statusText,
+                  !restaurant.is_closed && styles.statusTextActive,
+                  restaurant.is_closed && styles.statusTextInactive
+                ]}>
+                  {restaurant.is_closed ? 'Fermé' : 'Ouvert'}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.infoField}>
+              <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
+              <View style={[
+                styles.statusBadge,
+                restaurant.isActivated && styles.statusActive,
+                !restaurant.isActivated && styles.statusInactive
+              ]}>
+                <Text style={[
+                  styles.statusText,
+                  restaurant.isActivated && styles.statusTextActive,
+                  !restaurant.isActivated && styles.statusTextInactive
+                ]}>
+                  {restaurant.isActivated ? i18n.t('restaurantProfile.active') : i18n.t('restaurantProfile.inactive')}
                 </Text>
               </View>
             </View>
@@ -326,6 +566,13 @@ const styles = StyleSheet.create({
   },
   field: {
     marginBottom: constants.SPACING.md,
+  },
+  rowField: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  halfField: {
+    flex: 0.48,
   },
   fieldLabel: {
     fontSize: 14,

@@ -65,25 +65,25 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleAbout = () => {
     Alert.alert(
-      'À propos',
-      `Good Food Restaurant v1.0.0\n\nApplication de gestion de restaurant`,
-      [{ text: 'OK' }]
+      i18n.t('settings.aboutTitle'),
+      i18n.t('settings.aboutMessage'),
+      [{ text: i18n.t('common.ok') }]
     );
   };
 
   const handlePrivacy = () => {
     Alert.alert(
-      'Politique de confidentialité',
-      'La politique de confidentialité sera bientôt disponible.',
-      [{ text: 'OK' }]
+      i18n.t('settings.privacyTitle'),
+      i18n.t('settings.privacyMessage'),
+      [{ text: i18n.t('common.ok') }]
     );
   };
 
   const handleTerms = () => {
     Alert.alert(
-      'Conditions d\'utilisation',
-      'Les conditions d\'utilisation seront bientôt disponibles.',
-      [{ text: 'OK' }]
+      i18n.t('settings.termsTitle'),
+      i18n.t('settings.termsMessage'),
+      [{ text: i18n.t('common.ok') }]
     );
   };
 
@@ -93,9 +93,9 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleContact = () => {
     Alert.alert(
-      'Contact',
-      'Email: support@goodfood.com\nTéléphone: +33 1 23 45 67 89',
-      [{ text: 'OK' }]
+      i18n.t('settings.contactTitle'),
+      i18n.t('settings.contactMessage'),
+      [{ text: i18n.t('common.ok') }]
     );
   };
 
@@ -113,22 +113,22 @@ const SettingsScreen = ({ navigation }) => {
       >
         {/* Profil Restaurant */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Restaurant</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('settings.restaurantSection')}</Text>
           <SettingRow
-            title="Informations du restaurant"
-            subtitle="Nom, adresse, description"
+            title={i18n.t('settings.restaurantInfo')}
+            subtitle={i18n.t('settings.restaurantInfoSubtitle')}
             icon="business"
             onPress={handleRestaurantProfile}
           />
           <SettingRow
-            title="Horaires d'ouverture"
-            subtitle="Modifier vos horaires"
+            title={i18n.t('settings.openingHours')}
+            subtitle={i18n.t('settings.openingHoursSubtitle')}
             icon="schedule"
             onPress={handleOpeningHours}
           />
           <SettingRow
-            title="Acceptation automatique"
-            subtitle="Accepter automatiquement les commandes"
+            title={i18n.t('settings.autoAcceptOrders')}
+            subtitle={i18n.t('settings.autoAcceptOrdersSubtitle')}
             icon="auto-fix-high"
             rightComponent={
               <Switch
@@ -143,16 +143,16 @@ const SettingsScreen = ({ navigation }) => {
 
         {/* Livraison & Paiement */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Services</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('settings.servicesSection')}</Text>
           <SettingRow
-            title="Paramètres de livraison"
-            subtitle="Rayon, frais, délais"
+            title={i18n.t('settings.deliverySettings')}
+            subtitle={i18n.t('settings.deliverySettingsSubtitle')}
             icon="local-shipping"
             onPress={handleDeliverySettings}
           />
           <SettingRow
-            title="Méthodes de paiement"
-            subtitle="Gérer vos moyens de paiement"
+            title={i18n.t('settings.paymentSettings')}
+            subtitle={i18n.t('settings.paymentSettingsSubtitle')}
             icon="payment"
             onPress={handlePaymentSettings}
           />
@@ -160,10 +160,10 @@ const SettingsScreen = ({ navigation }) => {
 
         {/* Notifications */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Notifications</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('settings.notificationsSettings')}</Text>
           <SettingRow
-            title="Nouvelles commandes"
-            subtitle="Être notifié des nouvelles commandes"
+            title={i18n.t('settings.newOrdersNotif')}
+            subtitle={i18n.t('settings.orderUpdatesNotif')}
             icon="notifications"
             rightComponent={
               <Switch
@@ -175,8 +175,8 @@ const SettingsScreen = ({ navigation }) => {
             }
           />
           <SettingRow
-            title="Mises à jour commandes"
-            subtitle="Modifications de statut des commandes"
+            title={i18n.t('settings.orderUpdatesNotif')}
+            subtitle="Order status changes"
             icon="update"
             rightComponent={
               <Switch
@@ -188,8 +188,8 @@ const SettingsScreen = ({ navigation }) => {
             }
           />
           <SettingRow
-            title="Stock faible"
-            subtitle="Alertes quand un plat est en rupture"
+            title={i18n.t('settings.lowStockNotif')}
+            subtitle="Alerts when a dish is out of stock"
             icon="inventory"
             rightComponent={
               <Switch
@@ -201,8 +201,8 @@ const SettingsScreen = ({ navigation }) => {
             }
           />
           <SettingRow
-            title="Marketing"
-            subtitle="Offres spéciales et promotions"
+            title={i18n.t('settings.marketingNotif')}
+            subtitle="Special offers and promotions"
             icon="campaign"
             rightComponent={
               <Switch
@@ -217,35 +217,35 @@ const SettingsScreen = ({ navigation }) => {
 
         {/* Préférences */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Préférences</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('settings.preferencesSection')}</Text>
           <SettingRow
-            title="Langue"
-            subtitle={`Actuellement: ${language?.name || 'Français'}`}
+            title={i18n.t('settings.language')}
+            subtitle={`Currently: ${language?.name || 'English'}`}
             icon="language"
             onPress={handleLanguageChange}
-            value={language?.code || 'fr'}
+            value={language?.code || 'en'}
           />
           <SettingRow
-            title="Devise"
-            subtitle={`Actuellement: ${currency?.symbol || '€'} ${currency?.name || 'Euro'}`}
+            title={i18n.t('settings.changeCurrency')}
+            subtitle={`Currently: ${currency?.symbol || '$'} ${currency?.name || 'US Dollar'}`}
             icon="euro"
             onPress={handleCurrencyChange}
-            value={currency?.code || 'EUR'}
+            value={currency?.code || 'USD'}
           />
         </View>
 
         {/* Support & Aide */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Support & Aide</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('settings.supportHelpSection')}</Text>
           <SettingRow
-            title="Centre d'aide"
-            subtitle="FAQ et guides d'utilisation"
+            title={i18n.t('settings.helpCenter')}
+            subtitle={i18n.t('settings.helpCenterSubtitle')}
             icon="help"
             onPress={handleHelp}
           />
           <SettingRow
-            title="Nous contacter"
-            subtitle="Support technique et assistance"
+            title={i18n.t('settings.contactUs')}
+            subtitle={i18n.t('settings.contactUsSubtitle')}
             icon="contact-support"
             onPress={handleContact}
           />
@@ -253,22 +253,22 @@ const SettingsScreen = ({ navigation }) => {
 
         {/* Informations */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Informations</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('settings.informationSection')}</Text>
           <SettingRow
-            title="À propos"
-            subtitle="Version de l'application"
+            title={i18n.t('settings.about')}
+            subtitle={i18n.t('settings.aboutSubtitle')}
             icon="info"
             onPress={handleAbout}
           />
           <SettingRow
-            title="Politique de confidentialité"
-            subtitle="Comment nous utilisons vos données"
+            title={i18n.t('settings.privacy')}
+            subtitle={i18n.t('settings.privacySubtitle')}
             icon="privacy-tip"
             onPress={handlePrivacy}
           />
           <SettingRow
-            title="Conditions d'utilisation"
-            subtitle="Règles et conditions générales"
+            title={i18n.t('settings.terms')}
+            subtitle={i18n.t('settings.termsSubtitle')}
             icon="description"
             onPress={handleTerms}
           />
