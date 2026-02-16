@@ -1,34 +1,48 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, ScrollView, Alert, Switch, Text } from 'react-native';
 import { useSettings } from '../contexts/SettingContext';
+import { useUserSettings } from '../hooks/useUserSettings';
 import { ScreenHeader, SettingRow } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 
 const SettingsScreen = ({ navigation }) => {
   const { settings, currency, language, refreshSettings } = useSettings();
+  const {
+    userSettings,
+    loading: userSettingsLoading,
+    updateNotifications,
+    updateRestaurantSettings
+  } = useUserSettings();
 
-  // États locaux pour les paramètres
-  const [notifications, setNotifications] = useState({
-    newOrders: true,
-    orderUpdates: true,
-    lowStock: false,
-    marketing: false,
-  });
+  const handleNotificationToggle = async (key, value) => {
+    if (!userSettings) return;
 
-  const [restaurantSettings, setRestaurantSettings] = useState({
-    autoAcceptOrders: false,
-    preparationTime: 15,
-  });
+    const updatedNotifications = {
+      ...userSettings.notifications,
+      [key]: value
+    };
 
-  const handleNotificationToggle = (key, value) => {
-    setNotifications(prev => ({ ...prev, [key]: value }));
-    // Ici on sauvegarderait dans le contexte/backend
+    const result = await updateNotifications(updatedNotifications);
+
+    if (!result.success) {
+      Alert.alert(i18n.t('errors.serverError'), result.error);
+    }
   };
 
-  const handleRestaurantSettingToggle = (key, value) => {
-    setRestaurantSettings(prev => ({ ...prev, [key]: value }));
-    // Ici on sauvegarderait dans le contexte/backend
+  const handleRestaurantSettingToggle = async (key, value) => {
+    if (!userSettings) return;
+
+    const updatedSettings = {
+      ...userSettings.restaurantSettings,
+      [key]: value
+    };
+
+    const result = await updateRestaurantSettings(updatedSettings);
+
+    if (!result.success) {
+      Alert.alert(i18n.t('errors.serverError'), result.error);
+    }
   };
 
   const handleLanguageChange = () => {
@@ -132,10 +146,11 @@ const SettingsScreen = ({ navigation }) => {
             icon="auto-fix-high"
             rightComponent={
               <Switch
-                value={restaurantSettings.autoAcceptOrders}
+                value={userSettings?.restaurantSettings?.autoAcceptOrders || false}
                 onValueChange={(value) => handleRestaurantSettingToggle('autoAcceptOrders', value)}
                 trackColor={{ false: colors.grey[300], true: colors.primary }}
-                thumbColor={restaurantSettings.autoAcceptOrders ? colors.white : colors.grey[400]}
+                thumbColor={(userSettings?.restaurantSettings?.autoAcceptOrders || false) ? colors.white : colors.grey[400]}
+                disabled={userSettingsLoading}
               />
             }
           />
@@ -167,10 +182,11 @@ const SettingsScreen = ({ navigation }) => {
             icon="notifications"
             rightComponent={
               <Switch
-                value={notifications.newOrders}
+                value={userSettings?.notifications?.newOrders ?? true}
                 onValueChange={(value) => handleNotificationToggle('newOrders', value)}
                 trackColor={{ false: colors.grey[300], true: colors.primary }}
-                thumbColor={notifications.newOrders ? colors.white : colors.grey[400]}
+                thumbColor={(userSettings?.notifications?.newOrders ?? true) ? colors.white : colors.grey[400]}
+                disabled={userSettingsLoading}
               />
             }
           />
@@ -180,10 +196,11 @@ const SettingsScreen = ({ navigation }) => {
             icon="update"
             rightComponent={
               <Switch
-                value={notifications.orderUpdates}
+                value={userSettings?.notifications?.orderUpdates ?? true}
                 onValueChange={(value) => handleNotificationToggle('orderUpdates', value)}
                 trackColor={{ false: colors.grey[300], true: colors.primary }}
-                thumbColor={notifications.orderUpdates ? colors.white : colors.grey[400]}
+                thumbColor={(userSettings?.notifications?.orderUpdates ?? true) ? colors.white : colors.grey[400]}
+                disabled={userSettingsLoading}
               />
             }
           />
@@ -193,10 +210,11 @@ const SettingsScreen = ({ navigation }) => {
             icon="inventory"
             rightComponent={
               <Switch
-                value={notifications.lowStock}
+                value={userSettings?.notifications?.lowStock ?? false}
                 onValueChange={(value) => handleNotificationToggle('lowStock', value)}
                 trackColor={{ false: colors.grey[300], true: colors.primary }}
-                thumbColor={notifications.lowStock ? colors.white : colors.grey[400]}
+                thumbColor={(userSettings?.notifications?.lowStock ?? false) ? colors.white : colors.grey[400]}
+                disabled={userSettingsLoading}
               />
             }
           />
@@ -206,10 +224,11 @@ const SettingsScreen = ({ navigation }) => {
             icon="campaign"
             rightComponent={
               <Switch
-                value={notifications.marketing}
+                value={userSettings?.notifications?.marketing ?? false}
                 onValueChange={(value) => handleNotificationToggle('marketing', value)}
                 trackColor={{ false: colors.grey[300], true: colors.primary }}
-                thumbColor={notifications.marketing ? colors.white : colors.grey[400]}
+                thumbColor={(userSettings?.notifications?.marketing ?? false) ? colors.white : colors.grey[400]}
+                disabled={userSettingsLoading}
               />
             }
           />

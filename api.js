@@ -276,6 +276,47 @@ class ApiClient {
     });
   }
 
+  // Récupérer les paramètres utilisateur
+  async getUserSettings() {
+    return await this.apiCall('/user-settings');
+  }
+
+  // Mettre à jour les paramètres utilisateur
+  async updateUserSettings(settingsData) {
+    if (isDemoMode()) {
+      return { success: true, message: 'Paramètres mis à jour', data: settingsData };
+    }
+
+    return await this.apiCall('/user-settings', {
+      method: 'PUT',
+      body: JSON.stringify(settingsData),
+    });
+  }
+
+  // Mettre à jour seulement les notifications
+  async updateNotifications(notifications) {
+    if (isDemoMode()) {
+      return { success: true, message: 'Notifications mises à jour', data: notifications };
+    }
+
+    return await this.apiCall('/user-settings/notifications', {
+      method: 'PATCH',
+      body: JSON.stringify({ notifications }),
+    });
+  }
+
+  // Mettre à jour seulement les paramètres restaurant
+  async updateRestaurantSettings(restaurantSettings) {
+    if (isDemoMode()) {
+      return { success: true, message: 'Paramètres restaurant mis à jour', data: restaurantSettings };
+    }
+
+    return await this.apiCall('/user-settings/restaurant', {
+      method: 'PATCH',
+      body: JSON.stringify({ restaurantSettings }),
+    });
+  }
+
   // Ajouter un élément au menu
   async addMenuItem(menuItem) {
     if (isDemoMode()) {

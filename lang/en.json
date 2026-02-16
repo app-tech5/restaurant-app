@@ -525,7 +525,9 @@
     "informationSection": "Information",
     "aboutSubtitle": "Application version",
     "privacySubtitle": "How we use your data",
-    "termsSubtitle": "Terms and conditions of use"
+    "termsSubtitle": "Terms and conditions of use",
+    "settingsUpdated": "Settings updated successfully",
+    "settingsUpdateError": "Failed to update settings"
   },
   "common": {
     "save": "Save",
