@@ -14,6 +14,7 @@ import { useRestaurant } from '../contexts/RestaurantContext';
 import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import apiClient from '../api';
 
 const RestaurantProfileScreen = ({ navigation }) => {
   const { restaurant, isAuthenticated } = useRestaurant();
@@ -41,38 +42,41 @@ const RestaurantProfileScreen = ({ navigation }) => {
   }, [restaurant]);
 
   const handleSave = async () => {
-    // Validation basique
+    // Validation
     if (!formData.name.trim()) {
-      Alert.alert('Erreur', 'Le nom du restaurant est requis');
+      Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.nameRequired'));
       return;
     }
 
     if (!formData.email.trim()) {
-      Alert.alert('Erreur', 'L\'email est requis');
+      Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.emailRequired'));
       return;
     }
 
-    // Validation email basique
+    // Validation email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      Alert.alert('Erreur', 'L\'email n\'est pas valide');
+      Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.invalidEmail'));
       return;
     }
 
     try {
       setIsLoading(true);
 
-      // TODO: Implémenter l'API pour mettre à jour le profil
-      // await apiClient.updateRestaurantProfile(formData);
+      const response = await apiClient.updateRestaurantProfile(formData);
 
-      Alert.alert(
-        'Succès',
-        'Les informations du restaurant ont été mises à jour',
-        [{ text: 'OK', onPress: () => setIsEditing(false) }]
-      );
+      if (response.success) {
+        Alert.alert(
+          i18n.t('success.saved'),
+          i18n.t('restaurantProfile.updateSuccess'),
+          [{ text: i18n.t('common.ok'), onPress: () => setIsEditing(false) }]
+        );
+      } else {
+        throw new Error(response.message || 'Update failed');
+      }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
-      Alert.alert('Erreur', 'Impossible de sauvegarder les modifications');
+      Alert.alert(i18n.t('errors.serverError'), i18n.t('restaurantProfile.updateError'));
     } finally {
       setIsLoading(false);
     }
@@ -96,68 +100,73 @@ const RestaurantProfileScreen = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <ScreenHeader
-          title="Profil restaurant"
+          title={i18n.t('restaurantProfile.title')}
           showBackButton
           onLeftPress={() => navigation.goBack()}
         />
-        <Loading fullScreen text="Chargement..." />
+        <Loading fullScreen text={i18n.t('restaurantProfile.loading')} />
       </View>
     );
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <View style={styles.container}>
       <ScreenHeader
-        title="Profil restaurant"
+        title={i18n.t('restaurantProfile.title')}
         showBackButton
         onLeftPress={() => navigation.goBack()}
         rightComponent={
           isEditing ? (
             <View style={styles.headerButtons}>
               <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
-                <Text style={styles.cancelButtonText}>Annuler</Text>
+                <Text style={styles.cancelButtonText}>{i18n.t('restaurantProfile.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
                 <Text style={styles.saveButtonText}>
-                  {isLoading ? 'Sauvegarde...' : 'Sauvegarder'}
+                  {isLoading ? i18n.t('restaurantProfile.saving') : i18n.t('restaurantProfile.save')}
                 </Text>
               </TouchableOpacity>
             </View>
           ) : (
             <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.editButton}>
-              <Text style={styles.editButtonText}>Modifier</Text>
+              <Text style={styles.editButtonText}>{i18n.t('restaurantProfile.edit')}</Text>
             </TouchableOpacity>
           )
         }
       />
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardAvoidingView}
+        >
+          <View style={styles.content}>
           {/* Informations de base */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Informations générales</Text>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.generalInfo')}</Text>
 
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Nom du restaurant *</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.restaurantName')}</Text>
               <TextInput
                 style={[styles.textInput, !isEditing && styles.textInputDisabled]}
                 value={formData.name}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
-                placeholder="Nom du restaurant"
+                placeholder={i18n.t('restaurantProfile.restaurantNamePlaceholder')}
                 editable={isEditing}
               />
             </View>
 
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Email *</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.email')}</Text>
               <TextInput
                 style={[styles.textInput, !isEditing && styles.textInputDisabled]}
                 value={formData.email}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, email: text }))}
-                placeholder="email@restaurant.com"
+                placeholder={i18n.t('restaurantProfile.emailPlaceholder')}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 editable={isEditing}
@@ -165,24 +174,24 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Téléphone</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.phone')}</Text>
               <TextInput
                 style={[styles.textInput, !isEditing && styles.textInputDisabled]}
                 value={formData.phone}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, phone: text }))}
-                placeholder="+33123456789"
+                placeholder={i18n.t('restaurantProfile.phonePlaceholder')}
                 keyboardType="phone-pad"
                 editable={isEditing}
               />
             </View>
 
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Adresse</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.address')}</Text>
               <TextInput
                 style={[styles.textInput, styles.textArea, !isEditing && styles.textInputDisabled]}
                 value={formData.address}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, address: text }))}
-                placeholder="123 Rue de la Paix, 75001 Paris"
+                placeholder={i18n.t('restaurantProfile.addressPlaceholder')}
                 multiline
                 numberOfLines={3}
                 editable={isEditing}
@@ -192,14 +201,14 @@ const RestaurantProfileScreen = ({ navigation }) => {
 
           {/* Description */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Description</Text>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.description')}</Text>
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Description du restaurant</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.descriptionLabel')}</Text>
               <TextInput
                 style={[styles.textInput, styles.textArea, !isEditing && styles.textInputDisabled]}
                 value={formData.description}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, description: text }))}
-                placeholder="Décrivez votre restaurant, sa cuisine, son ambiance..."
+                placeholder={i18n.t('restaurantProfile.descriptionPlaceholder')}
                 multiline
                 numberOfLines={5}
                 editable={isEditing}
@@ -209,10 +218,10 @@ const RestaurantProfileScreen = ({ navigation }) => {
 
           {/* Informations système (lecture seule) */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Informations système</Text>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
 
             <View style={styles.infoField}>
-              <Text style={styles.infoLabel}>Statut</Text>
+              <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.status')}</Text>
               <View style={[
                 styles.statusBadge,
                 restaurant.status === 'active' && styles.statusActive,
@@ -223,26 +232,27 @@ const RestaurantProfileScreen = ({ navigation }) => {
                   restaurant.status === 'active' && styles.statusTextActive,
                   restaurant.status === 'inactive' && styles.statusTextInactive
                 ]}>
-                  {restaurant.status === 'active' ? 'Actif' : 'Inactif'}
+                  {restaurant.status === 'active' ? i18n.t('restaurantProfile.active') : i18n.t('restaurantProfile.inactive')}
                 </Text>
               </View>
             </View>
 
             <View style={styles.infoField}>
-              <Text style={styles.infoLabel}>ID Restaurant</Text>
+              <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.restaurantId')}</Text>
               <Text style={styles.infoValue}>{restaurant._id}</Text>
             </View>
 
             <View style={styles.infoField}>
-              <Text style={styles.infoLabel}>Type</Text>
+              <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.type')}</Text>
               <Text style={styles.infoValue}>
-                {restaurant.type === 'restaurant' ? 'Restaurant' : restaurant.type}
+                {restaurant.type === 'restaurant' ? i18n.t('restaurantProfile.restaurant') : restaurant.type}
               </Text>
             </View>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -250,6 +260,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.grey[50],
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   scrollView: {
     flex: 1,

@@ -33,17 +33,17 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleLanguageChange = () => {
     Alert.alert(
-      'Changer de langue',
-      'Cette fonctionnalité sera bientôt disponible',
-      [{ text: 'OK' }]
+      i18n.t('settings.changeLanguage'),
+      i18n.t('settings.languageComingSoon'),
+      [{ text: i18n.t('common.ok') }]
     );
   };
 
   const handleCurrencyChange = () => {
     Alert.alert(
-      'Changer de devise',
-      'Cette fonctionnalité sera bientôt disponible',
-      [{ text: 'OK' }]
+      i18n.t('settings.changeCurrency'),
+      i18n.t('settings.currencyComingSoon'),
+      [{ text: i18n.t('common.ok') }]
     );
   };
 
