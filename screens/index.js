@@ -17,6 +17,7 @@ export { default as SettingsScreen } from './SettingsScreen';
 export { default as RestaurantProfileScreen } from './RestaurantProfileScreen';
 export { default as OpeningHoursScreen } from './OpeningHoursScreen';
 export { default as DeliverySettingsScreen } from './DeliverySettingsScreen';
+export { default as PaymentSettingsScreen } from './PaymentSettingsScreen';
 export { default as OrderDetailsScreen } from './OrderDetailsScreen';
 export { default as AddEditMenuItemScreen } from './AddEditMenuItemScreen';
 export { default as ReportDetailsScreen } from './ReportDetailsScreen';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SettingsScreen, RestaurantProfileScreen, OpeningHoursScreen, DeliverySettingsScreen } from '../screens';
+import { SettingsScreen, RestaurantProfileScreen, OpeningHoursScreen, DeliverySettingsScreen, PaymentSettingsScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
@@ -87,17 +87,6 @@ const SettingsStackNavigator = () => {
 // Écrans temporaires - à remplacer par les vrais composants
 
 
-const PaymentSettingsScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Méthodes de paiement</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 const LanguageSettingsScreen = ({ navigation }) => {
   return (
