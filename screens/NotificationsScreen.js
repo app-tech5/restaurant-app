@@ -95,8 +95,11 @@ const NotificationsScreen = ({ navigation }) => {
     // Gérer l'action associée
     switch (notification.action) {
       case 'view_order':
-        navigation.navigate('OrderDetails', {
-          orderId: notification.actionData.orderId
+        navigation.navigate('Orders', {
+          screen: 'OrderDetails',
+          params: {
+            orderId: notification.actionData.orderId
+          }
         });
         break;
       case 'view_reviews':

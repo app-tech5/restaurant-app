@@ -332,6 +332,25 @@ class ApiClient {
     return await this.apiCall('/settings');
   }
 
+  // === AVIS CLIENTS ===
+
+  // Récupérer les avis du restaurant
+  async getRestaurantReviews() {
+    return await this.apiCall('/restaurant/reviews');
+  }
+
+  // Répondre à un avis
+  async replyToReview(reviewId, replyText) {
+    if (isDemoMode()) {
+      return { success: true, message: 'Réponse ajoutée' };
+    }
+
+    return await this.apiCall(`/restaurant/reviews/${reviewId}/reply`, {
+      method: 'POST',
+      body: JSON.stringify({ text: replyText }),
+    });
+  }
+
   // === ANALYTICS ===
 
   // Récupérer les analytics du restaurant

@@ -4,6 +4,7 @@ import { Icon, Rating } from 'react-native-elements';
 import { ScreenHeader, EmptyState } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import apiClient from '../api';
 
 const ReviewsScreen = ({ navigation }) => {
   const [reviews, setReviews] = useState([]);
@@ -12,63 +13,32 @@ const ReviewsScreen = ({ navigation }) => {
   const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
 
-  // Données simulées d'avis clients
-  const sampleReviews = [
-    {
-      id: '1',
-      customer: i18n.t('reviews.sampleReviews.review1.customer'),
-      rating: i18n.t('reviews.sampleReviews.review1.rating'),
-      comment: i18n.t('reviews.sampleReviews.review1.comment'),
-      date: i18n.t('reviews.sampleReviews.review1.date'),
-      verified: true,
-      helpful: 12,
-    },
-    {
-      id: '2',
-      customer: i18n.t('reviews.sampleReviews.review2.customer'),
-      rating: i18n.t('reviews.sampleReviews.review2.rating'),
-      comment: i18n.t('reviews.sampleReviews.review2.comment'),
-      date: i18n.t('reviews.sampleReviews.review2.date'),
-      verified: true,
-      helpful: 8,
-    },
-    {
-      id: '3',
-      customer: i18n.t('reviews.sampleReviews.review3.customer'),
-      rating: i18n.t('reviews.sampleReviews.review3.rating'),
-      comment: i18n.t('reviews.sampleReviews.review3.comment'),
-      date: i18n.t('reviews.sampleReviews.review3.date'),
-      verified: true,
-      helpful: 15,
-    },
-    {
-      id: '4',
-      customer: i18n.t('reviews.sampleReviews.review4.customer'),
-      rating: i18n.t('reviews.sampleReviews.review4.rating'),
-      comment: i18n.t('reviews.sampleReviews.review4.comment'),
-      date: i18n.t('reviews.sampleReviews.review4.date'),
-      verified: false,
-      helpful: 3,
-    },
-    {
-      id: '5',
-      customer: i18n.t('reviews.sampleReviews.review5.customer'),
-      rating: i18n.t('reviews.sampleReviews.review5.rating'),
-      comment: i18n.t('reviews.sampleReviews.review5.comment'),
-      date: i18n.t('reviews.sampleReviews.review5.date'),
-      verified: true,
-      helpful: 9,
-    },
-  ];
+  const [stats, setStats] = useState({
+    totalReviews: 0,
+    averageRating: 0,
+    ratingCounts: {}
+  });
 
   useEffect(() => {
-    // Simulation du chargement des avis
     const loadReviews = async () => {
-      setLoading(true);
-      // Simulation d'un délai de chargement
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setReviews(sampleReviews);
-      setLoading(false);
+      try {
+        setLoading(true);
+        const response = await apiClient.getRestaurantReviews();
+
+        if (response.success) {
+          const { reviews, stats } = response.data;
+          setReviews(reviews);
+          setStats(stats);
+        } else {
+          console.error('Erreur lors du chargement des avis:', response.message);
+          Alert.alert('Erreur', 'Impossible de charger les avis clients');
+        }
+      } catch (error) {
+        console.error('Erreur API:', error);
+        Alert.alert('Erreur', 'Erreur de connexion au serveur');
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadReviews();
@@ -115,9 +85,11 @@ const ReviewsScreen = ({ navigation }) => {
   }, [reviews, filter, sortBy]);
 
   const getAverageRating = () => {
-    if (reviews.length === 0) return 0;
-    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-    return (sum / reviews.length).toFixed(1);
+    return stats.averageRating || 0;
+  };
+
+  const getTotalReviews = () => {
+    return stats.totalReviews || 0;
   };
 
   const getRatingLabel = (rating) => {
@@ -189,8 +161,8 @@ const ReviewsScreen = ({ navigation }) => {
     <View style={styles.reviewCard}>
       <View style={styles.reviewHeader}>
         <View style={styles.customerInfo}>
-          <Text style={styles.customerName}>{item.customer}</Text>
-          {item.verified && (
+          <Text style={styles.customerName}>{item.user?.name || 'Client anonyme'}</Text>
+          {item.status === 'approved' && (
             <View style={styles.verifiedBadge}>
               <Icon name="verified" type="material" size={12} color={colors.success} />
               <Text style={styles.verifiedText}>{i18n.t('reviews.reviewItem.verified')}</Text>
@@ -205,20 +177,23 @@ const ReviewsScreen = ({ navigation }) => {
             ratingColor={colors.warning}
             ratingBackgroundColor={colors.grey[300]}
           />
-          <Text style={styles.reviewDate}>{formatDate(item.date)}</Text>
+          <Text style={styles.reviewDate}>{formatDate(item.createdAt)}</Text>
         </View>
       </View>
 
-      <Text style={styles.reviewComment}>{item.comment}</Text>
+      <Text style={styles.reviewComment}>{item.comment || item.text}</Text>
 
-      <View style={styles.reviewFooter}>
-        <TouchableOpacity style={styles.helpfulButton}>
-          <Icon name="thumb-up" type="material" size={14} color={colors.grey[500]} />
-          <Text style={styles.helpfulText}>
-            {i18n.t('reviews.reviewItem.helpful')} ({item.helpful})
+      {item.reply && (
+        <View style={styles.replyContainer}>
+          <View style={styles.replyHeader}>
+            <Text style={styles.replyLabel}>{i18n.t('reviews.reply.yourReply')}</Text>
+          </View>
+          <Text style={styles.replyText}>{item.reply.text}</Text>
+          <Text style={styles.replyDate}>
+            {formatDate(item.reply.date)}
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      )}
     </View>
   );
 
@@ -238,10 +213,10 @@ const ReviewsScreen = ({ navigation }) => {
       <View style={styles.statDivider} />
       <View style={styles.statItem}>
         <Text style={styles.totalReviews}>
-          {reviews.length}
+          {getTotalReviews()}
         </Text>
         <Text style={styles.statLabel}>
-          {i18n.t('reviews.totalReviews', { count: reviews.length })}
+          {i18n.t('reviews.totalReviews', { count: getTotalReviews() })}
         </Text>
       </View>
     </View>
@@ -284,7 +259,7 @@ const ReviewsScreen = ({ navigation }) => {
       <FlatList
         data={filteredReviews}
         renderItem={renderReviewItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
@@ -455,6 +430,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.grey[600],
     marginLeft: 4,
+  },
+  replyContainer: {
+    backgroundColor: colors.grey[50],
+    borderRadius: constants.BORDER_RADIUS,
+    padding: constants.SPACING.sm,
+    marginTop: constants.SPACING.sm,
+  },
+  replyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: constants.SPACING.xs,
+  },
+  replyLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.primary,
+  },
+  replyText: {
+    fontSize: 14,
+    color: colors.text.primary,
+    lineHeight: 20,
+    marginBottom: constants.SPACING.xs,
+  },
+  replyDate: {
+    fontSize: 12,
+    color: colors.grey[500],
   },
 });
 
