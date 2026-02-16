@@ -389,15 +389,15 @@ class ApiClient {
 
   // Récupérer toutes les langues disponibles
   async getLanguages() {
-    if (isDemoMode()) {
-      return {
-        success: true,
-        data: [
-          { _id: '1', code: 'fr', name: 'Français', isDefault: true },
-          { _id: '2', code: 'en', name: 'English', isDefault: false }
-        ]
-      };
-    }
+    // if (isDemoMode()) {
+    //   return {
+    //     success: true,
+    //     data: [
+    //       { _id: '1', code: 'fr', name: 'Français', isDefault: true },
+    //       { _id: '2', code: 'en', name: 'English', isDefault: false }
+    //     ]
+    //   };
+    // }
 
     try {
       const response = await this.apiCall('/languages');
