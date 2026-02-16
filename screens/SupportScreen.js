@@ -17,32 +17,32 @@ const SupportScreen = ({ navigation }) => {
   const { appName, settings } = useSettings();
 
   const supportCategories = [
-    { key: 'general', label: 'Général', icon: 'help' },
-    { key: 'technical', label: 'Technique', icon: 'build' },
-    { key: 'orders', label: 'Commandes', icon: 'restaurant' },
-    { key: 'billing', label: 'Facturation', icon: 'payment' },
-    { key: 'account', label: 'Compte', icon: 'account-circle' },
+    { key: 'general', label: i18n.t('support.categories.general'), icon: 'help' },
+    { key: 'technical', label: i18n.t('support.categories.technical'), icon: 'build' },
+    { key: 'orders', label: i18n.t('support.categories.orders'), icon: 'restaurant' },
+    { key: 'billing', label: i18n.t('support.categories.billing'), icon: 'payment' },
+    { key: 'account', label: i18n.t('support.categories.account'), icon: 'account-circle' },
   ];
 
   const faqItems = [
     {
-      question: 'Comment modifier mon menu ?',
-      answer: 'Allez dans l\'onglet Menu et cliquez sur un plat pour le modifier.',
+      question: i18n.t('support.faq.menuEdit'),
+      answer: i18n.t('support.faq.menuAnswer'),
       category: 'general'
     },
     {
-      question: 'Comment accepter une commande ?',
-      answer: 'Dans l\'onglet Commandes, touchez une commande en attente et cliquez sur "Accepter".',
+      question: i18n.t('support.faq.acceptOrder'),
+      answer: i18n.t('support.faq.acceptAnswer'),
       category: 'orders'
     },
     {
-      question: 'Comment changer mes horaires ?',
-      answer: 'Allez dans Paramètres > Restaurant > Horaires d\'ouverture.',
+      question: i18n.t('support.faq.openingHours'),
+      answer: i18n.t('support.faq.hoursAnswer'),
       category: 'general'
     },
     {
-      question: `Comment contacter le support pour ${restaurant?.name || 'mon restaurant'} ?`,
-      answer: 'Utilisez le formulaire ci-dessous ou appelez le numéro indiqué.',
+      question: i18n.t('support.faq.contactSupport'),
+      answer: i18n.t('support.faq.contactAnswer'),
       category: 'general'
     }
   ];
@@ -50,36 +50,39 @@ const SupportScreen = ({ navigation }) => {
   // Données de contact dynamiques depuis les contextes
   const contactMethods = [
     {
-      title: 'Téléphone',
+      title: i18n.t('support.phone'),
       subtitle: restaurant?.phone || '+33 1 23 45 67 89',
       icon: 'phone',
       action: () => Linking.openURL(`tel:${restaurant?.phone || '+33123456789'}`)
     },
     {
-      title: 'Email',
+      title: i18n.t('support.email'),
       subtitle: settings?.supportEmail || 'support@goodfood.com',
       icon: 'email',
       action: () => Linking.openURL(`mailto:${settings?.supportEmail || 'support@goodfood.com'}`)
     },
     {
-      title: 'Chat en ligne',
-      subtitle: 'Disponible 24/7',
+      title: i18n.t('support.liveChat'),
+      subtitle: 'Available 24/7',
       icon: 'chat',
-      action: () => Alert.alert('Chat', 'Le chat en ligne sera bientôt disponible')
+      action: () => Alert.alert(i18n.t('support.liveChat'), i18n.t('support.chatComingSoon'))
     }
   ];
 
   const handleSubmitSupport = () => {
     if (!subject.trim() || !message.trim()) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      Alert.alert(i18n.t('errors.validationError'), i18n.t('support.contactForm.fillAllFields'));
       return;
     }
 
     // Simulation d'envoi
     Alert.alert(
-      'Message envoyé',
-      `Votre message concernant ${restaurant?.name || 'votre restaurant'} a été envoyé avec succès. L'équipe ${appName || 'Good Food'} vous répondra dans les plus brefs délais.`,
-      [{ text: 'OK', onPress: () => {
+      i18n.t('support.contactForm.messageSent'),
+      i18n.t('support.contactForm.messageSentSuccess', {
+        restaurantName: restaurant?.name || 'your restaurant',
+        appName: appName || 'Good Food'
+      }),
+      [{ text: i18n.t('common.ok'), onPress: () => {
         setSubject('');
         setMessage('');
       }}]
@@ -104,7 +107,7 @@ const SupportScreen = ({ navigation }) => {
       >
         {/* Méthodes de contact rapide */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Contact rapide</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('support.quickContact')}</Text>
           {contactMethods.map((method, index) => (
             <TouchableOpacity
               key={index}
@@ -134,7 +137,7 @@ const SupportScreen = ({ navigation }) => {
 
         {/* FAQ */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Questions fréquentes</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('support.frequentlyAskedQuestions')}</Text>
 
           {/* Filtres de catégorie */}
           <View style={styles.categoryFilters}>
@@ -174,11 +177,11 @@ const SupportScreen = ({ navigation }) => {
 
         {/* Formulaire de contact */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Envoyer un message</Text>
+          <Text style={styles.sectionTitle}>{i18n.t('support.contactForm.title')}</Text>
 
           <Card containerStyle={styles.contactForm}>
             <Input
-              placeholder="Sujet de votre message"
+              placeholder={i18n.t('support.contactForm.subjectPlaceholder')}
               value={subject}
               onChangeText={setSubject}
               containerStyle={styles.inputContainer}
@@ -194,7 +197,7 @@ const SupportScreen = ({ navigation }) => {
             />
 
             <Input
-              placeholder="Votre message..."
+              placeholder={i18n.t('support.contactForm.messagePlaceholder')}
               value={message}
               onChangeText={setMessage}
               multiline
@@ -213,7 +216,7 @@ const SupportScreen = ({ navigation }) => {
             />
 
             <Button
-              title="Envoyer"
+              title={i18n.t('support.contactForm.send')}
               onPress={handleSubmitSupport}
               buttonStyle={styles.submitButton}
               containerStyle={styles.submitButtonContainer}
@@ -231,16 +234,16 @@ const SupportScreen = ({ navigation }) => {
                 size={24}
                 color={colors.primary}
               />
-              <Text style={styles.infoTitle}>Horaires de support {appName || 'Good Food'}</Text>
+              <Text style={styles.infoTitle}>{i18n.t('support.supportHours.title')} {appName || 'Good Food'}</Text>
             </View>
             <Text style={styles.infoText}>
-              L'équipe de support {appName || 'Good Food'} est disponible :
+              {i18n.t('support.supportHours.description', { appName: appName || 'Good Food' })}
             </Text>
-            <Text style={styles.infoText}>• Lundi - Vendredi : 9h00 - 18h00</Text>
-            <Text style={styles.infoText}>• Samedi : 10h00 - 16h00</Text>
-            <Text style={styles.infoText}>• Dimanche : Fermé</Text>
+            <Text style={styles.infoText}>• {i18n.t('support.supportHours.mondayFriday')}</Text>
+            <Text style={styles.infoText}>• {i18n.t('support.supportHours.saturday')}</Text>
+            <Text style={styles.infoText}>• {i18n.t('support.supportHours.sunday')}</Text>
             <Text style={styles.infoText}>
-              Temps de réponse moyen : 2-4 heures en semaine
+              {i18n.t('support.supportHours.responseTime')}
             </Text>
           </Card>
         </View>

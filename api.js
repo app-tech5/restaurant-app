@@ -264,6 +264,18 @@ class ApiClient {
     return await this.apiCall('/restaurant/menu');
   }
 
+  // Mettre à jour le profil du restaurant
+  async updateRestaurantProfile(profileData) {
+    if (isDemoMode()) {
+      return { success: true, message: 'Profil mis à jour', data: profileData };
+    }
+
+    return await this.apiCall('/restaurant/profile', {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+  }
+
   // Ajouter un élément au menu
   async addMenuItem(menuItem) {
     if (isDemoMode()) {

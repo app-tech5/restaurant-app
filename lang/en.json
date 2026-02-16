@@ -358,6 +358,51 @@
       }
     }
   },
+  "support": {
+    "title": "Support",
+    "quickContact": "Quick contact",
+    "phone": "Phone",
+    "email": "Email",
+    "liveChat": "Live chat",
+    "chatComingSoon": "Live chat will be available soon",
+    "frequentlyAskedQuestions": "Frequently asked questions",
+    "categories": {
+      "all": "All",
+      "general": "General",
+      "technical": "Technical",
+      "orders": "Orders",
+      "billing": "Billing",
+      "account": "Account"
+    },
+    "faq": {
+      "menuEdit": "How to modify my menu?",
+      "menuAnswer": "Go to the Menu tab and click on a dish to modify it.",
+      "acceptOrder": "How to accept an order?",
+      "acceptAnswer": "In the Orders tab, tap a pending order and click \"Accept\".",
+      "openingHours": "How to change my opening hours?",
+      "hoursAnswer": "Go to Settings > Restaurant > Opening hours.",
+      "contactSupport": "How to contact support?",
+      "contactAnswer": "Use the form below or call the indicated number."
+    },
+    "contactForm": {
+      "title": "Send a message",
+      "subjectPlaceholder": "Subject of your message",
+      "messagePlaceholder": "Your message...",
+      "send": "Send",
+      "messageSent": "Message sent",
+      "messageSentSuccess": "Your message regarding {{restaurantName}} has been sent successfully. The {{appName}} team will respond as soon as possible.",
+      "fillAllFields": "Please fill in all fields"
+    },
+    "supportHours": {
+      "title": "Support hours",
+      "description": "The {{appName}} support team is available:",
+      "mondayFriday": "Monday - Friday: 9:00 AM - 6:00 PM",
+      "saturday": "Saturday: 10:00 AM - 4:00 PM",
+      "sunday": "Sunday: Closed",
+      "responseTime": "Average response time: 2-4 hours on weekdays"
+    }
+  },
+
   "settings": {
     "title": "Settings",
     "profile": "Restaurant profile",
