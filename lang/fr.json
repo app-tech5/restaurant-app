@@ -290,6 +290,33 @@
     "privacy": "Confidentialité",
     "terms": "Conditions d'utilisation"
   },
+  "openingHours": {
+    "title": "Horaires d'ouverture",
+    "subtitle": "Définissez les horaires d'ouverture et de fermeture de votre restaurant",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche",
+    "openTime": "Heure d'ouverture",
+    "closeTime": "Heure de fermeture",
+    "closed": "Fermé",
+    "allDay": "24h/24",
+    "copyToAll": "Copier vers tous les jours",
+    "save": "Enregistrer les horaires",
+    "saving": "Enregistrement...",
+    "saveSuccess": "Horaires d'ouverture mis à jour avec succès",
+    "saveError": "Échec de la mise à jour des horaires d'ouverture",
+    "timeFormat": "HH:MM",
+    "validationError": "Veuillez vérifier le format de vos horaires d'ouverture",
+    "invalidTime": "Format d'heure invalide",
+    "closeBeforeOpen": "L'heure de fermeture doit être après l'heure d'ouverture",
+    "confirmCopy": "Copier ces horaires vers tous les jours ?",
+    "yes": "Oui",
+    "cancel": "Annuler"
+  },
 
   "common": {
     "save": "Enregistrer",
