@@ -385,6 +385,53 @@ class ApiClient {
     return await this.apiCall('/settings');
   }
 
+  // === LANGUES ===
+
+  // Récupérer toutes les langues disponibles
+  async getLanguages() {
+    if (isDemoMode()) {
+      return {
+        success: true,
+        data: [
+          { _id: '1', code: 'fr', name: 'Français', isDefault: true },
+          { _id: '2', code: 'en', name: 'English', isDefault: false }
+        ]
+      };
+    }
+
+    try {
+      const response = await this.apiCall('/languages');
+      return { success: true, data: response };
+    } catch (error) {
+      console.error('Error fetching languages:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  // Changer la langue de l'utilisateur
+  async changeUserLanguage(languageCode) {
+    if (isDemoMode()) {
+      // En mode démo, on sauvegarde juste localement
+      try {
+        await AsyncStorage.setItem('userLanguage', languageCode);
+        return { success: true, message: 'Langue changée' };
+      } catch (error) {
+        return { success: false, error: 'Erreur de sauvegarde' };
+      }
+    }
+
+    try {
+      const response = await this.apiCall('/user/language', {
+        method: 'PUT',
+        body: JSON.stringify({ language: languageCode })
+      });
+      return { success: true, data: response };
+    } catch (error) {
+      console.error('Error changing language:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   // === AVIS CLIENTS ===
 
   // Récupérer les avis du restaurant

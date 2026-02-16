@@ -490,6 +490,8 @@
     "changeCurrency": "Change currency",
     "languageComingSoon": "Language change feature will be available soon",
     "currencyComingSoon": "Currency change feature will be available soon",
+    "selectLanguage": "Select your preferred language:",
+    "languageChanged": "Language changed to {{language}}",
     "aboutTitle": "About",
     "aboutMessage": "Good Food Restaurant v1.0.0\n\nRestaurant management application",
     "privacyTitle": "Privacy Policy",

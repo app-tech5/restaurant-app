@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Alert, Switch, Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSettings } from '../contexts/SettingContext';
 import { useUserSettings } from '../hooks/useUserSettings';
 import { ScreenHeader, SettingRow } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import apiClient from '../api';
 
 const SettingsScreen = ({ navigation }) => {
   const { settings, currency, language, refreshSettings } = useSettings();
@@ -45,12 +47,69 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
-  const handleLanguageChange = () => {
-    Alert.alert(
-      i18n.t('settings.changeLanguage'),
-      i18n.t('settings.languageComingSoon'),
-      [{ text: i18n.t('common.ok') }]
-    );
+  const handleLanguageChange = async () => {
+    try {
+      // Récupérer les langues disponibles
+      const languagesResponse = await apiClient.getLanguages();
+
+      if (!languagesResponse.success) {
+        Alert.alert(i18n.t('errors.error'), 'Unable to load languages');
+        return;
+      }
+
+      const languages = languagesResponse.data;
+
+      // Créer les options pour l'Alert avec toutes les langues
+      const languageOptions = languages.map(lang => ({
+        text: `${lang.name} (${lang.code.toUpperCase()})`,
+        onPress: () => changeLanguage(lang.code),
+        style: lang.code === i18n.locale ? 'destructive' : 'default'
+      }));
+
+      // Ajouter l'option Annuler
+      languageOptions.push({
+        text: i18n.t('common.cancel'),
+        style: 'cancel'
+      });
+
+      Alert.alert(
+        i18n.t('settings.changeLanguage'),
+        i18n.t('settings.selectLanguage'),
+        languageOptions
+      );
+    } catch (error) {
+      console.error('Error loading languages:', error);
+      Alert.alert(i18n.t('errors.error'), 'Unable to load languages');
+    }
+  };
+
+  const changeLanguage = async (languageCode) => {
+    try {
+      // Changer la langue dans i18n
+      const { changeLanguage: changeI18nLanguage } = require('../i18n');
+      changeI18nLanguage(languageCode);
+
+      // Sauvegarder la préférence utilisateur
+      await AsyncStorage.setItem('userLanguage', languageCode);
+
+      // Notifer le changement
+      Alert.alert(
+        i18n.t('success.saved'),
+        i18n.t('settings.languageChanged', { language: languageCode.toUpperCase() }),
+        [
+          {
+            text: i18n.t('common.ok'),
+            onPress: () => {
+              // Forcer le rechargement pour appliquer la nouvelle langue
+              // Note: Dans une vraie app, on pourrait utiliser un context pour gérer cela
+            }
+          }
+        ]
+      );
+    } catch (error) {
+      console.error('Error changing language:', error);
+      Alert.alert(i18n.t('errors.error'), 'Unable to change language');
+    }
   };
 
   const handleCurrencyChange = () => {
