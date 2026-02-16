@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Text, RefreshControl } from 'react-native';
 import { Card, Input, Button, ListItem, Icon } from 'react-native-elements';
 import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import { useRestaurant } from '../contexts/RestaurantContext';
+import { useSettings } from '../contexts/SettingContext';
 
 const SupportScreen = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState('general');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+
+  // Récupération des données depuis les contextes
+  const { restaurant } = useRestaurant();
+  const { appName, settings } = useSettings();
 
   const supportCategories = [
     { key: 'general', label: 'Général', icon: 'help' },
@@ -35,24 +41,25 @@ const SupportScreen = ({ navigation }) => {
       category: 'general'
     },
     {
-      question: 'Comment contacter le support ?',
+      question: `Comment contacter le support pour ${restaurant?.name || 'mon restaurant'} ?`,
       answer: 'Utilisez le formulaire ci-dessous ou appelez le numéro indiqué.',
       category: 'general'
     }
   ];
 
+  // Données de contact dynamiques depuis les contextes
   const contactMethods = [
     {
       title: 'Téléphone',
-      subtitle: '+33 1 23 45 67 89',
+      subtitle: restaurant?.phone || '+33 1 23 45 67 89',
       icon: 'phone',
-      action: () => Linking.openURL('tel:+33123456789')
+      action: () => Linking.openURL(`tel:${restaurant?.phone || '+33123456789'}`)
     },
     {
       title: 'Email',
-      subtitle: 'support@goodfood.com',
+      subtitle: settings?.supportEmail || 'support@goodfood.com',
       icon: 'email',
-      action: () => Linking.openURL('mailto:support@goodfood.com')
+      action: () => Linking.openURL(`mailto:${settings?.supportEmail || 'support@goodfood.com'}`)
     },
     {
       title: 'Chat en ligne',
@@ -71,7 +78,7 @@ const SupportScreen = ({ navigation }) => {
     // Simulation d'envoi
     Alert.alert(
       'Message envoyé',
-      'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
+      `Votre message concernant ${restaurant?.name || 'votre restaurant'} a été envoyé avec succès. L'équipe ${appName || 'Good Food'} vous répondra dans les plus brefs délais.`,
       [{ text: 'OK', onPress: () => {
         setSubject('');
         setMessage('');
@@ -86,7 +93,7 @@ const SupportScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScreenHeader
-        title={i18n.t('navigation.support')}
+        title={`${i18n.t('navigation.support')} - ${appName || 'Good Food'}`}
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
@@ -224,10 +231,10 @@ const SupportScreen = ({ navigation }) => {
                 size={24}
                 color={colors.primary}
               />
-              <Text style={styles.infoTitle}>Horaires de support</Text>
+              <Text style={styles.infoTitle}>Horaires de support {appName || 'Good Food'}</Text>
             </View>
             <Text style={styles.infoText}>
-              Notre équipe de support est disponible :
+              L'équipe de support {appName || 'Good Food'} est disponible :
             </Text>
             <Text style={styles.infoText}>• Lundi - Vendredi : 9h00 - 18h00</Text>
             <Text style={styles.infoText}>• Samedi : 10h00 - 16h00</Text>

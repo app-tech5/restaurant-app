@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../good-food-app-main/customer-app"
+		},
+		{
+			"path": "../../my-backend"
+		},
+		{
+			"path": "../../delivery-app"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
