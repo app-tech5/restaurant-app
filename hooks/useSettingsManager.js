@@ -101,6 +101,49 @@ export const useSettingsManager = (isAuthenticated) => {
     }
   };
 
+  // Changer la langue de l'utilisateur
+  const changeLanguage = async (languageCode) => {
+    try {
+      // Utiliser l'API pour changer la langue (si nécessaire pour la persistance côté serveur)
+      // Pour l'instant, on ne fait que la persistance locale car c'est géré par i18n
+      console.log(`🌐 Changement de langue demandé: ${languageCode}`);
+
+      // Ici on pourrait appeler une API pour sauvegarder la préférence utilisateur côté serveur
+      // const response = await apiClient.changeUserLanguage(languageCode);
+
+      // Pour l'instant, on ne fait que mettre à jour localement
+      // La persistance est gérée dans i18n.js et AsyncStorage
+      return { success: true };
+    } catch (error) {
+      console.error('Erreur changement langue:', error);
+      throw error;
+    }
+  };
+
+  // Récupérer les langues disponibles
+  const getAvailableLanguages = async () => {
+    try {
+      // En mode démo ou si on veut des langues mockées
+      const mockLanguages = [
+        { _id: '1', code: 'fr', name: 'Français', isDefault: true },
+        { _id: '2', code: 'en', name: 'English', isDefault: false }
+      ];
+
+      // TODO: Dans le futur, récupérer depuis l'API
+      // const response = await apiClient.getLanguages();
+      // return response.success ? response.data : mockLanguages;
+
+      return mockLanguages;
+    } catch (error) {
+      console.error('Erreur récupération langues:', error);
+      // Retourner les langues par défaut en cas d'erreur
+      return [
+        { _id: '1', code: 'fr', name: 'Français', isDefault: true },
+        { _id: '2', code: 'en', name: 'English', isDefault: false }
+      ];
+    }
+  };
+
   // Valeurs calculées spécifiques aux restaurants
   const currency = getCurrency(settings);
   const language = getLanguage(settings);
@@ -112,6 +155,8 @@ export const useSettingsManager = (isAuthenticated) => {
     error,
     refreshSettings,
     invalidateCache,
+    changeLanguage,
+    getAvailableLanguages,
     currency,
     language,
     appName
