@@ -167,7 +167,15 @@
     "aboutReportsDescription": "Les rapports sont générés automatiquement à partir de vos données de ventes et commandes. Ils vous permettent d'analyser la performance de votre restaurant.",
     "view": "Voir",
     "exportReport": "Exporter le rapport",
-    "printReport": "Imprimer le rapport"
+    "printReport": "Imprimer le rapport",
+    "reportDetailsTitle": "Détails du rapport",
+    "loadingReport": "Chargement du rapport...",
+    "metrics": {
+      "totalRevenue": "Revenus totaux",
+      "totalOrders": "Commandes totales",
+      "averageOrderValue": "Panier moyen",
+      "averageTime": "Temps moyen"
+    }
   },
 
   "notifications": {

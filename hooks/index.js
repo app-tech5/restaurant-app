@@ -13,4 +13,5 @@ export { useReportData } from './useReportData';
 export { useReportCalculations } from './useReportCalculations';
 
 // Paramètres
+export { useSettings } from './useSettings';
 export { useSettingsManager } from './useSettingsManager';

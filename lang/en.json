@@ -251,7 +251,15 @@
     "aboutReportsDescription": "Reports are automatically generated from your sales and order data. They help you analyze your restaurant's performance.",
     "view": "View",
     "exportReport": "Export report",
-    "printReport": "Print report"
+    "printReport": "Print report",
+    "reportDetailsTitle": "Report Details",
+    "loadingReport": "Loading report...",
+    "metrics": {
+      "totalRevenue": "Total Revenue",
+      "totalOrders": "Total Orders",
+      "averageOrderValue": "Average Order Value",
+      "averageTime": "Average Time"
+    }
   },
 
   "notifications": {

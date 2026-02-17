@@ -11,6 +11,7 @@ import { Card } from 'react-native-elements';
 import { ScreenHeader, ReportMetricsCards, ReportCharts } from '../components';
 import { useReportData, useReportCalculations } from '../hooks';
 import { colors, constants } from '../global';
+import i18n from '../i18n';
 
 const ReportDetailsScreen = ({ route, navigation }) => {
   const { reportType, period } = route.params || {};
@@ -23,12 +24,12 @@ const ReportDetailsScreen = ({ route, navigation }) => {
     return (
       <View style={styles.container}>
         <ScreenHeader
-          title="Détails du rapport"
+          title={i18n.t('reports.reportDetailsTitle')}
           showBackButton
           onLeftPress={() => navigation.goBack()}
         />
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Chargement du rapport...</Text>
+          <Text style={styles.loadingText}>{i18n.t('reports.loadingReport')}</Text>
         </View>
       </View>
     );
@@ -37,7 +38,7 @@ const ReportDetailsScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <ScreenHeader
-        title="Détails du rapport"
+        title={i18n.t('reports.reportDetailsTitle')}
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />

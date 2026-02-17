@@ -2,20 +2,30 @@ import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { Card, Text } from 'react-native-elements';
 import { colors, constants } from '../global';
-import { formatPrice } from '../utils/restaurantUtils';
+import { useSettings } from '../hooks';
+import i18n from '../i18n';
 
 const ReportMetricsCards = ({ baseMetrics, reportType }) => {
   const { totalOrders, totalRevenue, averageOrderValue, averagePreparationTime } = baseMetrics;
+  const { formatCurrency, settings, isLoading: settingsLoading } = useSettings();
 
-  const renderMetricCard = (value, label, show = true) => {
+  // Fonction de formatage de fallback si les settings ne sont pas chargés
+  const formatCurrencyFallback = (amount) => {
+    if (typeof amount !== 'number') return '0.00€';
+    return `${amount.toFixed(2)}€`;
+  };
+
+  const renderMetricCard = (value, labelKey, show = true) => {
     if (!show) return null;
 
+    const label = i18n.t(`reports.metrics.${labelKey}`);
+    const formatter = formatCurrency || formatCurrencyFallback;
+
     return (
-      <Card containerStyle={styles.metricCard} key={label}>
+      <Card containerStyle={styles.metricCard} key={labelKey}>
         <Text style={styles.metricValue}>
-          {typeof value === 'number' && label.toLowerCase().includes('revenu') ? formatPrice(value) :
-           typeof value === 'number' && label.toLowerCase().includes('panier') ? formatPrice(value) :
-           typeof value === 'number' && label.toLowerCase().includes('temps') ? `${value}min` :
+          {typeof value === 'number' && (labelKey === 'totalRevenue' || labelKey === 'averageOrderValue') ? formatter(value) :
+           typeof value === 'number' && labelKey === 'averageTime' ? `${value}min` :
            value}
         </Text>
         <Text style={styles.metricLabel}>{label}</Text>
@@ -27,17 +37,17 @@ const ReportMetricsCards = ({ baseMetrics, reportType }) => {
 
   // Métriques selon le type de rapport
   if (reportType !== 'orders') {
-    metrics.push(renderMetricCard(totalRevenue, 'Revenus totaux'));
+    metrics.push(renderMetricCard(totalRevenue, 'totalRevenue'));
   }
 
-  metrics.push(renderMetricCard(totalOrders, 'Commandes totales'));
+  metrics.push(renderMetricCard(totalOrders, 'totalOrders'));
 
   if (reportType === 'revenue' || reportType === 'daily' || reportType === 'weekly' || reportType === 'monthly') {
-    metrics.push(renderMetricCard(averageOrderValue, 'Panier moyen', averageOrderValue > 0));
+    metrics.push(renderMetricCard(averageOrderValue, 'averageOrderValue', averageOrderValue > 0));
   }
 
   if (reportType === 'orders' && averagePreparationTime > 0) {
-    metrics.push(renderMetricCard(averagePreparationTime, 'Temps moyen'));
+    metrics.push(renderMetricCard(averagePreparationTime, 'averageTime'));
   }
 
   return (
