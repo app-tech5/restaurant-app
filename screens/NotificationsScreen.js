@@ -4,48 +4,11 @@ import { ListItem, Badge, Icon } from 'react-native-elements';
 import { ScreenHeader, EmptyState } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import { formatTimeAgo } from '../utils/timeUtils';
+import { mockNotifications } from '../__mocks__/mockNotifications';
 
-const NotificationsScreen = ({ navigation }) => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: '1',
-      type: 'order',
-      title: i18n.t('notifications.newOrder'),
-      message: i18n.t('notifications.newOrderMessage', { orderNumber: '1234', items: '2 pizzas' }),
-      timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-      read: false,
-      action: 'view_order',
-      actionData: { orderId: '1234' }
-    },
-    {
-      id: '2',
-      type: 'system',
-      title: i18n.t('notifications.maintenanceScheduled'),
-      message: i18n.t('notifications.maintenanceMessage'),
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-      read: true,
-      action: null
-    },
-    {
-      id: '3',
-      type: 'review',
-      title: i18n.t('notifications.newReview'),
-      message: i18n.t('notifications.newReviewMessage', { rating: '5' }),
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
-      read: false,
-      action: 'view_reviews'
-    },
-    {
-      id: '4',
-      type: 'order',
-      title: i18n.t('notifications.orderReady'),
-      message: i18n.t('notifications.orderReadyMessage', { orderNumber: '1230' }),
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), // 6 hours ago
-      read: true,
-      action: 'view_order',
-      actionData: { orderId: '1230' }
-    }
-  ]);
+const NotificationsScreen = ({ navigation, initialNotifications = mockNotifications }) => {
+  const [notifications, setNotifications] = useState(initialNotifications);
 
   const [filter, setFilter] = useState('all'); // 'all', 'unread', 'orders', 'system'
 
@@ -62,21 +25,6 @@ const NotificationsScreen = ({ navigation }) => {
     }
   };
 
-  const formatTimeAgo = (timestamp) => {
-    const now = new Date();
-    const diff = now - timestamp;
-    const minutes = Math.floor(diff / (1000 * 60));
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-    if (minutes < 60) {
-      return i18n.t('notifications.timeAgo.minutes', { count: minutes });
-    } else if (hours < 24) {
-      return i18n.t('notifications.timeAgo.hours', { count: hours });
-    } else {
-      return i18n.t('notifications.timeAgo.days', { count: days });
-    }
-  };
 
   const markAsRead = (notificationId) => {
     setNotifications(prev =>
@@ -222,7 +170,7 @@ const NotificationsScreen = ({ navigation }) => {
           </View>
         </ListItem.Content>
 
-        {!item.read && <View style={styles.unreadIndicator} />}
+        {!item.read && <View style={styles.unreadIndicator} testID="unread-indicator" />}
 
         <ListItem.Chevron />
       </ListItem>
@@ -249,11 +197,11 @@ const NotificationsScreen = ({ navigation }) => {
         onLeftPress={() => navigation.goBack()}
         rightComponent={
           unreadCount > 0 ? (
-            <TouchableOpacity onPress={markAllAsRead}>
+            <TouchableOpacity onPress={markAllAsRead} testID="mark-all-read-button">
               <Icon name="done-all" type="material" color={colors.primary} size={24} />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={clearAllNotifications}>
+            <TouchableOpacity onPress={clearAllNotifications} testID="clear-all-button">
               <Icon name="delete-sweep" type="material" color={colors.grey[500]} size={24} />
             </TouchableOpacity>
           )

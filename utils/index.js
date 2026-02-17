@@ -6,6 +6,7 @@ export * from './cacheUtils';
 export * from './settingsUtils';
 export * from './storageUtils';
 export * from './currencyUtils';
+export * from './timeUtils';
 
 // Constantes et configurations
 export { ORDER_STATUSES, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from './restaurantUtils';
