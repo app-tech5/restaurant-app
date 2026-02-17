@@ -1,0 +1,14 @@
+id: large-function
+message: "Function with many nested blocks. Consider breaking it down into smaller functions"
+language: JavaScript
+rule:
+  pattern: |
+    function $NAME($$$) {
+      $$${
+        $$${
+          $$${
+            $$$$
+          }$$$$
+        }$$$$
+      }$$$$
+    }

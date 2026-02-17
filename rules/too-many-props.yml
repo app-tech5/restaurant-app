@@ -1,0 +1,8 @@
+id: too-many-props
+message: "Component receives many props. Consider if it has too many responsibilities"
+language: JavaScript
+rule:
+  pattern: |
+    const $COMPONENT = ({ $PROP1, $PROP2, $PROP3, $PROP4, $PROP5, $PROP6, $PROP7, $$$ }) => {
+      $$$$
+    }

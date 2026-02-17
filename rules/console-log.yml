@@ -1,0 +1,5 @@
+id: console-log
+message: "Avoid using console.log in production code"
+language: JavaScript
+rule:
+  pattern: console.log($$$)

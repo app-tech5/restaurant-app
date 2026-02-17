@@ -1,0 +1,10 @@
+id: async-without-await
+message: "Async function should contain await or be removed"
+language: JavaScript
+rule:
+  pattern: async function $NAME($$$) { $BODY }
+  inside:
+    kind: function_declaration
+    not:
+      has:
+        pattern: await $$$

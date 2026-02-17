@@ -1,0 +1,18 @@
+id: large-utility
+message: "Utility function with complex nested logic. Consider breaking it down"
+language: JavaScript
+rule:
+  pattern: |
+    export const $NAME = $PARAMS => {
+      $$$
+      if ($$$) {
+        $$$
+        if ($$$) {
+          $$$
+          if ($$$) {
+            $$$$
+          }
+        }
+      }
+      $$$
+    }

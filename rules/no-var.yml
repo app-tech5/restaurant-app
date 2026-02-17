@@ -1,0 +1,5 @@
+id: no-var
+message: "Use let or const instead of var"
+language: JavaScript
+rule:
+  pattern: var $$$
