@@ -1,3 +1,5 @@
+const noCommentsPlugin = require('eslint-plugin-no-comments');
+
 module.exports = [
   {
     ignores: [
@@ -11,6 +13,9 @@ module.exports = [
   },
   {
     files: ['**/*.js', '**/*.jsx'],
+    plugins: {
+      'no-comments': noCommentsPlugin,
+    },
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -50,6 +55,9 @@ module.exports = [
       'prefer-const': 'error',
       'no-var': 'error',
       'no-undef': 'error',
+
+      // Supprimer tous les commentaires
+      'no-comments/disallowComments': 'error',
 
       // Règles React peuvent être ajoutées plus tard si nécessaire
     },
