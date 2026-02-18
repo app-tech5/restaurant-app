@@ -28,7 +28,8 @@ export const config = {
   API_TIMEOUT: 10000, // 10 secondes
 
   // === APPLICATION INFO ===
-  APP_NAME: 'Good Food Restaurant',
+  APP_NAME: 'Good Food',
+  APP_SUBTITLE: 'Restaurant',
   VERSION: '1.0.0',
   BUILD_NUMBER: '1',
 

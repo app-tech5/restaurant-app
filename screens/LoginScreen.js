@@ -95,8 +95,8 @@ export default function LoginScreen({ navigation }) {
             color={colors.white}
             size={80}
           />
-              <Text style={styles.appTitle}>Good Food</Text>
-              <Text style={styles.appSubtitle}>Restaurant</Text>
+              <Text style={styles.appTitle}>{config.APP_NAME}</Text>
+              <Text style={styles.appSubtitle}>{config.APP_SUBTITLE}</Text>
             </Animatable.View>
 
             {/* Formulaire de connexion */}

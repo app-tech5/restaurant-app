@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../global';
 import i18n from '../i18n';
+import { config } from '../config';
 
 export default function SplashScreen({ navigation }) {
   return (
@@ -23,8 +24,8 @@ export default function SplashScreen({ navigation }) {
             containerStyle={styles.iconContainer}
           />
           <View style={styles.textContainer}>
-            <Text style={styles.appName}>{i18n.t('app.name')}</Text>
-            <Text style={styles.appType}>Restaurant</Text>
+            <Text style={styles.appName}>{config.APP_NAME}</Text>
+            <Text style={styles.appType}>{config.APP_SUBTITLE}</Text>
             <Text style={styles.tagline}>{i18n.t('app.slogan')}</Text>
           </View>
         </Animatable.View>
