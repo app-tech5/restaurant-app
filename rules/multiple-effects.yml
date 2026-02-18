@@ -2,13 +2,10 @@ id: multiple-effects
 message: "Component has multiple useEffect hooks. Consider consolidating related effects"
 language: JavaScript
 rule:
-  pattern: |
-    const $COMPONENT = () => {
-      $$$
-      useEffect($$$)
-      $$$
-      useEffect($$$)
-      $$$
-      useEffect($$$)
-      $$$
-    }
+  pattern: useEffect($$$)
+  inside:
+    kind: function_declaration
+    has:
+      pattern: useEffect($$$)
+      has:
+        pattern: useEffect($$$)

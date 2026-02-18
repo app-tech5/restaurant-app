@@ -1,0 +1,17 @@
+id: many-imports
+message: "File has many imports. Consider if it has too many responsibilities"
+language: JavaScript
+rule:
+  pattern: import
+  inside:
+    kind: program
+    has:
+      pattern: import
+      has:
+        pattern: import
+        has:
+          pattern: import
+          has:
+            pattern: import
+            has:
+              pattern: import

@@ -1,11 +1,5 @@
 id: complex-component
-message: "Component has multiple useState hooks. Consider using useReducer or extracting state logic"
+message: "Component uses useState. Check if it has too many state variables"
 language: JavaScript
 rule:
-  pattern: useState($$$)
-  inside:
-    kind: function_declaration
-    has:
-      pattern: useState($$$)
-      has:
-        pattern: useState($$$)
+  pattern: useState

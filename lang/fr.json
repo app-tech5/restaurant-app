@@ -175,6 +175,25 @@
       "totalOrders": "Commandes totales",
       "averageOrderValue": "Panier moyen",
       "averageTime": "Temps moyen"
+    },
+    "charts": {
+      "statusDistribution": "Répartition par statut",
+      "mostOrderedDishes": "Plats les plus commandés",
+      "revenueByDay": "Revenus par jour",
+      "mostProfitableDishes": "Plats les plus rentables",
+      "peakHours": "Heures de pointe",
+      "status": {
+        "delivered": "Livrées",
+        "ready": "Prêtes",
+        "preparing": "En préparation",
+        "accepted": "Acceptées",
+        "pending": "En attente",
+        "cancelled": "Annulées"
+      },
+      "units": {
+        "orders": "commandes",
+        "ordersAbbrev": "cmd"
+      }
     }
   },
 

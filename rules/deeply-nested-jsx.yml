@@ -1,0 +1,20 @@
+id: deeply-nested-jsx
+message: "Deeply nested JSX (>4 levels). Consider extracting components"
+language: JavaScript
+rule:
+  pattern: |
+    <$TAG $$$>
+      $$$
+      <$TAG $$$>
+        $$$
+        <$TAG $$$>
+          $$$
+          <$TAG $$$>
+            $$$
+            <$TAG $$$>
+              $$$$
+            </$TAG>
+          </$TAG>
+        </$TAG>
+      </$TAG>
+    </$TAG>

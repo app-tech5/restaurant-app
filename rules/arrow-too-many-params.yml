@@ -1,0 +1,5 @@
+id: arrow-too-many-params
+message: "Arrow function has many parameters. Consider using an options object"
+language: JavaScript
+rule:
+  pattern: ($P1, $P2, $P3, $P4, $P5, $$$) => $$$

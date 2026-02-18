@@ -259,6 +259,25 @@
       "totalOrders": "Total Orders",
       "averageOrderValue": "Average Order Value",
       "averageTime": "Average Time"
+    },
+    "charts": {
+      "statusDistribution": "Status Distribution",
+      "mostOrderedDishes": "Most Ordered Dishes",
+      "revenueByDay": "Revenue by Day",
+      "mostProfitableDishes": "Most Profitable Dishes",
+      "peakHours": "Peak Hours",
+      "status": {
+        "delivered": "Delivered",
+        "ready": "Ready",
+        "preparing": "Preparing",
+        "accepted": "Accepted",
+        "pending": "Pending",
+        "cancelled": "Cancelled"
+      },
+      "units": {
+        "orders": "orders",
+        "ordersAbbrev": "ord"
+      }
     }
   },
 

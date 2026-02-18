@@ -3,27 +3,28 @@ import { View, StyleSheet, Text, Platform } from 'react-native';
 import { Card } from 'react-native-elements';
 import { colors, constants } from '../global';
 import { formatPrice } from '../utils/restaurantUtils';
+import i18n from '../i18n';
 
 const ReportCharts = ({ calculations, reportType }) => {
   const renderStatusChart = () => {
     const { ordersByStatus } = calculations;
     const statusConfig = {
-      delivered: { label: 'Livrées', color: colors.success },
-      ready: { label: 'Prêtes', color: colors.info },
-      preparing: { label: 'En préparation', color: colors.warning },
-      accepted: { label: 'Acceptées', color: colors.primary },
-      pending: { label: 'En attente', color: colors.grey[500] },
-      cancelled: { label: 'Annulées', color: colors.error }
+      delivered: { label: i18n.t('reports.charts.status.delivered'), color: colors.success },
+      ready: { label: i18n.t('reports.charts.status.ready'), color: colors.info },
+      preparing: { label: i18n.t('reports.charts.status.preparing'), color: colors.warning },
+      accepted: { label: i18n.t('reports.charts.status.accepted'), color: colors.primary },
+      pending: { label: i18n.t('reports.charts.status.pending'), color: colors.grey[500] },
+      cancelled: { label: i18n.t('reports.charts.status.cancelled'), color: colors.error }
     };
 
     return (
       <Card containerStyle={styles.chartCard}>
-        <Text style={styles.chartTitle}>Répartition par statut</Text>
+        <Text style={styles.chartTitle}>{i18n.t('reports.charts.statusDistribution')}</Text>
         {Object.entries(ordersByStatus).map(([status, count]) => {
           if (count === 0) return null;
           const config = statusConfig[status];
           return (
-            <View key={status} style={styles.statusRow}>
+            <View key={`status-${status}`} style={styles.statusRow}>
               <View style={styles.statusInfo}>
                 <View style={[styles.statusDot, { backgroundColor: config.color }]} />
                 <Text style={styles.statusLabel}>{config.label}</Text>
@@ -43,14 +44,14 @@ const ReportCharts = ({ calculations, reportType }) => {
 
     return (
       <Card containerStyle={styles.chartCard}>
-        <Text style={styles.chartTitle}>Plats les plus commandés</Text>
+        <Text style={styles.chartTitle}>{i18n.t('reports.charts.mostOrderedDishes')}</Text>
         {topItems.map((item, index) => (
           <View key={item.name} style={styles.itemRow}>
             <View style={styles.itemInfo}>
               <Text style={styles.itemRank}>#{index + 1}</Text>
               <Text style={styles.itemName}>{item.name}</Text>
             </View>
-            <Text style={styles.itemCount}>{item.count} cmd</Text>
+            <Text style={styles.itemCount}>{item.count} {i18n.t('reports.charts.units.ordersAbbrev')}</Text>
           </View>
         ))}
       </Card>
@@ -64,11 +65,11 @@ const ReportCharts = ({ calculations, reportType }) => {
 
     return (
       <Card containerStyle={styles.chartCard}>
-        <Text style={styles.chartTitle}>Revenus par jour</Text>
+        <Text style={styles.chartTitle}>{i18n.t('reports.charts.revenueByDay')}</Text>
         {revenueByDay.slice(0, 7).map((day, index) => (
           <View key={index} style={styles.revenueRow}>
             <Text style={styles.revenueDate}>
-              {day.date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' })}
+              {day.date.toLocaleDateString(i18n.locale === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'short', day: 'numeric' })}
             </Text>
             <Text style={styles.revenueAmount}>{formatPrice(day.revenue)}</Text>
           </View>
@@ -84,7 +85,7 @@ const ReportCharts = ({ calculations, reportType }) => {
 
     return (
       <Card containerStyle={styles.chartCard}>
-        <Text style={styles.chartTitle}>Plats les plus rentables</Text>
+        <Text style={styles.chartTitle}>{i18n.t('reports.charts.mostProfitableDishes')}</Text>
         {topRevenueItems.map((item, index) => (
           <View key={item.name} style={styles.revenueRow}>
             <View style={styles.itemInfo}>
@@ -105,11 +106,11 @@ const ReportCharts = ({ calculations, reportType }) => {
 
     return (
       <Card containerStyle={styles.chartCard}>
-        <Text style={styles.chartTitle}>Heures de pointe</Text>
+        <Text style={styles.chartTitle}>{i18n.t('reports.charts.peakHours')}</Text>
         {peakHours.map((hour, index) => (
           <View key={index} style={styles.hourRow}>
             <Text style={styles.hourTime}>{hour.hour}h - {hour.hour + 1}h</Text>
-            <Text style={styles.hourCount}>{hour.count} commandes</Text>
+            <Text style={styles.hourCount}>{hour.count} {i18n.t('reports.charts.units.orders')}</Text>
           </View>
         ))}
       </Card>
@@ -139,7 +140,11 @@ const ReportCharts = ({ calculations, reportType }) => {
     charts.push(renderPeakHoursChart());
   }
 
-  return <>{charts}</>;
+  return <>{charts.map((chart, index) => (
+    <React.Fragment key={`chart-${index}`}>
+      {chart}
+    </React.Fragment>
+  ))}</>;
 };
 
 const styles = StyleSheet.create({
