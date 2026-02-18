@@ -3,10 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 
-/**
- * Composant pour afficher la section des graphiques d'évolution
- * @param {boolean} isLoading - État de chargement
- */
 const ChartSection = ({ isLoading }) => {
   if (isLoading) {
     return null;

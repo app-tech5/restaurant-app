@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import { getContainerStyles, STAT_CARD_SIZES } from './statCardUtils';
 
-// Styles de base pour les cartes statistiques
 export const statCardStyles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -17,13 +16,11 @@ export const statCardStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-
-  // Styles pour les conteneurs de différentes tailles
+  
   smallContainer: getContainerStyles(STAT_CARD_SIZES.SMALL),
   mediumContainer: getContainerStyles(STAT_CARD_SIZES.MEDIUM),
   largeContainer: getContainerStyles(STAT_CARD_SIZES.LARGE),
-
-  // Styles pour les éléments internes
+  
   iconContainer: {
     marginRight: constants.SPACING.md,
   },
@@ -49,11 +46,6 @@ export const statCardStyles = StyleSheet.create({
   },
 });
 
-/**
- * Retourne les styles de conteneur pour une taille donnée
- * @param {string} size - La taille souhaitée
- * @returns {object} Style de conteneur
- */
 export const getContainerStyle = (size = STAT_CARD_SIZES.MEDIUM) => {
   switch (size) {
     case STAT_CARD_SIZES.SMALL:

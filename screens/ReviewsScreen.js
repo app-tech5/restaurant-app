@@ -45,13 +45,12 @@ const ReviewsScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Appliquer les filtres et le tri
+    
     let filtered = [...reviews];
-
-    // Appliquer le filtre
+    
     switch (filter) {
       case 'recent':
-        // Les 3 plus récents
+        
         filtered = filtered.slice(0, 3);
         break;
       case 'positive':
@@ -63,8 +62,7 @@ const ReviewsScreen = ({ navigation }) => {
       default:
         break;
     }
-
-    // Appliquer le tri
+    
     switch (sortBy) {
       case 'oldest':
         filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -247,15 +245,15 @@ const ReviewsScreen = ({ navigation }) => {
         rightComponent={renderSortButton()}
       />
 
-      {/* Statistiques */}
+      {}
       {renderStatsHeader()}
 
-      {/* Filtres */}
+      {}
       <View style={styles.filtersContainer}>
         {filterOptions.map(renderFilterTab)}
       </View>
 
-      {/* Liste des avis */}
+      {}
       <FlatList
         data={filteredReviews}
         renderItem={renderReviewItem}

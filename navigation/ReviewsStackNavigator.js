@@ -34,7 +34,7 @@ const ReviewsStackNavigator = () => {
         component={ReviewsScreen}
         options={{
           title: i18n.t('reviews.title'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
     </Stack.Navigator>

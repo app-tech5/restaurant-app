@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import EmptyState from '../../components/EmptyState';
 
-// Mock des dépendances
 jest.mock('react-native-elements', () => ({
   Icon: ({ name, type, size, color, containerStyle, ...props }) => {
     const React = require('react');

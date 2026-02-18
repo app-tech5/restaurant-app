@@ -9,7 +9,7 @@ const MenuCategoriesTabs = ({ categories, selectedCategory, setSelectedCategory 
 
     return (
       <TouchableOpacity
-        // key={category}
+        
         style={[
           styles.categoryTab,
           isActive && styles.activeCategoryTab

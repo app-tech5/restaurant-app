@@ -118,7 +118,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       ]
     );
   };
-  
 
   const handleAccept = async () => {
     try {
@@ -237,7 +236,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   />
 
   <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-    {/* Statut de la commande */}
+    {}
     <Card containerStyle={styles.statusCard}>
       <View style={styles.statusHeader}>
         <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
@@ -260,7 +259,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       </View>
     </Card>
 
-    {/* Actions disponibles */}
+    {}
     {getActionButtons().length > 0 && (
       <Card containerStyle={styles.actionsCard}>
         <Text style={styles.actionsTitle}>{i18n.t('orderDetails.actions')}</Text>
@@ -270,7 +269,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       </Card>
     )}
 
-    {/* Informations client */}
+    {}
     <Card containerStyle={styles.customerCard}>
       <Text style={styles.cardTitle}>{i18n.t('orderDetails.customerInfo')}</Text>
 
@@ -304,7 +303,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       </View>
     </Card>
 
-    {/* Articles commandés */}
+    {}
     <Card containerStyle={styles.itemsCard}>
       <Text style={styles.cardTitle}>{i18n.t('orderDetails.orderedItems')}</Text>
 
@@ -327,7 +326,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       </View>
     </Card>
 
-    {/* Notes spéciales */}
+    {}
     {notes && (
       <Card containerStyle={styles.notesCard}>
         <Text style={styles.cardTitle}>{i18n.t('orderDetails.specialNotes')}</Text>

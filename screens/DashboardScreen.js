@@ -22,9 +22,9 @@ const DashboardScreen = ({ navigation }) => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    // Calculer les statistiques quand orders ou stats changent
+    
     console.log("stats dans Dashboard", stats)
-    // console.log("Array.isArray(orders)", Array.isArray(orders))
+    
     if (Array.isArray(orders) && stats) {
       console.log("orders dans Dashboard", orders)
       const calcStats = calculateRestaurantStats(orders, []);
@@ -101,7 +101,7 @@ const DashboardScreen = ({ navigation }) => {
           />
         }
       >
-        {/* Section Statistiques */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.title')}
@@ -122,7 +122,7 @@ const DashboardScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Section Actions Rapides */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.quickActions')}
@@ -161,7 +161,7 @@ const DashboardScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Section Commandes Récentes */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.recentOrders')}
@@ -186,7 +186,7 @@ const DashboardScreen = ({ navigation }) => {
           )}
         </View>
 
-        {/* Section État du Restaurant */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.restaurantStatus')}

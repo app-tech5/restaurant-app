@@ -8,8 +8,7 @@ import i18n from '../i18n';
 const ReportMetricsCards = ({ baseMetrics, reportType }) => {
   const { totalOrders, totalRevenue, averageOrderValue, averagePreparationTime } = baseMetrics;
   const { formatCurrency, settings, isLoading: settingsLoading } = useSettings();
-
-  // Fonction de formatage de fallback si les settings ne sont pas chargés
+  
   const formatCurrencyFallback = (amount) => {
     if (typeof amount !== 'number') return '0.00€';
     return `${amount.toFixed(2)}€`;
@@ -34,8 +33,7 @@ const ReportMetricsCards = ({ baseMetrics, reportType }) => {
   };
 
   const metrics = [];
-
-  // Métriques selon le type de rapport
+  
   if (reportType !== 'orders') {
     metrics.push(renderMetricCard(totalRevenue, 'totalRevenue'));
   }

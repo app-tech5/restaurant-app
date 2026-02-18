@@ -21,7 +21,7 @@ const StatCard = ({
 
   const CardContent = () => (
     <View style={[styles.card, styles.mediumContainer, { backgroundColor }, 
-    // style
+    
     ]} {...props}>
       <View style={styles.iconContainer}>
         <Icon

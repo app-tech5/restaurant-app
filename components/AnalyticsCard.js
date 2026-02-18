@@ -7,7 +7,7 @@ const AnalyticsCard = ({
   title,
   value,
   change = null,
-  changeType = 'neutral', // 'positive', 'negative', 'neutral'
+  changeType = 'neutral', 
   icon,
   iconType = 'material',
   chart = null,
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     marginBottom: constants.SPACING.sm,
   },
   header: {
-    // flexDirection: 'row',
+    
     justifyContent: 'space-between',
-    // alignItems: 'center',
+    
     marginBottom: constants.SPACING.sm,
   },
   titleContainer: {

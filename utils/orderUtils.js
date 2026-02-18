@@ -1,11 +1,6 @@
 import { colors } from '../global';
 import i18n from '../i18n';
 
-/**
- * Obtient la couleur d'un statut de commande
- * @param {string} status - Statut de la commande
- * @returns {string} Couleur hex du statut
- */
 export const getStatusColor = (status) => {
   switch (status?.toLowerCase()) {
     case 'pending': return colors.warning;
@@ -17,11 +12,6 @@ export const getStatusColor = (status) => {
   }
 };
 
-/**
- * Obtient l'icône d'un statut de commande
- * @param {string} status - Statut de la commande
- * @returns {string} Nom de l'icône
- */
 export const getStatusIcon = (status) => {
   switch (status?.toLowerCase()) {
     case 'pending': return 'time-outline';
@@ -33,32 +23,17 @@ export const getStatusIcon = (status) => {
   }
 };
 
-/**
- * Obtient le texte d'un statut de commande
- * @param {string} status - Statut de la commande
- * @returns {string} Texte du statut
- */
 export const getStatusText = (status) => {
   if (!status) return i18n.t('orders.status.unknown', 'Unknown');
   return i18n.t(`orders.status.${status.toLowerCase()}`, status);
 };
 
-/**
- * Formate une date en format lisible
- * @param {string} dateString - Chaîne de date
- * @returns {string} Date formatée
- */
 export const formatDate = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-/**
- * Formate le temps écoulé depuis une date
- * @param {string} dateString - Chaîne de date
- * @returns {string} Temps écoulé formaté
- */
 export const formatTimeAgo = (dateString) => {
   if (!dateString) return '';
   const now = new Date();
@@ -75,11 +50,6 @@ export const formatTimeAgo = (dateString) => {
   return `${diffInWeeks}w ${i18n.t('orders.ago', 'ago')}`;
 };
 
-/**
- * Formate le temps estimé d'arrivée
- * @param {string} dateString - Chaîne de date d'estimation
- * @returns {string|null} Temps estimé formaté ou null
- */
 export const formatEstimatedTime = (dateString) => {
   if (!dateString) return null;
   const date = new Date(dateString);
@@ -93,11 +63,6 @@ export const formatEstimatedTime = (dateString) => {
   return `${hours}h ${minutes % 60}min`;
 };
 
-/**
- * Calcule les statistiques des commandes
- * @param {Array} orders - Liste des commandes
- * @returns {Object} Statistiques calculées
- */
 export const calculateOrderStats = (orders = []) => {
   const stats = {
     total: orders.length,
@@ -118,11 +83,6 @@ export const calculateOrderStats = (orders = []) => {
   return stats;
 };
 
-/**
- * Obtient les options de filtrage par statut
- * @param {Object} orderStats - Statistiques des commandes
- * @returns {Array} Liste des filtres
- */
 export const getStatusFilters = (orderStats) => {
   return [
     { label: i18n.t('orders.all', 'All'), value: null, count: orderStats.total },

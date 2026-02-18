@@ -17,7 +17,7 @@ export const useRestaurant = () => {
 };
 
 export const RestaurantProvider = ({ children }) => {
-  // Hook d'authentification
+  
   const {
     restaurant,
     isLoading,
@@ -27,8 +27,7 @@ export const RestaurantProvider = ({ children }) => {
     setRestaurant,
     setIsAuthenticated
   } = useRestaurantAuth();
-
-  // Hook des paramètres
+  
   const {
     settings,
     isLoading: settingsLoading,
@@ -38,15 +37,13 @@ export const RestaurantProvider = ({ children }) => {
     getCurrencySymbol,
     getCurrencyCode
   } = useSettings();
-
-  // Hook des statistiques
+  
   const {
     stats,
     loadRestaurantStats,
     invalidateRestaurantStatsCache
   } = useRestaurantStats(restaurant, isAuthenticated);
-
-  // Hook des commandes
+  
   const {
     orders,
     loadRestaurantOrders,
@@ -58,8 +55,7 @@ export const RestaurantProvider = ({ children }) => {
   } = useRestaurantOrders(restaurant, isAuthenticated);
 
   console.log("Orders in RestaurantContext", orders)
-
-  // Hook du menu
+  
   const {
     menu,
     loadMenu,
@@ -69,25 +65,21 @@ export const RestaurantProvider = ({ children }) => {
     toggleMenuItemAvailability,
     invalidateMenuCache
   } = useRestaurantMenu(restaurant, isAuthenticated);
-
-  // Wrapper pour logout qui nettoie tout
+  
   const logout = async () => {
-    // Invalider tous les caches
+    
     invalidateRestaurantStatsCache();
     invalidateOrdersCache();
     invalidateMenuCache();
-
-    // Appeler le logout d'authentification
+    
     await authLogout();
-
-    // Reset local state
+    
     setRestaurant(null);
     setIsAuthenticated(false);
   };
-
-  // Valeur du contexte
+  
   const value = {
-    // Authentification
+    
     restaurant,
     isLoading,
     isAuthenticated,
@@ -95,8 +87,7 @@ export const RestaurantProvider = ({ children }) => {
     logout,
     setRestaurant,
     setIsAuthenticated,
-
-    // Paramètres
+    
     settings,
     settingsLoading,
     settingsError,
@@ -104,13 +95,11 @@ export const RestaurantProvider = ({ children }) => {
     formatCurrency,
     getCurrencySymbol,
     getCurrencyCode,
-
-    // Statistiques
+    
     stats,
     loadRestaurantStats,
     invalidateRestaurantStatsCache,
-
-    // Commandes
+    
     orders,
     loadRestaurantOrders,
     updateOrderStatus,
@@ -118,8 +107,7 @@ export const RestaurantProvider = ({ children }) => {
     prepareOrder,
     readyForPickup,
     invalidateOrdersCache,
-
-    // Menu
+    
     menu,
     loadMenu,
     addMenuItem,

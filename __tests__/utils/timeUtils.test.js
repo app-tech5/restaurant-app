@@ -1,4 +1,4 @@
-// Mock AsyncStorage before importing anything that uses it
+
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
@@ -12,7 +12,6 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   multiMerge: jest.fn(),
 }));
 
-// Mock i18n for this specific test
 jest.mock('../../i18n', () => ({
   t: jest.fn((key, options) => {
     const translations = {
@@ -74,7 +73,7 @@ describe('timeUtils', () => {
     });
 
     it('should handle edge cases', () => {
-      const justNow = new Date(now.getTime() - 10 * 1000); // 10 seconds ago
+      const justNow = new Date(now.getTime() - 10 * 1000); 
       expect(formatTimeAgo(justNow)).toBe('Il y a 0 min');
 
       const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -82,7 +81,7 @@ describe('timeUtils', () => {
     });
 
     it('should handle future dates', () => {
-      const futureDate = new Date(now.getTime() + 60 * 1000); // 1 minute in future
+      const futureDate = new Date(now.getTime() + 60 * 1000); 
       expect(formatTimeAgo(futureDate)).toBe('Il y a 1 min');
     });
   });

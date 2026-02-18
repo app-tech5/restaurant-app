@@ -4,11 +4,6 @@ import { AnalyticsCard } from './index';
 import { constants } from '../global';
 import i18n from '../i18n';
 
-/**
- * Composant pour afficher la grille des métriques d'analytics principales
- * @param {Object} metrics - Objet contenant les métriques calculées
- * @param {boolean} isLoading - État de chargement
- */
 const AnalyticsGrid = ({ metrics, isLoading }) => {
   if (!metrics || isLoading) {
     return null;
@@ -39,7 +34,7 @@ const AnalyticsGrid = ({ metrics, isLoading }) => {
     {
       title: i18n.t('analytics.averageOrderValue'),
       value: metrics.averageOrderValue.formatted,
-      change: 5.7, // Valeur fixe pour l'instant
+      change: 5.7, 
       changeType: 'positive',
       icon: 'trending-up',
     },

@@ -25,8 +25,7 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState(config.DEMO_MODE ? config.DEMO_PASSWORD : '');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useRestaurant();
-
-  // Vérifier si le restaurant est déjà connecté au démarrage
+  
   useEffect(() => {
     const checkExistingLogin = async () => {
       try {
@@ -34,7 +33,7 @@ export default function LoginScreen({ navigation }) {
         const restaurantData = await AsyncStorage.getItem('restaurantData');
 
         if (token && restaurantData) {
-          // Le restaurant est déjà connecté, aller directement au Home
+          
           navigation.replace('DrawerNavigator');
         }
       } catch (error) {
@@ -54,7 +53,7 @@ export default function LoginScreen({ navigation }) {
     setIsLoading(true);
 
     try {
-      // Utiliser toujours la fonction login du hook qui gère le mode démo et production
+      
       const result = await login(email, password);
 
       if (result.success) {
@@ -83,7 +82,7 @@ export default function LoginScreen({ navigation }) {
             duration={1000}
             style={styles.contentContainer}
           >
-            {/* Header avec logo */}
+            {}
             <Animatable.View
               animation="bounceIn"
               delay={500}
@@ -99,7 +98,7 @@ export default function LoginScreen({ navigation }) {
               <Text style={styles.appSubtitle}>{config.APP_SUBTITLE}</Text>
             </Animatable.View>
 
-            {/* Formulaire de connexion */}
+            {}
             <Animatable.View
               animation="fadeInUp"
               delay={800}

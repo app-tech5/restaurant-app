@@ -34,7 +34,7 @@ const OrdersStackNavigator = () => {
         component={OrdersScreen}
         options={{
           title: i18n.t('navigation.orders'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
       <Stack.Screen
@@ -42,7 +42,7 @@ const OrdersStackNavigator = () => {
         component={OrderDetailsScreen}
         options={{
           title: i18n.t('orders.orderDetails'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
       <Stack.Screen
@@ -55,8 +55,6 @@ const OrdersStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
-// Écrans temporaires - à remplacer par les vrais composants
 
 const OrderHistoryScreen = ({ navigation }) => {
   return (

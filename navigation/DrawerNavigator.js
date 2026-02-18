@@ -18,7 +18,6 @@ import { useRestaurant } from '../contexts/RestaurantContext';
 
 const Drawer = createDrawerNavigator();
 
-// Composant personnalisé pour le contenu du drawer
 function CustomDrawerContent(props) {
   const { logout } = useRestaurant();
 
@@ -37,7 +36,7 @@ function CustomDrawerContent(props) {
           onPress: async () => {
             try {
               await logout();
-              // La navigation vers l'écran de login sera gérée par l'App.js ou le contexte d'authentification
+              
             } catch (error) {
               console.error('Erreur lors de la déconnexion:', error);
               Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion');
@@ -105,7 +104,7 @@ export default function DrawerNavigator() {
         drawerInactiveBackgroundColor: 'transparent',
       }}
     >
-      {/* 🏠 TABLEAU DE BORD */}
+      {}
       <Drawer.Screen
         name="Dashboard"
         component={DashboardScreen}
@@ -121,7 +120,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* 🍽️ COMMANDES */}
+      {}
       <Drawer.Screen
         name="Orders"
         component={OrdersStackNavigator}
@@ -137,7 +136,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* 📋 GESTION MENU */}
+      {}
       <Drawer.Screen
         name="Menu"
         component={MenuStackNavigator}
@@ -153,7 +152,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* 📊 ANALYSES */}
+      {}
       <Drawer.Screen
         name="Analytics"
         component={AnalyticsScreen}
@@ -169,7 +168,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* ⭐ AVIS CLIENTS */}
+      {}
       <Drawer.Screen
         name="Reviews"
         component={ReviewsStackNavigator}
@@ -185,7 +184,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* 📈 RAPPORTS */}
+      {}
       <Drawer.Screen
         name="Reports"
         component={ReportsStackNavigator}
@@ -201,7 +200,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* 🔔 NOTIFICATIONS */}
+      {}
       <Drawer.Screen
         name="Notifications"
         component={NotificationsScreen}
@@ -217,7 +216,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* 🆘 SUPPORT */}
+      {}
       <Drawer.Screen
         name="Support"
         component={SupportScreen}
@@ -233,7 +232,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* 👤 PROFIL */}
+      {}
       <Drawer.Screen
         name="Profile"
         component={ProfileStackNavigator}
@@ -249,7 +248,7 @@ export default function DrawerNavigator() {
         }}
       />
 
-      {/* ⚙️ PARAMÈTRES */}
+      {}
       <Drawer.Screen
         name="Settings"
         component={SettingsStackNavigator}

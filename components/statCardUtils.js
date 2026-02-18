@@ -1,12 +1,10 @@
-// Utilitaires pour le composant StatCard
-// Définition des tailles disponibles pour les cartes statistiques
+
 export const STAT_CARD_SIZES = {
   SMALL: 'small',
   MEDIUM: 'medium',
   LARGE: 'large',
 };
 
-// Configuration des styles pour chaque taille
 export const SIZE_CONFIGS = {
   [STAT_CARD_SIZES.SMALL]: {
     iconSize: 20,
@@ -28,20 +26,10 @@ export const SIZE_CONFIGS = {
   },
 };
 
-/**
- * Retourne la configuration de style pour une taille donnée
- * @param {string} size - La taille souhaitée (small, medium, large)
- * @returns {object} Configuration de style pour la taille
- */
 export const getSizeConfig = (size = STAT_CARD_SIZES.MEDIUM) => {
   return SIZE_CONFIGS[size] || SIZE_CONFIGS[STAT_CARD_SIZES.MEDIUM];
 };
 
-/**
- * Calcule les styles de conteneur en fonction de la taille
- * @param {string} size - La taille souhaitée
- * @returns {object} Styles de conteneur
- */
 export const getContainerStyles = (size = STAT_CARD_SIZES.MEDIUM) => {
   const { constants } = require('../global');
 
@@ -56,7 +44,7 @@ export const getContainerStyles = (size = STAT_CARD_SIZES.MEDIUM) => {
         minHeight: 100,
         padding: constants.SPACING.lg,
       };
-    default: // medium
+    default: 
       return {
         minHeight: 80,
         padding: constants.SPACING.md,

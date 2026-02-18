@@ -3,11 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 
-/**
- * Composant pour afficher les statistiques détaillées
- * @param {Object} metrics - Objet contenant toutes les métriques
- * @param {boolean} isLoading - État de chargement
- */
 const DetailedStats = ({ metrics, isLoading }) => {
   if (!metrics || isLoading) {
     return null;
@@ -20,7 +15,7 @@ const DetailedStats = ({ metrics, isLoading }) => {
     },
     {
       label: i18n.t('analytics.activeItems'),
-      value: '24', // Valeur fixe pour l'instant
+      value: '24', 
     },
     {
       label: i18n.t('analytics.averageRevenuePerDay'),

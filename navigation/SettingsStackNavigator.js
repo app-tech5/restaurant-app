@@ -34,7 +34,7 @@ const SettingsStackNavigator = () => {
         component={SettingsScreen}
         options={{
           title: i18n.t('navigation.settings'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
       <Stack.Screen
@@ -77,16 +77,12 @@ const SettingsStackNavigator = () => {
         component={RestaurantProfileScreen}
         options={{
           title: 'Profil restaurant',
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
     </Stack.Navigator>
   );
 };
-
-// Écrans temporaires - à remplacer par les vrais composants
-
-
 
 const LanguageSettingsScreen = ({ navigation }) => {
   return (

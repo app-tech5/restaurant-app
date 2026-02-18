@@ -3,11 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 
-/**
- * Composant pour sélectionner la période d'analyse
- * @param {string} selectedPeriod - Période actuellement sélectionnée
- * @param {Function} onPeriodChange - Callback appelé quand la période change
- */
 const PeriodSelector = ({ selectedPeriod, onPeriodChange }) => {
   const periods = [
     { key: 'today', label: i18n.t('analytics.periods.today') },

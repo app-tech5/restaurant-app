@@ -1,14 +1,7 @@
 import { useMemo } from 'react';
 
-/**
- * Hook personnalisé pour les calculs complexes des rapports
- * @param {Array} filteredOrders - Commandes filtrées selon la période
- * @param {string} reportType - Type de rapport
- * @returns {Object} Calculs spécifiques au type de rapport
- */
 export const useReportCalculations = (filteredOrders, reportType) => {
-
-  // Calcul des plats les plus commandés
+  
   const topItems = useMemo(() => {
     if (!filteredOrders.length) return [];
 
@@ -24,8 +17,7 @@ export const useReportCalculations = (filteredOrders, reportType) => {
       .slice(0, 5)
       .map(([name, count]) => ({ name, count }));
   }, [filteredOrders]);
-
-  // Calcul de la répartition par statut
+  
   const ordersByStatus = useMemo(() => {
     return {
       pending: filteredOrders.filter(o => o.status === 'pending').length,
@@ -36,8 +28,7 @@ export const useReportCalculations = (filteredOrders, reportType) => {
       cancelled: filteredOrders.filter(o => o.status === 'cancelled').length,
     };
   }, [filteredOrders]);
-
-  // Calcul de la distribution horaire
+  
   const hourlyDistribution = useMemo(() => {
     const hourlyCount = new Array(24).fill(0);
     filteredOrders.forEach(order => {
@@ -46,8 +37,7 @@ export const useReportCalculations = (filteredOrders, reportType) => {
     });
     return hourlyCount.map((count, hour) => ({ hour, count }));
   }, [filteredOrders]);
-
-  // Calcul des revenus par jour
+  
   const revenueByDay = useMemo(() => {
     const revenueMap = {};
     filteredOrders
@@ -61,8 +51,7 @@ export const useReportCalculations = (filteredOrders, reportType) => {
       .map(([date, revenue]) => ({ date: new Date(date), revenue }))
       .sort((a, b) => b.date - a.date);
   }, [filteredOrders]);
-
-  // Calcul des plats les plus rentables
+  
   const topRevenueItems = useMemo(() => {
     const itemRevenue = {};
     filteredOrders
@@ -79,8 +68,7 @@ export const useReportCalculations = (filteredOrders, reportType) => {
       .slice(0, 5)
       .map(([name, revenue]) => ({ name, revenue }));
   }, [filteredOrders]);
-
-  // Calcul du temps de préparation moyen
+  
   const averagePreparationTime = useMemo(() => {
     const deliveredOrders = filteredOrders.filter(order => order.status === 'delivered');
     if (deliveredOrders.length === 0) return 0;
@@ -91,16 +79,14 @@ export const useReportCalculations = (filteredOrders, reportType) => {
 
     return Math.round(totalTime / deliveredOrders.length);
   }, [filteredOrders]);
-
-  // Calcul des heures de pointe
+  
   const peakHours = useMemo(() => {
     return hourlyDistribution
       .map((item, index) => ({ hour: index, count: item.count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
   }, [hourlyDistribution]);
-
-  // Retourner les calculs selon le type de rapport
+  
   const calculations = useMemo(() => {
     const baseData = {
       topItems,

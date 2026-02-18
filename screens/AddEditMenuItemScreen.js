@@ -145,7 +145,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
   };
 
   const handlePriceChange = (text) => {
-    // Permettre seulement les chiffres et la virgule/point
+    
     const cleanedText = text.replace(/[^0-9.,]/g, '');
     setFormData(prev => ({ ...prev, price: cleanedText }));
   };
@@ -184,7 +184,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
 
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
-            {/* Nom du plat */}
+            {}
             <View style={styles.field}>
             <Text style={styles.fieldLabel}>{i18n.t('menu.itemNameLabel')}</Text>
               <TextInput
@@ -197,7 +197,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
             </View>
 
-            {/* Description */}
+            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.itemDescriptionLabel')}</Text>
               <TextInput
@@ -212,7 +212,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
             </View>
 
-            {/* Image */}
+            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.imageUrl')} *</Text>
               <TextInput
@@ -225,7 +225,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
             </View>
 
-            {/* Prix */}
+            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.price')} *</Text>
               <TextInput
@@ -239,7 +239,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
             </View>
 
-            {/* Temps de préparation */}
+            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.preparationTime')} *</Text>
               <TextInput
@@ -253,7 +253,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               {errors.preparation_time && <Text style={styles.errorText}>{errors.preparation_time}</Text>}
             </View>
 
-            {/* Catégorie */}
+            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.category')} *</Text>
               <TextInput
@@ -265,7 +265,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
 
-              {/* Suggestions de catégories */}
+              {}
               <View style={styles.categorySuggestions}>
                 <Text style={styles.suggestionsLabel}>{i18n.t('menu.suggestions')} :</Text>
                 <View style={styles.suggestionsContainer}>
@@ -290,7 +290,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               </View>
             </View>
 
-            {/* Disponibilité */}
+            {}
             <View style={styles.field}>
               <View style={styles.switchRow}>
                 <View style={styles.switchLabel}>
@@ -308,7 +308,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               </View>
             </View>
 
-            {/* Ingrédients */}
+            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.ingredients')}</Text>
               <TextInput
@@ -325,7 +325,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               </Text>
             </View>
 
-            {/* Tags */}
+            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>Tags</Text>
               <TextInput
@@ -340,7 +340,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               </Text>
             </View>
 
-            {/* Bouton de sauvegarde */}
+            {}
             <View style={styles.buttonContainer}>
               <Button
                 title={isEditMode ? i18n.t('menu.editItem') : i18n.t('menu.addItem')}
@@ -351,7 +351,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
             </View>
 
-            {/* Informations */}
+            {}
             <View style={styles.infoContainer}>
               <Text style={styles.infoText}>
                 {i18n.t('menu.requiredFields')}

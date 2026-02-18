@@ -1,16 +1,12 @@
 import i18n from '../i18n';
 
-/**
- * Données mock pour les notifications
- * Utilisé pour les tests et le développement
- */
 export const mockNotifications = [
   {
     id: '1',
     type: 'order',
     title: i18n.t('notifications.newOrder'),
     message: i18n.t('notifications.newOrderMessage', { orderNumber: '1234', items: '2 pizzas' }),
-    timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 5), 
     read: false,
     action: 'view_order',
     actionData: { orderId: '1234' }
@@ -20,7 +16,7 @@ export const mockNotifications = [
     type: 'system',
     title: i18n.t('notifications.maintenanceScheduled'),
     message: i18n.t('notifications.maintenanceMessage'),
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), 
     read: true,
     action: null
   },
@@ -29,7 +25,7 @@ export const mockNotifications = [
     type: 'review',
     title: i18n.t('notifications.newReview'),
     message: i18n.t('notifications.newReviewMessage', { rating: '5' }),
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), 
     read: false,
     action: 'view_reviews'
   },
@@ -38,18 +34,13 @@ export const mockNotifications = [
     type: 'order',
     title: i18n.t('notifications.orderReady'),
     message: i18n.t('notifications.orderReadyMessage', { orderNumber: '1230' }),
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), // 6 hours ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), 
     read: true,
     action: 'view_order',
     actionData: { orderId: '1230' }
   }
 ];
 
-/**
- * Génère des notifications mock supplémentaires pour les tests
- * @param {number} count - Nombre de notifications à générer
- * @returns {Array} Array de notifications mock
- */
 export const generateMockNotifications = (count = 5) => {
   const types = ['order', 'system', 'review'];
   const notifications = [];
@@ -57,7 +48,7 @@ export const generateMockNotifications = (count = 5) => {
   for (let i = 0; i < count; i++) {
     const type = types[i % types.length];
     const isRead = Math.random() > 0.5;
-    const timeOffset = Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000); // Random time within last week
+    const timeOffset = Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000); 
 
     let title, message, action, actionData;
 
@@ -100,14 +91,8 @@ export const generateMockNotifications = (count = 5) => {
   return notifications;
 };
 
-/**
- * Notifications mock vides pour les tests d'état vide
- */
 export const emptyNotifications = [];
 
-/**
- * Notifications mock toutes lues
- */
 export const allReadNotifications = mockNotifications.map(notification => ({
   ...notification,
   read: true

@@ -11,8 +11,7 @@ const SupportScreen = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState('general');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-
-  // Récupération des données depuis les contextes
+  
   const { restaurant } = useRestaurant();
   const { appName, settings } = useSettings();
 
@@ -46,8 +45,7 @@ const SupportScreen = ({ navigation }) => {
       category: 'general'
     }
   ];
-
-  // Données de contact dynamiques depuis les contextes
+  
   const contactMethods = [
     {
       title: i18n.t('support.phone'),
@@ -74,8 +72,7 @@ const SupportScreen = ({ navigation }) => {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('support.contactForm.fillAllFields'));
       return;
     }
-
-    // Simulation d'envoi
+    
     Alert.alert(
       i18n.t('support.contactForm.messageSent'),
       i18n.t('support.contactForm.messageSentSuccess', {
@@ -105,7 +102,7 @@ const SupportScreen = ({ navigation }) => {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Méthodes de contact rapide */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.quickContact')}</Text>
           {contactMethods.map((method, index) => (
@@ -135,11 +132,11 @@ const SupportScreen = ({ navigation }) => {
           ))}
         </View>
 
-        {/* FAQ */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.frequentlyAskedQuestions')}</Text>
 
-          {/* Filtres de catégorie */}
+          {}
           <View style={styles.categoryFilters}>
             {supportCategories.map(category => (
               <TouchableOpacity
@@ -166,7 +163,7 @@ const SupportScreen = ({ navigation }) => {
             ))}
           </View>
 
-          {/* Liste FAQ */}
+          {}
           {filteredFaq.map((faq, index) => (
             <Card key={index} containerStyle={styles.faqCard}>
               <Card.Title style={styles.faqQuestion}>{faq.question}</Card.Title>
@@ -175,7 +172,7 @@ const SupportScreen = ({ navigation }) => {
           ))}
         </View>
 
-        {/* Formulaire de contact */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.contactForm.title')}</Text>
 
@@ -224,7 +221,7 @@ const SupportScreen = ({ navigation }) => {
           </Card>
         </View>
 
-        {/* Informations supplémentaires */}
+        {}
         <View style={styles.section}>
           <Card containerStyle={styles.infoCard}>
             <View style={styles.infoHeader}>

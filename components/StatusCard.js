@@ -14,7 +14,7 @@ const StatusCard = ({
   style = {},
   ...props
 }) => {
-  // Configuration des tailles
+  
   const sizeConfig = {
     small: {
       container: styles.smallContainer,
@@ -48,7 +48,7 @@ const StatusCard = ({
       ]}
       {...props}
     >
-      {/* Icône */}
+      {}
       <View style={[styles.iconContainer, { backgroundColor: color + '15' }]}>
         <Icon
           name={icon}
@@ -58,7 +58,7 @@ const StatusCard = ({
         />
       </View>
 
-      {/* Contenu texte */}
+      {}
       <View style={styles.content}>
         <Text
           style={[

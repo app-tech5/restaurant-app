@@ -10,7 +10,7 @@ import { mockNotifications } from '../__mocks__/mockNotifications';
 const NotificationsScreen = ({ navigation, initialNotifications = mockNotifications }) => {
   const [notifications, setNotifications] = useState(initialNotifications);
 
-  const [filter, setFilter] = useState('all'); // 'all', 'unread', 'orders', 'system'
+  const [filter, setFilter] = useState('all'); 
 
   const getNotificationIcon = (type) => {
     switch (type) {
@@ -25,7 +25,6 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
     }
   };
 
-
   const markAsRead = (notificationId) => {
     setNotifications(prev =>
       prev.map(notif =>
@@ -35,12 +34,11 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
   };
 
   const handleNotificationPress = (notification) => {
-    // Marquer comme lu
+    
     if (!notification.read) {
       markAsRead(notification.id);
     }
-
-    // Gérer l'action associée
+    
     switch (notification.action) {
       case 'view_order':
         navigation.navigate('Orders', {
@@ -54,7 +52,7 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
         navigation.navigate('Reviews', { screen: 'ReviewsMain' });
         break;
       default:
-        // Pas d'action spécifique
+        
         break;
     }
   };
@@ -208,12 +206,12 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
         }
       />
 
-      {/* Filtres */}
+      {}
       <View style={styles.filtersContainer}>
         {filterOptions.map(renderFilterTab)}
       </View>
 
-      {/* Liste des notifications */}
+      {}
       <FlatList
         data={filteredNotifications}
         renderItem={renderNotification}

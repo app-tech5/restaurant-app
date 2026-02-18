@@ -34,8 +34,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (restaurant) {
-      // Pour l'instant, utiliser des valeurs par défaut car ces champs ne sont pas encore dans le modèle
-      // TODO: Mettre à jour quand le backend supportera ces champs
+      
       setFormData({
         deliveryRadius: restaurant.deliveryRadius || '5',
         fixedFee: restaurant.fixedFee || '2.50',
@@ -58,7 +57,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
   };
 
   const handleSave = async () => {
-    // Validation des champs numériques
+    
     if (!validateNumber(formData.deliveryRadius, 'deliveryRadius')) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('delivery.invalidRadius'));
       return;
@@ -86,11 +85,9 @@ const DeliverySettingsScreen = ({ navigation }) => {
 
     try {
       setIsLoading(true);
-
-      // Pour l'instant, sauvegarder seulement les champs supportés par le backend
-      // TODO: Étendre quand le backend supportera tous les champs de livraison
+      
       const updateData = {
-        // Champs temporaires - à remplacer par les vrais champs du backend
+        
         deliveryRadius: formData.deliveryRadius,
         fixedFee: formData.fixedFee,
         perKmFee: formData.perKmFee,
@@ -100,9 +97,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
         deliveryEnabled: formData.deliveryEnabled,
         pickupEnabled: formData.pickupEnabled
       };
-
-      // Note: Pour l'instant, on utilise updateRestaurantProfile qui ne gère que certains champs
-      // Une vraie implémentation nécessiterait une route dédiée pour les paramètres de livraison
+      
       const response = await apiClient.updateRestaurantProfile(updateData);
 
       if (response.success) {
@@ -130,7 +125,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
   };
 
   const handleCancel = () => {
-    // Reset to original values
+    
     if (restaurant) {
       setFormData({
         deliveryRadius: restaurant.deliveryRadius || '5',
@@ -206,7 +201,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
       />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Service Options */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.serviceOptions')}</Text>
 
@@ -245,7 +240,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Delivery Radius */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.availability')}</Text>
 
@@ -265,7 +260,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Pricing */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.pricing')}</Text>
 
@@ -334,7 +329,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
           )}
         </View>
 
-        {/* Estimated Time */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.estimatedTime')}</Text>
 

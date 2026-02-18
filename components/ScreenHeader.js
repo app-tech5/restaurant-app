@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rightContainer: {
-    // width: 40,
+    
     alignItems: 'flex-end',
   },
   backButton: {

@@ -1,10 +1,7 @@
-// Export de tous les écrans de l'application restaurant
 
-// Écrans principaux
 export { default as SplashScreen } from './SplashScreen';
 export { default as LoginScreen } from './LoginScreen';
 
-// Écrans de l'app
 export { default as DashboardScreen } from './DashboardScreen';
 export { default as OrdersScreen } from './OrdersScreen';
 export { default as MenuScreen } from './MenuScreen';

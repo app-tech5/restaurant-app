@@ -18,7 +18,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
 
   return (
     <View style={styles.orderItemContainer}>
-      {/* Timeline indicator */}
+      {}
       <View style={styles.timelineContainer}>
         <View style={styles.timelineLine} />
         <View style={[styles.timelineDot, { backgroundColor: getStatusColor(order.status) }]}>
@@ -31,7 +31,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
         onPress={() => onPress(order)}
         activeOpacity={0.7}
       >
-        {/* Header avec statut et date */}
+        {}
         <View style={styles.orderHeader}>
           <View style={styles.orderLeft}>
             <Text style={styles.orderId}>
@@ -49,7 +49,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
           </View>
         </View>
 
-        {/* Informations restaurant */}
+        {}
         <View style={styles.restaurantSection}>
           <View style={styles.restaurantIcon}>
             <Ionicons name="restaurant" size={20} color={colors.primary} />
@@ -64,7 +64,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
           </View>
         </View>
 
-        {/* Détails commande */}
+        {}
         <View style={styles.orderDetails}>
           <View style={styles.detailItem}>
             <Ionicons name="bag-outline" size={16} color={colors.text.secondary} />
@@ -85,9 +85,9 @@ const OrderItem = ({ order, onPress, onCancel }) => {
           </View>
         </View>
 
-        {/* Informations supplémentaires */}
+        {}
         <View style={styles.additionalInfo}>
-          {/* Mode de paiement */}
+          {}
           {order.payment?.method && (
             <View style={styles.infoItem}>
               <Ionicons name="card-outline" size={14} color={colors.text.secondary} />
@@ -97,7 +97,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
             </View>
           )}
 
-          {/* Type de livraison */}
+          {}
           {order.delivery?.type && (
             <View style={styles.infoItem}>
               <Ionicons
@@ -111,7 +111,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
             </View>
           )}
 
-          {/* Heure estimée pour les livraisons en cours */}
+          {}
           {order.status?.toLowerCase() === 'out_for_delivery' && order.delivery?.estimatedTime && (
             <View style={styles.infoItem}>
               <Ionicons name="time-outline" size={14} color={colors.primary} />
@@ -121,7 +121,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
             </View>
           )}
 
-          {/* Informations du livreur pour les livraisons en cours */}
+          {}
           {order.status?.toLowerCase() === 'out_for_delivery' && order.driver?.userId && (
             <View style={styles.infoItem}>
               <Ionicons name="person-outline" size={14} color={colors.primary} />
@@ -132,7 +132,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
           )}
         </View>
 
-        {/* Actions */}
+        {}
         <View style={styles.orderActions}>
           {order.status?.toLowerCase() === 'pending' && onCancel && (
             <TouchableOpacity
@@ -147,7 +147,7 @@ const OrderItem = ({ order, onPress, onCancel }) => {
           )}
           <TouchableOpacity
             style={styles.trackButton}
-            onPress={() => {/* TODO: Implement tracking */}}
+            onPress={() => {}}
           >
             <Ionicons name="location" size={16} color={colors.primary} />
             <Text style={styles.trackButtonText}>

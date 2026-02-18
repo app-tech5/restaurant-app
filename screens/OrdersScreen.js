@@ -18,7 +18,7 @@ const OrdersScreen = ({ navigation }) => {
   } = useRestaurant();
 
   const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState('all'); // 'all', 'pending', 'preparing', 'ready'
+  const [activeTab, setActiveTab] = useState('all'); 
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -65,7 +65,7 @@ const OrdersScreen = ({ navigation }) => {
   };
 
   const handleOrderPress = (order) => {
-    // Navigation vers les détails de la commande
+    
     navigation.navigate('OrderDetails', { order });
   };
 
@@ -116,7 +116,6 @@ const OrdersScreen = ({ navigation }) => {
       }
     };
 
-
     const message = emptyMessages[activeTab];
 
     return (
@@ -149,7 +148,7 @@ const OrdersScreen = ({ navigation }) => {
         onLeftPress={() => navigation.goBack()}
       />
 
-      {/* Onglets de filtrage */}
+      {}
       <View style={styles.tabsContainer}>
         {[
           { key: 'all', label: i18n.t('orders.tabs.all') },

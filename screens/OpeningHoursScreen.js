@@ -43,7 +43,7 @@ const OpeningHoursScreen = ({ navigation }) => {
   };
 
   const handleSave = async () => {
-    // Validation des horaires si le restaurant n'est pas fermé
+    
     if (!formData.is_closed) {
       if (!formData.openingTime.trim() || !formData.closingTime.trim()) {
         Alert.alert(i18n.t('errors.validationError'), i18n.t('openingHours.validationError'));
@@ -54,8 +54,7 @@ const OpeningHoursScreen = ({ navigation }) => {
         Alert.alert(i18n.t('errors.validationError'), i18n.t('openingHours.invalidTime'));
         return;
       }
-
-      // Vérifier que l'heure de fermeture est après l'heure d'ouverture
+      
       const openTime = new Date(`2000-01-01T${formData.openingTime}:00`);
       const closeTime = new Date(`2000-01-01T${formData.closingTime}:00`);
 
@@ -101,7 +100,7 @@ const OpeningHoursScreen = ({ navigation }) => {
   };
 
   const handleCancel = () => {
-    // Reset to original values
+    
     if (restaurant) {
       setFormData({
         openingTime: restaurant.openingTime || '09:00',
@@ -170,7 +169,7 @@ const OpeningHoursScreen = ({ navigation }) => {
       />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Restaurant Status */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
 
@@ -192,7 +191,7 @@ const OpeningHoursScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Opening Hours */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
 

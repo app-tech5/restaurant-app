@@ -82,7 +82,7 @@ const OrderCard = ({
         style={styles.content}
         disabled={!onPress}
       >
-        {/* Header avec numéro de commande et statut */}
+        {}
         <View style={styles.header}>
           <View style={styles.orderInfo}>
             <Text style={styles.orderNumber}>
@@ -100,7 +100,7 @@ const OrderCard = ({
           </View>
         </View>
 
-        {/* Informations client */}
+        {}
         <View style={styles.customerInfo}>
           <Icon
             name="person"
@@ -113,7 +113,7 @@ const OrderCard = ({
           <Text style={styles.customerPhone}>{customerPhone}</Text>
         </View>
 
-        {/* Articles commandés */}
+        {}
         <View style={styles.itemsContainer}>
           <Text style={styles.itemsTitle}>
             {items.length} article{items.length > 1 ? 's' : ''}
@@ -130,7 +130,7 @@ const OrderCard = ({
           )}
         </View>
 
-        {/* Footer avec total et temps estimé */}
+        {}
         <View style={styles.footer}>
           <View style={styles.totalContainer}>
             <Text style={styles.totalLabel}>{i18n.t('orders.total')}</Text>
@@ -155,7 +155,7 @@ const OrderCard = ({
         </View>
       </TouchableOpacity>
 
-      {/* Boutons d'action */}
+      {}
       {actionButtons.length > 0 && (
         <View style={styles.actionsContainer}>
           {actionButtons.map((button, index) => (

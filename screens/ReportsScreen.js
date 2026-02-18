@@ -55,7 +55,7 @@ const ReportsScreen = ({ navigation }) => {
       description: i18n.t('reports.customerReportDescription'),
       icon: 'people',
       color: colors.grey[700],
-      available: false, // Sera disponible plus tard
+      available: false, 
     },
   ];
 
@@ -75,8 +75,7 @@ const ReportsScreen = ({ navigation }) => {
       );
       return;
     }
-
-    // Simulation de génération de rapport
+    
     Alert.alert(
       i18n.t('reports.reportGeneratedTitle'),
       i18n.t('reports.reportGeneratedMessage', { reportTitle: reportType.title, period: selectedPeriod }),
@@ -168,7 +167,7 @@ const ReportsScreen = ({ navigation }) => {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Sélecteur de période */}
+        {}
         <View style={styles.periodSection}>
           <Text style={styles.sectionTitle}>{i18n.t('reports.periodTitle')}</Text>
           <View style={styles.periodSelector}>
@@ -192,7 +191,7 @@ const ReportsScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Liste des rapports */}
+        {}
         <View style={styles.reportsSection}>
           <Text style={styles.sectionTitle}>{i18n.t('reports.availableReports')}</Text>
           <View style={styles.reportsGrid}>
@@ -200,7 +199,7 @@ const ReportsScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Informations supplémentaires */}
+        {}
         <View style={styles.infoSection}>
           <View style={styles.infoCard}>
             <Icon

@@ -24,7 +24,7 @@ const OrderStatusBadge = ({
           container: styles.largeContainer,
           text: styles.largeText,
         };
-      default: // medium
+      default: 
         return {
           container: styles.mediumContainer,
           text: styles.mediumText,

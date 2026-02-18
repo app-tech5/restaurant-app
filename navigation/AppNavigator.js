@@ -12,14 +12,13 @@ const Stack = createStackNavigator();
 export default function AppNavigator() {
   const navigationRef = useRef();
   const { isAuthenticated, isLoading } = useRestaurant();
-
-  // Gérer la navigation basée sur l'état d'authentification
+  
   useEffect(() => {
     if (!isLoading && navigationRef.current) {
       const navigation = navigationRef.current;
 
       if (isAuthenticated) {
-        // Si authentifié, aller au drawer
+        
         if (navigation.getCurrentRoute()?.name !== 'DrawerNavigator') {
           navigation.reset({
             index: 0,
@@ -27,7 +26,7 @@ export default function AppNavigator() {
           });
         }
       } else {
-        // Si pas authentifié et pas sur Splash, aller au login
+        
         const currentRoute = navigation.getCurrentRoute()?.name;
         if (currentRoute !== 'Splash' && currentRoute !== 'Login') {
           navigation.reset({

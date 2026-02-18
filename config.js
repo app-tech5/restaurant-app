@@ -1,79 +1,54 @@
-// Configuration globale de l'application restaurant
 
 export const config = {
-  // === MODE DÉVELOPPEMENT ===
-  DEMO_MODE: __DEV__, // Automatiquement true en développement
-
-  // === DONNÉES DÉMO ===
+  
+  DEMO_MODE: __DEV__, 
+  
   DEMO_EMAIL: 'demo@restaurant.com',
   DEMO_PASSWORD: 'password123',
 
-  // === API CONFIGURATION ===
-  // API_BASE_URL: __DEV__
-  //   ? 'http://localhost:3000/api'  // Développement
-  //   : 'https://api.goodfood.com/api', // Production
-
-  // API_BASE_URL: __DEV__
-  // ? 'https://deshawn-athermanous-indefensibly.ngrok-free.dev/api'  // Développement
-  // : 'https://api.goodfood.com/api', // Production
-
-  // API_BASE_URL: __DEV__
-  // ? 'http://144.91.97.29:5001/api'  // Développement
-  // : 'https://api.goodfood.com/api', // Production
-
   API_BASE_URL: __DEV__
-    ? 'http://localhost:5000/api'  // Développement
-    : 'https://api.goodfood.com/api', // Production
+    ? 'http://localhost:5000/api'  
+    : 'https://api.goodfood.com/api', 
 
-  API_TIMEOUT: 10000, // 10 secondes
-
-  // === APPLICATION INFO ===
+  API_TIMEOUT: 10000, 
+  
   APP_NAME: 'Good Food',
   APP_SUBTITLE: 'Restaurant',
   VERSION: '1.0.0',
   BUILD_NUMBER: '1',
-
-  // === FONCTIONNALITÉS ===
+  
   ENABLE_NOTIFICATIONS: true,
   ENABLE_LOCATION: true,
   ENABLE_CAMERA: true,
   ENABLE_ANIMATIONS: true,
-
-  // === CACHE CONFIGURATION ===
+  
   CACHE_ENABLED: true,
-  CACHE_DEFAULT_TTL: 5 * 60 * 1000, // 5 minutes
-  CACHE_LONG_TTL: 30 * 60 * 1000, // 30 minutes
-
-  // === LIMITES APPLICATION ===
+  CACHE_DEFAULT_TTL: 5 * 60 * 1000, 
+  CACHE_LONG_TTL: 30 * 60 * 1000, 
+  
   MAX_MENU_ITEMS: 100,
   MAX_ORDER_ITEMS: 50,
-  MAX_IMAGE_SIZE: 5 * 1024 * 1024, // 5MB
-
-  // === CONSTANTES RESTAURANT ===
-  DEFAULT_PREPARATION_TIME: 15, // minutes
-  DEFAULT_DELIVERY_RADIUS: 5, // km
-  MIN_ORDER_AMOUNT: 5.00, // €
-  DEFAULT_TAX_RATE: 20, // %
-
-  // === TIMERS ===
-  ORDER_REFRESH_INTERVAL: 30000, // 30 secondes
-  STATS_REFRESH_INTERVAL: 60000, // 1 minute
-  LOCATION_UPDATE_INTERVAL: 10000, // 10 secondes
-
-  // === ANALYTICS ===
+  MAX_IMAGE_SIZE: 5 * 1024 * 1024, 
+  
+  DEFAULT_PREPARATION_TIME: 15, 
+  DEFAULT_DELIVERY_RADIUS: 5, 
+  MIN_ORDER_AMOUNT: 5.00, 
+  DEFAULT_TAX_RATE: 20, 
+  
+  ORDER_REFRESH_INTERVAL: 30000, 
+  STATS_REFRESH_INTERVAL: 60000, 
+  LOCATION_UPDATE_INTERVAL: 10000, 
+  
   ENABLE_ANALYTICS: true,
   ANALYTICS_TRACKING_ID: 'restaurant-app',
-
-  // === SUPPORT ===
+  
   SUPPORT_EMAIL: 'support@goodfood.com',
   SUPPORT_PHONE: '+33123456789',
-
-  // === PAIEMENT ===
+  
   ENABLE_PAYMENT: true,
   PAYMENT_CURRENCIES: ['EUR', 'USD', 'GBP'],
   DEFAULT_CURRENCY: 'EUR',
-
-  // === VALIDATION ===
+  
   VALIDATION: {
     email: {
       pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,

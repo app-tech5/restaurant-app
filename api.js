@@ -1,8 +1,7 @@
-// API Client pour l'application restaurant
+
 import { config } from './config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Fonction utilitaire pour vérifier si on est en mode démo
 const isDemoMode = () => config.DEMO_MODE === true;
 
 const API_BASE_URL = config.API_BASE_URL;
@@ -14,8 +13,7 @@ class ApiClient {
     this.restaurant = null;
     this.initializeFromStorage();
   }
-
-  // Initialisation automatique depuis AsyncStorage
+  
   async initializeFromStorage() {
     try {
       const token = await AsyncStorage.getItem('restaurantToken');
@@ -32,8 +30,7 @@ class ApiClient {
       console.error('Error initializing restaurant from storage:', error);
     }
   }
-
-  // Configuration des headers avec token si disponible
+  
   getHeaders() {
     const headers = {
       'Content-Type': 'application/json',
@@ -45,8 +42,7 @@ class ApiClient {
 
     return headers;
   }
-
-  // Méthode générique pour les appels API
+  
   async apiCall(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const config = {
@@ -69,13 +65,12 @@ class ApiClient {
 
       const data = await response.json();
       console.log(`✅ API Success: ${endpoint}`)
-      // console.log(`✅ API Success: ${endpoint}`, data);
+      
       return data;
 
     } catch (error) {
       console.error(`❌ API Error: ${endpoint}`, error);
-
-      // En mode démo, on peut retourner des données mockées
+      
       if (isDemoMode() && endpoint.includes('stats')) {
         return this.getMockData(endpoint);
       }
@@ -83,8 +78,7 @@ class ApiClient {
       throw error;
     }
   }
-
-  // Données mockées pour le mode démo
+  
   getMockData(endpoint) {
     if (endpoint.includes('stats')) {
       return {
@@ -140,12 +134,9 @@ class ApiClient {
 
     return null;
   }
-
-  // === AUTHENTIFICATION ===
-
-  // Connexion restaurant
+  
   async restaurantLogin(email, password) {
-    // En mode démo, utiliser les credentials de démo pour se connecter à la vraie API
+    
     const loginEmail = isDemoMode() ? config.DEMO_EMAIL : email;
     const loginPassword = isDemoMode() ? config.DEMO_PASSWORD : password;
 
@@ -161,8 +152,7 @@ class ApiClient {
 
     return response;
   }
-
-  // Profil restaurant
+  
   async getRestaurantProfile() {
     if (isDemoMode()) {
       return this.restaurant || {
@@ -178,8 +168,7 @@ class ApiClient {
 
     return await this.apiCall('/restaurant/profile');
   }
-
-  // Déconnexion
+  
   async logout() {
     this.token = null;
     this.restaurant = null;
@@ -192,23 +181,16 @@ class ApiClient {
 
     return { success: true };
   }
-
-  // === STATISTIQUES ===
-
-  // Statistiques du restaurant
+  
   async getRestaurantStats() {
     return await this.apiCall('/restaurant/stats');
   }
-
-  // === COMMANDES ===
-
-  // Liste des commandes
+  
   async getRestaurantOrders(status = null) {
     const endpoint = status ? `/restaurant/orders?status=${status}` : '/restaurant/orders';
     return await this.apiCall(endpoint);
   }
-
-  // Accepter une commande
+  
   async acceptOrder(orderId) {
     if (isDemoMode()) {
       return { success: true, message: 'Commande acceptée' };
@@ -218,8 +200,7 @@ class ApiClient {
       method: 'POST',
     });
   }
-
-  // Préparer une commande
+  
   async prepareOrder(orderId) {
     if (isDemoMode()) {
       return { success: true, message: 'Préparation démarrée' };
@@ -229,8 +210,7 @@ class ApiClient {
       method: 'POST',
     });
   }
-
-  // Commande prête
+  
   async readyForPickup(orderId) {
     if (isDemoMode()) {
       return { success: true, message: 'Commande prête' };
@@ -240,8 +220,7 @@ class ApiClient {
       method: 'POST',
     });
   }
-
-  // Changer le statut d'une commande
+  
   async updateOrderStatus(orderId, status) {
     if (isDemoMode()) {
       return { success: true, message: `Statut changé à ${status}` };
@@ -252,19 +231,12 @@ class ApiClient {
       body: JSON.stringify({ status }),
     });
   }
-
-  // === MENU ===
-
-  // Récupérer le menu
+  
   async getRestaurantMenu() {
-    // if (isDemoMode()) {
-    //   return this.getMockData('/menu');
-    // }
 
     return await this.apiCall('/restaurant/menu');
   }
-
-  // Mettre à jour le profil du restaurant
+  
   async updateRestaurantProfile(profileData) {
     if (isDemoMode()) {
       return { success: true, message: 'Profil mis à jour', data: profileData };
@@ -275,13 +247,11 @@ class ApiClient {
       body: JSON.stringify(profileData),
     });
   }
-
-  // Récupérer les paramètres utilisateur
+  
   async getUserSettings() {
     return await this.apiCall('/user-settings');
   }
-
-  // Mettre à jour les paramètres utilisateur
+  
   async updateUserSettings(settingsData) {
     if (isDemoMode()) {
       return { success: true, message: 'Paramètres mis à jour', data: settingsData };
@@ -292,8 +262,7 @@ class ApiClient {
       body: JSON.stringify(settingsData),
     });
   }
-
-  // Mettre à jour seulement les notifications
+  
   async updateNotifications(notifications) {
     if (isDemoMode()) {
       return { success: true, message: 'Notifications mises à jour', data: notifications };
@@ -304,8 +273,7 @@ class ApiClient {
       body: JSON.stringify({ notifications }),
     });
   }
-
-  // Mettre à jour seulement les paramètres restaurant
+  
   async updateRestaurantSettings(restaurantSettings) {
     if (isDemoMode()) {
       return { success: true, message: 'Paramètres restaurant mis à jour', data: restaurantSettings };
@@ -316,8 +284,7 @@ class ApiClient {
       body: JSON.stringify({ restaurantSettings }),
     });
   }
-
-  // Ajouter un élément au menu
+  
   async addMenuItem(menuItem) {
     if (isDemoMode()) {
       return {
@@ -331,8 +298,7 @@ class ApiClient {
       body: JSON.stringify(menuItem),
     });
   }
-
-  // Modifier un élément du menu
+  
   async updateMenuItem(itemId, updates) {
     if (isDemoMode()) {
       return { success: true, message: 'Élément mis à jour' };
@@ -343,8 +309,7 @@ class ApiClient {
       body: JSON.stringify(updates),
     });
   }
-
-  // Supprimer un élément du menu
+  
   async deleteMenuItem(itemId) {
     if (isDemoMode()) {
       return { success: true, message: 'Élément supprimé' };
@@ -354,8 +319,7 @@ class ApiClient {
       method: 'DELETE',
     });
   }
-
-  // Changer la disponibilité d'un élément
+  
   async toggleMenuItemAvailability(itemId, available) {
     if (isDemoMode()) {
       return { success: true, message: `Élément ${available ? 'activé' : 'désactivé'}` };
@@ -366,33 +330,16 @@ class ApiClient {
       body: JSON.stringify({ available }),
     });
   }
-
-  // === PARAMÈTRES ===
-
-  // Récupérer les paramètres
+  
   async getSettings() {
-    // if (isDemoMode()) {
-    //   return {
-    //     success: true,
-    //     data: {
-    //       currency: { code: 'EUR', symbol: '€', name: 'Euro', value: 'EUR', label: 'EUR - Euro' },
-    //       language: { code: 'fr', name: 'Français', isDefault: true },
-    //       appName: 'Good Food Restaurant'
-    //     }
-    //   };
-    // }
 
     return await this.apiCall('/settings');
   }
-
-  // === AVIS CLIENTS ===
-
-  // Récupérer les avis du restaurant
+  
   async getRestaurantReviews() {
     return await this.apiCall('/restaurant/reviews');
   }
-
-  // Répondre à un avis
+  
   async replyToReview(reviewId, replyText) {
     if (isDemoMode()) {
       return { success: true, message: 'Réponse ajoutée' };
@@ -403,16 +350,12 @@ class ApiClient {
       body: JSON.stringify({ text: replyText }),
     });
   }
-
-  // === ANALYTICS ===
-
-  // Récupérer les analytics du restaurant
+  
   async getRestaurantAnalytics(period = 'today') {
     return await this.apiCall(`/restaurant/analytics?period=${period}`);
   }
 }
 
-// Instance unique de l'API client
 const apiClient = new ApiClient();
 
 export default apiClient;

@@ -70,7 +70,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
   }, [restaurant]);
 
   const handleSave = async () => {
-    // Validation
+    
     if (!formData.name.trim()) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.nameRequired'));
       return;
@@ -80,8 +80,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.emailRequired'));
       return;
     }
-
-    // Validation email
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.invalidEmail'));
@@ -111,7 +110,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
   };
 
   const handleCancel = () => {
-    // Reset les données du formulaire
+    
     if (restaurant) {
       setFormData({
         name: restaurant.name || '',
@@ -187,7 +186,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
           style={styles.keyboardAvoidingView}
         >
           <View style={styles.content}>
-          {/* Informations de base */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.generalInfo')}</Text>
 
@@ -241,7 +240,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Description */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.description')}</Text>
             <View style={styles.field}>
@@ -258,7 +257,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Informations de localisation */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.locationInfo')}</Text>
 
@@ -310,7 +309,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Horaires d'ouverture */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
 
@@ -350,7 +349,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Options de service */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.serviceOptions')}</Text>
 
@@ -366,7 +365,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Image du restaurant */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.restaurantImage')}</Text>
             <View style={styles.field}>
@@ -381,7 +380,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Informations business */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.businessInfo')}</Text>
 
@@ -422,7 +421,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Informations système (lecture seule) */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
 

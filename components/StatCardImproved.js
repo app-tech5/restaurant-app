@@ -19,7 +19,7 @@ const StatCardImproved = ({
   disabled = false,
   ...props
 }) => {
-  // Configuration des tailles
+  
   const sizeConfig = {
     small: {
       container: styles.smallContainer,
@@ -45,11 +45,10 @@ const StatCardImproved = ({
   };
 
   const config = sizeConfig[size] || sizeConfig.medium;
-
-  // Contenu de la carte
+  
   const cardContent = (
     <>
-      {/* Icône */}
+      {}
       <View style={styles.iconContainer}>
         <Icon
           name={icon}
@@ -59,7 +58,7 @@ const StatCardImproved = ({
         />
       </View>
 
-      {/* Contenu texte */}
+      {}
       <View style={styles.content}>
         <Text
           style={[
@@ -101,15 +100,13 @@ const StatCardImproved = ({
       </View>
     </>
   );
-
-  // Styles de base de la carte
+  
   const baseCardStyle = [
     styles.card,
     config.container,
     style
   ];
-
-  // Si onPress est fourni, rendre la carte touchable
+  
   const CardComponent = onPress ? TouchableOpacity : View;
   const cardProps = onPress ? {
     onPress,
@@ -117,8 +114,7 @@ const StatCardImproved = ({
     activeOpacity: 0.7,
     ...props
   } : props;
-
-  // Rendu avec ou sans gradient
+  
   if (gradient) {
     return (
       <CardComponent {...cardProps}>

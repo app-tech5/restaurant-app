@@ -2,7 +2,6 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import ScreenHeader from '../../components/ScreenHeader';
 
-// Mock des dépendances
 jest.mock('react-native-elements', () => ({
   Icon: ({ name, type, size, color, ...props }) => {
     const React = require('react');
@@ -39,7 +38,7 @@ describe('ScreenHeader', () => {
   };
 
   beforeEach(() => {
-    // Mock du fichier global.js
+    
     jest.mock('../../global', () => ({
       colors: mockColors,
       constants: {

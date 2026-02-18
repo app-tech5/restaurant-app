@@ -1,19 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 
-/**
- * Hook personnalisé pour gérer les données des rapports
- * @param {string} reportType - Type de rapport (daily, weekly, monthly, revenue, orders)
- * @param {string} period - Période (day, week, month)
- * @returns {Object} État et fonctions pour les données du rapport
- */
 export const useReportData = (reportType, period) => {
   const { stats, orders, loadRestaurantStats, loadRestaurantOrders } = useRestaurant();
 
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
-  // Charger les données au montage
+  
   useEffect(() => {
     loadReportData();
   }, [reportType, period]);
@@ -37,8 +30,7 @@ export const useReportData = (reportType, period) => {
     await loadReportData();
     setRefreshing(false);
   };
-
-  // Filtrer les commandes selon la période
+  
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
 
@@ -62,8 +54,7 @@ export const useReportData = (reportType, period) => {
 
     return orders.filter(order => new Date(order.createdAt) >= startDate);
   }, [orders, period]);
-
-  // Calculer les métriques de base
+  
   const baseMetrics = useMemo(() => {
     const totalOrders = filteredOrders.length;
     const deliveredOrders = filteredOrders.filter(order => order.status === 'delivered');
@@ -77,8 +68,7 @@ export const useReportData = (reportType, period) => {
       deliveredOrders: deliveredOrders.length
     };
   }, [filteredOrders]);
-
-  // Déterminer le titre et la période textuelle
+  
   const reportInfo = useMemo(() => {
     const now = new Date();
     let title = '';
@@ -121,14 +111,13 @@ export const useReportData = (reportType, period) => {
   }, [reportType, period]);
 
   return {
-    // État
+    
     isLoading,
     refreshing,
     filteredOrders,
     baseMetrics,
     reportInfo,
-
-    // Actions
+    
     onRefresh
   };
 };

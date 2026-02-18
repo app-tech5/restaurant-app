@@ -34,7 +34,7 @@ const ReportsStackNavigator = () => {
         component={ReportsScreen}
         options={{
           title: i18n.t('navigation.reports'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
       <Stack.Screen

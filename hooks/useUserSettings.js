@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import apiClient from '../api';
 
-/**
- * Hook personnalisé pour gérer les paramètres utilisateur
- * @returns {Object} État et fonctions pour gérer les paramètres utilisateur
- */
 export const useUserSettings = () => {
   const [userSettings, setUserSettings] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -28,8 +24,7 @@ export const useUserSettings = () => {
     } catch (err) {
       console.error('Error loading user settings:', err);
       setError(err.message);
-
-      // En cas d'erreur, définir des valeurs par défaut
+      
       setUserSettings({
         notifications: {
           newOrders: true,

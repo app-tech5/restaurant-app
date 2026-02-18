@@ -3,11 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 
-/**
- * Composant pour afficher les métriques de performance
- * @param {Object} metrics - Objet contenant les métriques de performance
- * @param {boolean} isLoading - État de chargement
- */
 const PerformanceMetrics = ({ metrics, isLoading }) => {
   if (!metrics || isLoading) {
     return null;
@@ -53,7 +48,7 @@ const PerformanceMetrics = ({ metrics, isLoading }) => {
 
 const styles = StyleSheet.create({
   container: {
-    // Pas de style spécifique pour le conteneur
+    
   },
   metricCard: {
     backgroundColor: colors.white,

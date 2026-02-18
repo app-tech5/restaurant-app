@@ -118,8 +118,7 @@ const ReportCharts = ({ calculations, reportType }) => {
   };
 
   const charts = [];
-
-  // Ajouter les graphiques selon le type de rapport
+  
   if (calculations.showStatusChart) {
     charts.push(renderStatusChart());
   }

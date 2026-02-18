@@ -1,4 +1,4 @@
-// Mock i18n for this test
+
 jest.mock('../../i18n', () => ({
   t: jest.fn((key, options) => {
     const translations = {
@@ -35,7 +35,6 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import ReportCharts from '../../components/ReportCharts';
 
-// Mock react-native-elements
 jest.mock('react-native-elements', () => ({
   Card: ({ children, containerStyle }) => (
     <div style={containerStyle} testID="card">
@@ -44,7 +43,6 @@ jest.mock('react-native-elements', () => ({
   )
 }));
 
-// Mock formatPrice utility
 jest.mock('../../utils/restaurantUtils', () => ({
   formatPrice: jest.fn((price) => `$${price}`)
 }));
@@ -138,9 +136,7 @@ describe('ReportCharts Component', () => {
       const { getByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
-      // Should show abbreviated day names for English locale
-      // Jan 1, 2024 is a Monday, Jan 2, 2024 is a Tuesday
+      
       expect(getByText('Mon 1')).toBeTruthy();
       expect(getByText('Tue 2')).toBeTruthy();
     });
@@ -249,7 +245,7 @@ describe('ReportCharts Component', () => {
 
   describe('Language Switching', () => {
     it('displays French translations when locale is French', () => {
-      // Mock French locale
+      
       const i18n = require('../../i18n');
       i18n.t.mockImplementation((key, options) => {
         const frenchTranslations = {

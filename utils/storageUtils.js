@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Clés de stockage pour restaurant-app
 const STORAGE_KEYS = {
   RESTAURANT_DATA: 'restaurantData',
   RESTAURANT_TOKEN: 'restaurantToken',
@@ -8,11 +7,6 @@ const STORAGE_KEYS = {
   CACHE_VERSION: 'restaurantCacheVersion'
 };
 
-/**
- * Sauvegarde les données du restaurant dans AsyncStorage
- * @param {Object} restaurantData - Données du restaurant
- * @param {string} token - Token d'authentification
- */
 export const updateRestaurantCache = async (restaurantData, token = null) => {
   try {
     if (restaurantData) {
@@ -30,10 +24,6 @@ export const updateRestaurantCache = async (restaurantData, token = null) => {
   }
 };
 
-/**
- * Récupère les données du restaurant depuis AsyncStorage
- * @returns {Promise<Object|null>} Données du restaurant ou null
- */
 export const getRestaurantFromCache = async () => {
   try {
     const restaurantData = await AsyncStorage.getItem(STORAGE_KEYS.RESTAURANT_DATA);
@@ -53,9 +43,6 @@ export const getRestaurantFromCache = async () => {
   }
 };
 
-/**
- * Supprime toutes les données du restaurant du cache
- */
 export const clearRestaurantCache = async () => {
   try {
     await AsyncStorage.multiRemove([
@@ -69,10 +56,6 @@ export const clearRestaurantCache = async () => {
   }
 };
 
-/**
- * Sauvegarde les paramètres utilisateur
- * @param {Object} settings - Paramètres à sauvegarder
- */
 export const saveSettings = async (settings) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
@@ -83,10 +66,6 @@ export const saveSettings = async (settings) => {
   }
 };
 
-/**
- * Récupère les paramètres utilisateur
- * @returns {Promise<Object|null>} Paramètres ou null
- */
 export const getSettings = async () => {
   try {
     const settings = await AsyncStorage.getItem(STORAGE_KEYS.SETTINGS);
@@ -97,9 +76,6 @@ export const getSettings = async () => {
   }
 };
 
-/**
- * Nettoie tous les paramètres sauvegardés
- */
 export const clearSettings = async () => {
   try {
     await AsyncStorage.removeItem(STORAGE_KEYS.SETTINGS);
@@ -110,9 +86,6 @@ export const clearSettings = async () => {
   }
 };
 
-/**
- * Nettoie complètement tout le stockage de l'app
- */
 export const clearAllStorage = async () => {
   try {
     await AsyncStorage.clear();
@@ -123,10 +96,6 @@ export const clearAllStorage = async () => {
   }
 };
 
-/**
- * Obtient des informations sur le stockage
- * @returns {Promise<Object>} Informations de debug sur le stockage
- */
 export const getStorageInfo = async () => {
   try {
     const keys = await AsyncStorage.getAllKeys();

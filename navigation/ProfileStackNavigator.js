@@ -32,13 +32,11 @@ const ProfileStackNavigator = () => {
         component={RestaurantProfileScreen}
         options={{
           title: i18n.t('restaurantProfile.title'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
     </Stack.Navigator>
   );
 };
-
-// RestaurantProfileScreen importé depuis screens
 
 export default ProfileStackNavigator;

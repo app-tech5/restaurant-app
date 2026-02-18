@@ -1,4 +1,4 @@
-// Mock AsyncStorage before importing i18n
+
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
@@ -8,7 +8,7 @@ import i18n, { initializeLanguage, changeLanguage, getCurrentLanguage, hasTransl
 
 describe('i18n', () => {
   beforeEach(() => {
-    // Reset i18n state before each test
+    
     i18n.locale = 'en';
     jest.clearAllMocks();
   });

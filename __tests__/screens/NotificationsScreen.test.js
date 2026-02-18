@@ -1,4 +1,4 @@
-// Mock AsyncStorage first before any other imports
+
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
@@ -12,7 +12,6 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   multiMerge: jest.fn(),
 }));
 
-// Mock i18n for this test
 jest.mock('../../i18n', () => ({
   t: jest.fn((key, options) => {
     const translations = {
@@ -63,7 +62,6 @@ import { Alert } from 'react-native';
 import NotificationsScreen from '../../screens/NotificationsScreen';
 import { mockNotifications, emptyNotifications, allReadNotifications } from '../../__mocks__/mockNotifications';
 
-// Mock hooks that might use AsyncStorage
 jest.mock('../../hooks', () => ({
   useRestaurantAuth: () => ({
     user: { id: 1, name: 'Test User' },
@@ -83,19 +81,16 @@ jest.mock('../../hooks', () => ({
   }),
 }));
 
-// Mock components that might use AsyncStorage indirectly
 jest.mock('../../components/ReportMetricsCards', () => {
   const React = require('react');
   return () => React.createElement('View', { testID: 'report-metrics-cards' });
 });
 
-// Mock utils that might use AsyncStorage
 jest.mock('../../utils/restaurantUtils', () => ({
   updateRestaurantCache: jest.fn(),
   clearRestaurantCache: jest.fn(),
 }));
 
-// Mock API that might have AsyncStorage dependencies
 jest.mock('../../api', () => ({
   get: jest.fn(),
   post: jest.fn(),
@@ -103,7 +98,6 @@ jest.mock('../../api', () => ({
   delete: jest.fn(),
 }));
 
-// Mock des dépendances
 jest.mock('react-native-elements', () => {
   const mockReact = require('react');
   const { View, TouchableOpacity, Text } = require('react-native');
@@ -114,8 +108,7 @@ jest.mock('react-native-elements', () => {
       style: containerStyle,
       testID: 'list-item'
     }, children);
-
-  // Add static properties to the component
+  
   MockListItem.Content = ({ children }) => children;
   MockListItem.Title = ({ children, style }) => mockReact.createElement('Text', { style }, children);
   MockListItem.Subtitle = ({ children, style }) => mockReact.createElement('Text', { style }, children);
@@ -161,7 +154,6 @@ jest.mock('../../components/EmptyState', () => {
   );
 });
 
-// Mock Alert
 const mockAlert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
 describe('NotificationsScreen', () => {
@@ -184,15 +176,14 @@ describe('NotificationsScreen', () => {
     );
 
     expect(getByText('Notifications')).toBeTruthy();
-    expect(getAllByTestId('list-item')).toHaveLength(4); // 4 notifications mock
+    expect(getAllByTestId('list-item')).toHaveLength(4); 
   });
 
   it('displays unread indicator for unread notifications', () => {
     const { getAllByTestId } = render(
       <NotificationsScreen navigation={mockNavigation} />
     );
-
-    // Should have unread indicators for unread notifications
+    
     const unreadNotifications = mockNotifications.filter(n => !n.read);
     expect(getAllByTestId('unread-indicator')).toHaveLength(unreadNotifications.length);
   });
@@ -239,9 +230,7 @@ describe('NotificationsScreen', () => {
 
     const firstNotification = getAllByTestId('list-item')[0];
     fireEvent.press(firstNotification);
-
-    // The notification should be marked as read
-    // (This would normally change the state, but we're testing the interaction)
+    
   });
 
   it('navigates to order details when order notification is pressed', () => {
@@ -249,7 +238,7 @@ describe('NotificationsScreen', () => {
       <NotificationsScreen navigation={mockNavigation} />
     );
 
-    const firstNotification = getAllByTestId('list-item')[0]; // First notification is an order
+    const firstNotification = getAllByTestId('list-item')[0]; 
     fireEvent.press(firstNotification);
 
     expect(mockNavigation.navigate).toHaveBeenCalledWith('Orders', {
@@ -263,7 +252,7 @@ describe('NotificationsScreen', () => {
       <NotificationsScreen navigation={mockNavigation} />
     );
 
-    const thirdNotification = getAllByTestId('list-item')[2]; // Third notification is a review
+    const thirdNotification = getAllByTestId('list-item')[2]; 
     fireEvent.press(thirdNotification);
 
     expect(mockNavigation.navigate).toHaveBeenCalledWith('Reviews', {
@@ -280,17 +269,13 @@ describe('NotificationsScreen', () => {
   });
 
   it('shows clear all button when all notifications are read', () => {
-    // Since the component uses mockNotifications directly, we need to test the logic differently
-    // The button appears when unreadCount is 0, so we can test this by checking the rendered state
+    
     const { queryByTestId } = render(
       <NotificationsScreen navigation={mockNavigation} />
     );
-
-    // With current mockNotifications (which have unread items), mark-all-read-button should be visible
+    
     expect(queryByTestId('mark-all-read-button')).toBeTruthy();
-
-    // Note: Testing the clear-all-button would require mocking the component's state differently
-    // For now, we test that the mark-all-read button appears when there are unread notifications
+    
   });
 
   it('marks all notifications as read when mark all button is pressed', () => {
@@ -300,14 +285,10 @@ describe('NotificationsScreen', () => {
 
     const markAllButton = getByTestId('mark-all-read-button');
     fireEvent.press(markAllButton);
-
-    // All notifications should be marked as read
-    // (State would change, but we're testing the interaction)
+    
   });
 
   it('shows alert when clear all button is pressed', () => {
-    // Since we can't easily mock the component state, we'll test that the clearAllNotifications function works
-    // by testing the markAllAsRead functionality instead, which doesn't require state mocking
 
     const { getByTestId } = render(
       <NotificationsScreen navigation={mockNavigation} />
@@ -315,13 +296,8 @@ describe('NotificationsScreen', () => {
 
     const markAllButton = getByTestId('mark-all-read-button');
     fireEvent.press(markAllButton);
-
-    // The mark all as read functionality should work without requiring state mocks
-    // Note: Testing clearAllNotifications would require more complex state mocking
+    
   });
-
-  // Note: Tests for clearAll functionality would require complex state mocking
-  // which is not straightforward with the current component structure
 
   it('shows empty state when no notifications', () => {
     const { getByTestId, getByText } = render(
@@ -333,7 +309,7 @@ describe('NotificationsScreen', () => {
   });
 
   it('shows filtered empty state when no notifications match filter', () => {
-    // Use only system notifications and filter by 'orders' to test empty filter state
+    
     const systemOnlyNotifications = mockNotifications.filter(n => n.type === 'system');
 
     const { getByTestId, getByText } = render(
@@ -342,15 +318,13 @@ describe('NotificationsScreen', () => {
         initialNotifications={systemOnlyNotifications}
       />
     );
-
-    // Change filter to 'orders' which should result in no matches
+    
     const ordersTab = getByText('Commandes');
     fireEvent.press(ordersTab);
 
     expect(getByTestId('empty-state')).toBeTruthy();
     expect(getByText('Aucune notification dans la catégorie "orders"')).toBeTruthy();
   });
-
 
   it('navigates back when back button is pressed', () => {
     const { getByTestId } = render(
@@ -369,8 +343,7 @@ describe('NotificationsScreen', () => {
     );
 
     const notifications = getAllByTestId('list-item');
-    // The first notification should be the most recent (least old)
-    // We can't easily test the actual sorting without more complex mocking
+    
     expect(notifications).toHaveLength(mockNotifications.length);
   });
 });

@@ -34,7 +34,7 @@ const MenuStackNavigator = () => {
         component={MenuScreen}
         options={{
           title: i18n.t('navigation.menu'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         }}
       />
       <Stack.Screen
@@ -44,7 +44,7 @@ const MenuStackNavigator = () => {
           title: route.params?.mode === 'add'
             ? i18n.t('menu.addItem')
             : i18n.t('menu.editItem'),
-          headerShown: false, // Utilise ScreenHeader dans le composant
+          headerShown: false, 
         })}
       />
       <Stack.Screen
@@ -64,8 +64,6 @@ const MenuStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
-// Écrans temporaires - à remplacer par les vrais composants
 
 const MenuCategoriesScreen = ({ navigation }) => {
   return (

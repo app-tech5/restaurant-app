@@ -47,17 +47,15 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleLanguageChange = async () => {
     try {
-      // Récupérer les langues disponibles via le hook
+      
       const availableLanguages = await getAvailableLanguages();
-
-      // Créer les options pour l'Alert avec toutes les langues
+      
       const languageOptions = availableLanguages.map(lang => ({
         text: `${lang.name} (${lang.code.toUpperCase()})`,
         onPress: () => handleLanguageSelection(lang.code),
         style: lang.code === i18n.locale ? 'destructive' : 'default'
       }));
-
-      // Ajouter l'option Annuler
+      
       languageOptions.push({
         text: i18n.t('common.cancel'),
         style: 'cancel'
@@ -76,10 +74,9 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleLanguageSelection = async (languageCode) => {
     try {
-      // Utiliser la méthode du SettingContext
+      
       await changeLanguage(languageCode);
-
-      // Changer la langue dans i18n
+      
       const { changeLanguage: changeI18nLanguage } = require('../i18n');
       changeI18nLanguage(languageCode);
 
@@ -166,7 +163,7 @@ const SettingsScreen = ({ navigation }) => {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Profil Restaurant */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.restaurantSection')}</Text>
           <SettingRow
@@ -197,7 +194,7 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Livraison & Paiement */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.servicesSection')}</Text>
           <SettingRow
@@ -214,7 +211,7 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Notifications */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.notificationsSettings')}</Text>
           <SettingRow
@@ -275,7 +272,7 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Préférences */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.preferencesSection')}</Text>
           <SettingRow
@@ -294,7 +291,7 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Support & Aide */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.supportHelpSection')}</Text>
           <SettingRow
@@ -311,7 +308,7 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Informations */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.informationSection')}</Text>
           <SettingRow
@@ -334,7 +331,7 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Version */}
+        {}
         <View style={styles.versionContainer}>
           <Text style={styles.versionText}>
             Good Food Restaurant v1.0.0

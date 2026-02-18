@@ -19,7 +19,6 @@ const ReportDetailsScreen = ({ route, navigation }) => {
   const { isLoading, refreshing, filteredOrders, baseMetrics, reportInfo, onRefresh } = useReportData(reportType, period);
   const calculations = useReportCalculations(filteredOrders, reportType);
 
-
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -54,19 +53,19 @@ const ReportDetailsScreen = ({ route, navigation }) => {
           />
         }
       >
-        {/* En-tête du rapport */}
+        {}
         <Card containerStyle={styles.headerCard}>
           <Text style={styles.reportTitle}>{reportInfo.title}</Text>
           <Text style={styles.reportPeriod}>{reportInfo.periodText}</Text>
         </Card>
 
-        {/* Métriques principales */}
+        {}
         <ReportMetricsCards
           baseMetrics={baseMetrics}
           reportType={reportType}
         />
 
-        {/* Graphiques spécifiques au type de rapport */}
+        {}
         <ReportCharts
           calculations={calculations}
           reportType={reportType}

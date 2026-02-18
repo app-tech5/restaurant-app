@@ -1,6 +1,5 @@
 import '@testing-library/jest-native/extend-expect';
 
-// Global AsyncStorage mock - must be first
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
@@ -14,7 +13,6 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   multiMerge: jest.fn(),
 }));
 
-// Mock i18n-js to avoid ES6 module issues
 const mockT = jest.fn((key, options) => {
   const translations = {
     'notifications.newOrder': 'Nouvelle commande',
@@ -46,10 +44,9 @@ const mockT = jest.fn((key, options) => {
   };
 
   let result = translations[key] || key;
-
-  // Handle interpolation
+  
   if (options) {
-    // Handle all interpolations including count
+    
     Object.keys(options).forEach(optionKey => {
       result = result.replace(new RegExp(`{{${optionKey}}}`, 'g'), options[optionKey]);
       result = result.replace(new RegExp(`{{count}}`, 'g'), options[optionKey]);
@@ -68,7 +65,6 @@ jest.mock('i18n-js', () => ({
   })),
 }));
 
-// Also mock the default export
 jest.mock('../i18n', () => ({
   t: mockT,
   default: {
@@ -79,14 +75,11 @@ jest.mock('../i18n', () => ({
   },
 }));
 
-
-// Mock expo-font
 jest.mock('expo-font', () => ({
   loadAsync: jest.fn(),
   isLoaded: jest.fn(() => true),
 }));
 
-// Mock expo-localization
 jest.mock('expo-localization', () => ({
   locale: 'fr-FR',
   locales: ['fr-FR'],
@@ -96,7 +89,6 @@ jest.mock('expo-localization', () => ({
   isRTL: false,
 }));
 
-// Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => ({
   useSharedValue: jest.fn(() => ({ value: 0 })),
   useAnimatedStyle: jest.fn(() => ({})),
@@ -105,10 +97,8 @@ jest.mock('react-native-reanimated', () => ({
   runOnUI: jest.fn((fn) => fn()),
 }));
 
-// Silence the warning: Animated: `useNativeDriver` is not supported
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
-// Mock react-native-maps
 jest.mock('react-native-maps', () => {
   const React = require('react');
   const { View } = require('react-native');
@@ -127,7 +117,6 @@ jest.mock('react-native-maps', () => {
   };
 });
 
-// Mock expo-location
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(() =>
     Promise.resolve({ status: 'granted' })
@@ -143,7 +132,6 @@ jest.mock('expo-location', () => ({
   ),
 }));
 
-// Mock other libraries
 jest.mock('react-native-modal', () => 'MockModal');
 jest.mock('react-native-linear-gradient', () => 'MockLinearGradient');
 jest.mock('expo-linear-gradient', () => 'MockExpoLinearGradient');
@@ -175,13 +163,11 @@ jest.mock('expo-location', () => ({
   })),
 }));
 
-// Global test utilities
 global.fetch = jest.fn();
 
-// Mock console methods to reduce noise in tests
 global.console = {
   ...console,
-  // Keep error and warn for debugging
+  
   log: jest.fn(),
   info: jest.fn(),
   debug: jest.fn(),

@@ -33,8 +33,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (restaurant) {
-      // Pour l'instant, utiliser des valeurs par défaut car ces champs ne sont pas encore dans le modèle
-      // TODO: Mettre à jour quand le backend supportera ces champs
+      
       setFormData({
         cashPayment: restaurant.cashPayment !== undefined ? restaurant.cashPayment : true,
         cardPayment: restaurant.cardPayment !== undefined ? restaurant.cardPayment : true,
@@ -59,7 +58,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
   };
 
   const handleSave = async () => {
-    // Validation des champs numériques
+    
     if (!validateNumber(formData.commissionRate, 'commissionRate', 0, 100)) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('payment.invalidRate'));
       return;
@@ -82,11 +81,9 @@ const PaymentSettingsScreen = ({ navigation }) => {
 
     try {
       setIsLoading(true);
-
-      // Pour l'instant, sauvegarder seulement les champs supportés par le backend
-      // TODO: Étendre quand le backend supportera tous les champs de paiement
+      
       const updateData = {
-        // Champs temporaires - à remplacer par les vrais champs du backend
+        
         cashPayment: formData.cashPayment,
         cardPayment: formData.cardPayment,
         onlinePayment: formData.onlinePayment,
@@ -95,9 +92,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
         fixedFee: formData.fixedFee,
         percentageFee: formData.percentageFee
       };
-
-      // Note: Pour l'instant, on utilise updateRestaurantProfile qui ne gère que certains champs
-      // Une vraie implémentation nécessiterait une route dédiée pour les paramètres de paiement
+      
       const response = await apiClient.updateRestaurantProfile(updateData);
 
       if (response.success) {
@@ -125,7 +120,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
   };
 
   const handleCancel = () => {
-    // Reset to original values
+    
     if (restaurant) {
       setFormData({
         cashPayment: restaurant.cashPayment !== undefined ? restaurant.cashPayment : true,
@@ -200,7 +195,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
       />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Payment Methods */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('payment.methods')}</Text>
 
@@ -265,7 +260,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Fees & Commissions */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('payment.fees')}</Text>
 
