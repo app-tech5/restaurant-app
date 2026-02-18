@@ -81,6 +81,7 @@
 
   "menu": {
     "title": "Gestion du menu",
+    "searchPlaceholder": "Rechercher un plat...",
     "addItem": "Ajouter un plat",
     "editItem": "Modifier le plat",
     "deleteItem": "Supprimer le plat",

@@ -144,6 +144,7 @@
   },
   "menu": {
     "title": "Menu Management",
+    "searchPlaceholder": "Search for a dish...",
     "addItem": "Add dish",
     "editItem": "Edit dish",
     "deleteItem": "Delete dish",
@@ -181,6 +182,13 @@
       "beverages": "Beverages",
       "sides": "Sides",
       "specialties": "Specialties"
+    },
+    "empty": {
+      "noResults": "No results",
+      "noResultsSubtitle": "No dishes match your criteria",
+      "emptyMenu": "Empty menu",
+      "emptyMenuSubtitle": "Add your first dish to get started",
+      "addFirstItem": "Add a dish"
     }
   },
   "analytics": {

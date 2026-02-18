@@ -3,6 +3,7 @@ import { StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native';
 import { MenuItemCard, EmptyState } from './';
 import { colors, constants } from '../global';
 import { RefreshControl } from 'react-native';
+import i18n from '../i18n';
 
 const MenuList = ({
   filteredItems,
@@ -30,8 +31,8 @@ const MenuList = ({
       return (
         <EmptyState
           icon="search"
-          title="Aucun résultat"
-          subtitle="Aucun plat ne correspond à vos critères"
+          title={i18n.t('menu.empty.noResults')}
+          subtitle={i18n.t('menu.empty.noResultsSubtitle')}
         />
       );
     }
@@ -39,15 +40,15 @@ const MenuList = ({
     return (
       <EmptyState
         icon="restaurant-menu"
-        title="Menu vide"
-        subtitle="Ajoutez votre premier plat pour commencer"
+        title={i18n.t('menu.empty.emptyMenu')}
+        subtitle={i18n.t('menu.empty.emptyMenuSubtitle')}
         action={
           <TouchableOpacity
             style={styles.addFirstItemButton}
             onPress={onAddFirstItem}
           >
             <Text style={styles.addFirstItemText}>
-              Ajouter un plat
+              {i18n.t('menu.empty.addFirstItem')}
             </Text>
           </TouchableOpacity>
         }

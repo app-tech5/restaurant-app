@@ -2,11 +2,12 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { colors, constants } from '../global';
+import i18n from '../i18n';
 
 const MenuSearchBar = ({ searchQuery, setSearchQuery }) => {
   return (
     <SearchBar
-      placeholder="Rechercher un plat..."
+      placeholder={i18n.t('menu.searchPlaceholder')}
       onChangeText={setSearchQuery}
       value={searchQuery}
       containerStyle={styles.searchContainer}
