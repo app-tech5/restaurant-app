@@ -69,7 +69,7 @@ const SettingsStackNavigator = () => {
         name="NotificationSettings"
         component={NotificationSettingsScreen}
         options={{
-          title: 'Paramètres de notifications',
+          title: i18n.t('navigation.notificationSettings'),
         }}
       />
       <Stack.Screen
@@ -87,10 +87,10 @@ const SettingsStackNavigator = () => {
 const LanguageSettingsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Paramètres de langue</Text>
+      <Text>{i18n.t('navigation.languageSettings')}</Text>
       <Text>À implémenter...</Text>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
+        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -99,10 +99,10 @@ const LanguageSettingsScreen = ({ navigation }) => {
 const NotificationSettingsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Paramètres de notifications</Text>
+      <Text>{i18n.t('navigation.notificationSettings')}</Text>
       <Text>À implémenter...</Text>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
+        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
       </TouchableOpacity>
     </View>
   );

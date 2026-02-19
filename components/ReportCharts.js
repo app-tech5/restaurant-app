@@ -46,7 +46,7 @@ const ReportCharts = ({ calculations, reportType }) => {
       <Card containerStyle={styles.chartCard}>
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.mostOrderedDishes')}</Text>
         {topItems.map((item, index) => (
-          <View key={item.name} style={styles.itemRow}>
+          <View key={`top-item-${item.name}-${index}`} style={styles.itemRow}>
             <View style={styles.itemInfo}>
               <Text style={styles.itemRank}>#{index + 1}</Text>
               <Text style={styles.itemName}>{item.name}</Text>
@@ -67,7 +67,7 @@ const ReportCharts = ({ calculations, reportType }) => {
       <Card containerStyle={styles.chartCard}>
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.revenueByDay')}</Text>
         {revenueByDay.slice(0, 7).map((day, index) => (
-          <View key={index} style={styles.revenueRow}>
+          <View key={`revenue-day-${index}`} style={styles.revenueRow}>
             <Text style={styles.revenueDate}>
               {day.date.toLocaleDateString(i18n.locale === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'short', day: 'numeric' })}
             </Text>
@@ -109,7 +109,7 @@ const ReportCharts = ({ calculations, reportType }) => {
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.peakHours')}</Text>
         {peakHours.map((hour, index) => (
           <View key={index} style={styles.hourRow}>
-            <Text style={styles.hourTime}>{hour.hour}h - {hour.hour + 1}h</Text>
+            <Text style={styles.hourTime}>{i18n.t('common.hourRange', { start: hour.hour, end: hour.hour + 1 })}</Text>
             <Text style={styles.hourCount}>{hour.count} {i18n.t('reports.charts.units.orders')}</Text>
           </View>
         ))}

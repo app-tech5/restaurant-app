@@ -14,7 +14,7 @@ const ChartSection = ({ isLoading }) => {
         {i18n.t('analytics.salesByDay')}
       </Text>
       <Text style={styles.placeholder}>
-        (Victory Native sera intégré ici)
+        ({i18n.t('charts.victoryIntegration')})
       </Text>
     </View>
   );

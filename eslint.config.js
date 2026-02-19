@@ -51,10 +51,6 @@ module.exports = [
     },
     rules: {
       
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      'prefer-const': 'error',
-      'no-var': 'error',
-      'no-undef': 'error',
       "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       'no-comments/disallowComments': 'error',

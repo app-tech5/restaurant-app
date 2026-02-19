@@ -233,6 +233,18 @@
     }
   },
 
+  "navigation": {
+    "menuManagement": "Gestion des menus",
+    "menuCategories": "Gestion des catégories de menu",
+    "menuAnalytics": "Analyses du menu",
+    "ordersHistory": "Historique des commandes",
+    "languageSettings": "Paramètres de langue",
+    "notificationSettings": "Paramètres de notifications",
+    "return": "Retour"
+  },
+  "charts": {
+    "victoryIntegration": "Victory Native sera intégré ici"
+  },
   "reviews": {
     "title": "Avis clients",
     "averageRating": "Note moyenne",
@@ -499,7 +511,16 @@
     "start": "Commencer",
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer ?",
     "noData": "Aucune donnée disponible",
-    "noResults": "Aucun résultat trouvé"
+    "noResults": "Aucun résultat trouvé",
+    "return": "Retour",
+    "item": "article",
+    "items": "articles",
+    "minutes": "minutes",
+    "tags": "Tags",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "hourRange": "{{start}}h - {{end}}h",
+    "itemQuantity": "{{quantity}}x {{name}}"
   },
 
   "errors": {

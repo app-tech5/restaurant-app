@@ -285,7 +285,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
 
             <View style={styles.rowField}>
               <View style={[styles.field, styles.halfField]}>
-                <Text style={styles.fieldLabel}>Latitude</Text>
+                <Text style={styles.fieldLabel}>{i18n.t('common.latitude')}</Text>
                 <TextInput
                   style={[styles.textInput, !isEditing && styles.textInputDisabled]}
                   value={formData.latitude}
@@ -296,7 +296,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 />
               </View>
               <View style={[styles.field, styles.halfField]}>
-                <Text style={styles.fieldLabel}>Longitude</Text>
+                <Text style={styles.fieldLabel}>{i18n.t('common.longitude')}</Text>
                 <TextInput
                   style={[styles.textInput, !isEditing && styles.textInputDisabled]}
                   value={formData.longitude}

@@ -327,7 +327,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
 
             {}
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Tags</Text>
+              <Text style={styles.fieldLabel}>{i18n.t('common.tags')}</Text>
               <TextInput
                 style={[styles.textInput]}
                 value={formData.tags}

@@ -115,11 +115,11 @@ const OrderCard = ({
         {}
         <View style={styles.itemsContainer}>
           <Text style={styles.itemsTitle}>
-            {items.length} article{items.length > 1 ? 's' : ''}
+            {items.length} {i18n.t(items.length > 1 ? 'common.items' : 'common.item')}
           </Text>
           {items.slice(0, 2).map((item, index) => (
             <Text key={index} style={styles.itemText} numberOfLines={1}>
-              {item.quantity}x {item.name}
+              {i18n.t('common.itemQuantity', { quantity: item.quantity, name: item.name })}
             </Text>
           ))}
           {items.length > 2 && (
@@ -147,7 +147,7 @@ const OrderCard = ({
                 color={colors.grey[600]}
               />
               <Text style={styles.estimatedTime}>
-                {estimatedTime} min
+                {estimatedTime} {i18n.t('common.minutes')}
               </Text>
             </View>
           )}

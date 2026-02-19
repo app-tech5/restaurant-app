@@ -58,7 +58,7 @@ const MenuStackNavigator = () => {
         name="MenuAnalytics"
         component={MenuAnalyticsScreen}
         options={{
-          title: 'Analyses du menu',
+          title: i18n.t('navigation.menuAnalytics'),
         }}
       />
     </Stack.Navigator>
@@ -68,10 +68,10 @@ const MenuStackNavigator = () => {
 const MenuCategoriesScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Gestion des catégories de menu</Text>
+      <Text>{i18n.t('navigation.menuCategories')}</Text>
       <Text>À implémenter...</Text>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
+        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -80,10 +80,10 @@ const MenuCategoriesScreen = ({ navigation }) => {
 const MenuAnalyticsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Analyses du menu</Text>
+      <Text>{i18n.t('navigation.menuAnalytics')}</Text>
       <Text>À implémenter...</Text>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
+        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
       </TouchableOpacity>
     </View>
   );

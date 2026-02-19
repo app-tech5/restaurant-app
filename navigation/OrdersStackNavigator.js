@@ -59,10 +59,10 @@ const OrdersStackNavigator = () => {
 const OrderHistoryScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Historique des commandes</Text>
+      <Text>{i18n.t('navigation.ordersHistory')}</Text>
       <Text>À implémenter...</Text>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>Retour</Text>
+        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
       </TouchableOpacity>
     </View>
   );

@@ -15,7 +15,14 @@
     "support": "Support",
     "profile": "Profile",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "menuManagement": "Menu Management",
+    "menuCategories": "Menu Categories Management",
+    "menuAnalytics": "Menu Analytics",
+    "ordersHistory": "Orders History",
+    "languageSettings": "Language Settings",
+    "notificationSettings": "Notification Settings",
+    "return": "Return"
   },
   "auth": {
     "login": "Login",
@@ -324,6 +331,9 @@
     }
   },
 
+  "charts": {
+    "victoryIntegration": "Victory Native will be integrated here"
+  },
   "reviews": {
     "title": "Customer reviews",
     "averageRating": "Average rating",
@@ -703,7 +713,16 @@
     "start": "Start",
     "confirmDelete": "Are you sure you want to delete?",
     "noData": "No data available",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "return": "Return",
+    "item": "item",
+    "items": "items",
+    "minutes": "minutes",
+    "tags": "Tags",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "hourRange": "{{start}}h - {{end}}h",
+    "itemQuantity": "{{quantity}}x {{name}}"
   },
   "errors": {
     "networkError": "Network error",
