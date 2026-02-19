@@ -54,6 +54,7 @@ module.exports = [
       "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       'no-comments/disallowComments': 'error',
+      "max-lines": ["warn", { "max": 300 }],
       
       'i18next/no-literal-string': [
         'error',

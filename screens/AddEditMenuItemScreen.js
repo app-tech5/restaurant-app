@@ -58,36 +58,36 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Le nom du plat est requis';
+      newErrors.name = i18n.t('menu.validation.nameRequired');
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'La description est requise';
+      newErrors.description = i18n.t('menu.validation.descriptionRequired');
     }
 
     if (!formData.price.trim()) {
-      newErrors.price = 'Le prix est requis';
+      newErrors.price = i18n.t('menu.validation.priceRequired');
     } else {
       const priceNum = parseFloat(formData.price.replace(',', '.'));
       if (isNaN(priceNum) || priceNum <= 0) {
-        newErrors.price = 'Le prix doit être un nombre positif';
+        newErrors.price = i18n.t('menu.validation.pricePositiveNumber');
       }
     }
 
     if (!formData.category.trim()) {
-      newErrors.category = 'La catégorie est requise';
+      newErrors.category = i18n.t('menu.validation.categoryRequired');
     }
 
     if (!formData.image.trim()) {
-      newErrors.image = 'L\'image est requise';
+      newErrors.image = i18n.t('menu.validation.imageRequired');
     }
 
     if (!formData.preparation_time.trim()) {
-      newErrors.preparation_time = 'Le temps de préparation est requis';
+      newErrors.preparation_time = i18n.t('menu.validation.prepTimeRequired');
     } else {
       const prepTime = parseInt(formData.preparation_time);
       if (isNaN(prepTime) || prepTime <= 0) {
-        newErrors.preparation_time = 'Le temps de préparation doit être un nombre positif';
+        newErrors.preparation_time = i18n.t('menu.validation.prepTimePositiveNumber');
       }
     }
 
@@ -118,26 +118,26 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
       if (isEditMode) {
         await updateMenuItem(item._id, menuItemData);
         Alert.alert(
-          'Succès',
-          'Le plat a été modifié avec succès',
-          [{ text: 'OK', onPress: () => navigation.goBack() }]
+          i18n.t('menu.alerts.success'),
+          i18n.t('menu.alerts.itemUpdated'),
+          [{ text: i18n.t('common.ok'), onPress: () => navigation.goBack() }]
         );
       } else {
         await addMenuItem(menuItemData);
         Alert.alert(
-          'Succès',
-          'Le plat a été ajouté avec succès',
+          i18n.t('menu.alerts.success'),
+          i18n.t('menu.alerts.itemAdded'),
           [
-            { text: 'Ajouter un autre', style: 'default' },
-            { text: 'Terminé', onPress: () => navigation.goBack() }
+            { text: i18n.t('menu.alerts.addAnother'), style: 'default' },
+            { text: i18n.t('menu.alerts.done'), onPress: () => navigation.goBack() }
           ]
         );
       }
     } catch (error) {
-      console.error('Erreur sauvegarde plat:', error);
+      console.error('Error saving dish:', error);
       Alert.alert(
-        'Erreur',
-        `Impossible de ${isEditMode ? 'modifier' : 'ajouter'} le plat`
+        i18n.t('menu.alerts.error'),
+        isEditMode ? i18n.t('menu.alerts.updateFailed') : i18n.t('menu.alerts.addFailed')
       );
     } finally {
       setIsLoading(false);
@@ -260,7 +260,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 style={[styles.textInput, errors.category && styles.textInputError]}
                 value={formData.category}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, category: text }))}
-                placeholder="Ex: Plats principaux, Desserts..."
+                placeholder={i18n.t('menu.categoryPlaceholder')}
                 maxLength={50}
               />
               {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}

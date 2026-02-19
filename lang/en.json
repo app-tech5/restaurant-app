@@ -179,6 +179,7 @@
     "ingredientsHint": "Separate ingredients with commas",
     "tagsPlaceholder": "e.g. spicy, vegetarian, popular",
     "tagsHint": "Separate tags with commas",
+    "categoryPlaceholder": "e.g. Main courses, Desserts, Beverages...",
     "suggestions": "Suggestions",
     "requiredFields": "* Required fields",
     "visibilityNote": "Only available dishes are visible to customers",
@@ -196,6 +197,26 @@
       "emptyMenu": "Empty menu",
       "emptyMenuSubtitle": "Add your first dish to get started",
       "addFirstItem": "Add a dish"
+    },
+    "validation": {
+      "nameRequired": "Dish name is required",
+      "descriptionRequired": "Description is required",
+      "priceRequired": "Price is required",
+      "pricePositiveNumber": "Price must be a positive number",
+      "categoryRequired": "Category is required",
+      "imageRequired": "Image is required",
+      "prepTimeRequired": "Preparation time is required",
+      "prepTimePositiveNumber": "Preparation time must be a positive number"
+    },
+    "alerts": {
+      "success": "Success",
+      "itemUpdated": "Dish updated successfully",
+      "itemAdded": "Dish added successfully",
+      "addAnother": "Add another",
+      "done": "Done",
+      "error": "Error",
+      "updateFailed": "Unable to update dish",
+      "addFailed": "Unable to add dish"
     }
   },
   "analytics": {
