@@ -47,14 +47,12 @@ const getFromCache = async (key, ttl = CACHE_CONFIG.DEFAULT_TTL) => {
     const cacheData = JSON.parse(cached);
     
     if (cacheData.version !== CACHE_CONFIG.VERSION) {
-      console.log('Cache version mismatch, invalidating');
       await AsyncStorage.removeItem(key);
       return null;
     }
     
     const age = Date.now() - cacheData.timestamp;
     if (age > ttl) {
-      console.log(`Cache expired for ${key}, age: ${age}ms, ttl: ${ttl}ms`);
       await AsyncStorage.removeItem(key);
       return null;
     }
@@ -103,7 +101,6 @@ export const loadWithSmartCache = async (
         }
       }
     } catch (apiError) {
-      console.log('API fetch failed, using cached data if available:', apiError.message);
       if (!cachedData) {
         
         onError?.('Impossible de charger les données');

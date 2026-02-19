@@ -16,8 +16,6 @@ export const updateRestaurantCache = async (restaurantData, token = null) => {
     if (token) {
       await AsyncStorage.setItem(STORAGE_KEYS.RESTAURANT_TOKEN, token);
     }
-
-    console.log('✅ Données restaurant sauvegardées dans AsyncStorage');
   } catch (error) {
     console.error('❌ Erreur sauvegarde restaurant:', error);
     throw error;
@@ -49,7 +47,6 @@ export const clearRestaurantCache = async () => {
       STORAGE_KEYS.RESTAURANT_DATA,
       STORAGE_KEYS.RESTAURANT_TOKEN
     ]);
-    console.log('🗑️ Cache restaurant nettoyé');
   } catch (error) {
     console.error('❌ Erreur nettoyage cache restaurant:', error);
     throw error;
@@ -59,7 +56,6 @@ export const clearRestaurantCache = async () => {
 export const saveSettings = async (settings) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-    console.log('✅ Paramètres sauvegardés');
   } catch (error) {
     console.error('❌ Erreur sauvegarde paramètres:', error);
     throw error;
@@ -79,7 +75,6 @@ export const getSettings = async () => {
 export const clearSettings = async () => {
   try {
     await AsyncStorage.removeItem(STORAGE_KEYS.SETTINGS);
-    console.log('🗑️ Paramètres nettoyés');
   } catch (error) {
     console.error('❌ Erreur nettoyage paramètres:', error);
     throw error;
@@ -89,7 +84,6 @@ export const clearSettings = async () => {
 export const clearAllStorage = async () => {
   try {
     await AsyncStorage.clear();
-    console.log('🗑️ Tout le stockage nettoyé');
   } catch (error) {
     console.error('❌ Erreur nettoyage stockage:', error);
     throw error;

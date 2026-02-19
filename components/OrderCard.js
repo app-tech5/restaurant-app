@@ -27,7 +27,6 @@ const OrderCard = ({
   } = order;
 
   const { currency } = useSettings();
-  console.log("currency in OrderCard", currency)
 
   const statusLabel = getOrderStatusLabel(status);
   const statusColor = getOrderStatusColor(status);

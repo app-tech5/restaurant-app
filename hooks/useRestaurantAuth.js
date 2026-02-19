@@ -31,7 +31,7 @@ export const useRestaurantAuth = () => {
               await updateRestaurantCache(freshRestaurantData);
             }
           } catch (refreshError) {
-            console.log('Could not refresh restaurant data, using cached data:', refreshError.message);
+            // Could not refresh restaurant data, using cached data
           }
           
         }
@@ -74,8 +74,7 @@ export const useRestaurantAuth = () => {
                 setRestaurant(freshRestaurantData);
               }
             } catch (refreshError) {
-              
-              console.log('Could not refresh restaurant data, using existing data');
+
             }
           }
 

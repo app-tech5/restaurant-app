@@ -16,8 +16,6 @@ export const useSettingsManager = (isAuthenticated) => {
   useEffect(() => {
     
     if (isAuthenticated) {
-      console.log('🔄 Chargement des settings car restaurant authentifié');
-      
       loadSettingsWithSmartCache(
         () => apiClient.getSettings(), 
         (response, fromCache) => {
@@ -26,14 +24,13 @@ export const useSettingsManager = (isAuthenticated) => {
           setSettings(data);
           setError(null);
           if (fromCache) {
-            console.log('🔄 Settings chargés depuis le cache');
+            // Settings chargés depuis le cache
           }
         },
         (response) => {
           
           const data = response.data || response;
           setSettings(data);
-          console.log('🔄 Settings mis à jour depuis l\'API');
         },
         (loading) => {
           
@@ -46,8 +43,7 @@ export const useSettingsManager = (isAuthenticated) => {
         }
       );
     } else {
-      
-      console.log('🔄 Restaurant non authentifié - remise à zéro des settings');
+
       const resetState = resetSettingsState();
       setSettings(resetState.settings);
       setLoading(resetState.loading);
@@ -58,7 +54,6 @@ export const useSettingsManager = (isAuthenticated) => {
   const refreshSettings = async () => {
     
     if (!isAuthenticated) {
-      console.log('🔄 Impossible de rafraîchir les settings - restaurant non authentifié');
       return;
     }
     
@@ -81,13 +76,11 @@ export const useSettingsManager = (isAuthenticated) => {
   const invalidateCache = async () => {
     
     if (!isAuthenticated) {
-      console.log('🔄 Impossible d\'invalider le cache des settings - restaurant non authentifié');
       return;
     }
 
     try {
       await clearSettingsCache();
-      console.log('🗑️ Cache des settings invalidé');
       await refreshSettings();
     } catch (error) {
       console.error('Erreur lors de l\'invalidation du cache:', error);
@@ -96,9 +89,7 @@ export const useSettingsManager = (isAuthenticated) => {
   
   const changeLanguage = async (languageCode) => {
     try {
-      
-      console.log(`🌐 Changement de langue demandé: ${languageCode}`);
-      
+
       return { success: true };
     } catch (error) {
       console.error('Erreur changement langue:', error);

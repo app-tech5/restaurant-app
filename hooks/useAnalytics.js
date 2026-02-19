@@ -10,7 +10,6 @@ export const useAnalytics = (restaurant, isAuthenticated) => {
   
   const loadAnalytics = async (selectedPeriod = period) => {
     if (!isAuthenticated || !restaurant?._id) {
-      console.log('❌ Restaurant non authentifié, impossible de charger les analytics');
       return;
     }
 
@@ -26,13 +25,12 @@ export const useAnalytics = (restaurant, isAuthenticated) => {
           
           setAnalytics(data);
           if (fromCache) {
-            console.log(`🔄 Analytics ${selectedPeriod} chargés depuis le cache`);
+            // Analytics chargés depuis le cache
           }
         },
         (data) => {
-          
+
           setAnalytics(data);
-          console.log(`🔄 Analytics ${selectedPeriod} mis à jour depuis l'API`);
         },
         (loading) => {
           

@@ -10,7 +10,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
   
   const loadMenu = async () => {
     if (!isAuthenticated || !restaurant?._id) {
-      console.log('❌ Restaurant non authentifié, impossible de charger le menu');
       return;
     }
 
@@ -23,17 +22,15 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
           
           setMenu(data);
           if (fromCache) {
-            console.log('🔄 Menu chargé depuis le cache dans RestaurantContext');
+            // Menu chargé depuis le cache
           }
         },
         (data) => {
-          
+
           setMenu(data);
-          console.log('🔄 Menu mis à jour depuis l\'API dans RestaurantContext');
         },
         (loading) => {
-          
-          console.log(`🔄 État de chargement du menu: ${loading}`);
+
         },
         (errorMsg) => {
           
@@ -60,7 +57,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.addMenuItem(menuItem);
-      console.log('➕ Élément ajouté au menu:', response);
       await loadMenu(); 
       return response;
     } catch (error) {
@@ -81,7 +77,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.updateMenuItem(itemId, updates);
-      console.log('🔄 Élément du menu mis à jour:', response);
       await loadMenu(); 
       return response;
     } catch (error) {
@@ -100,7 +95,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.deleteMenuItem(itemId);
-      console.log('🗑️ Élément supprimé du menu:', response);
       await loadMenu(); 
       return response;
     } catch (error) {
@@ -121,7 +115,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.toggleMenuItemAvailability(itemId, available);
-      console.log(`🔄 Élément ${available ? 'activé' : 'désactivé'}:`, response);
       await loadMenu(); 
       return response;
     } catch (error) {
@@ -134,7 +127,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
     if (restaurant?._id) {
       try {
         await clearMenuCache(restaurant._id);
-        console.log('🗑️ Cache du menu invalidé');
         await loadMenu(); 
       } catch (error) {
         console.error('Erreur lors de l\'invalidation du cache du menu:', error);

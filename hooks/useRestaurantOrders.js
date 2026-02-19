@@ -10,7 +10,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
   
   const loadRestaurantOrders = async (status = null) => {
     if (!isAuthenticated || !restaurant?._id) {
-      console.log('❌ Restaurant non authentifié, impossible de charger les commandes');
       return;
     }
 
@@ -23,17 +22,15 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
           
           setOrders(data);
           if (fromCache) {
-            console.log('🔄 Commandes chargées depuis le cache dans RestaurantContext');
+            // Commandes chargées depuis le cache
           }
         },
         (data) => {
-          
+
           setOrders(data);
-          console.log('🔄 Commandes mises à jour depuis l\'API dans RestaurantContext');
         },
         (loading) => {
-          
-          console.log(`🔄 État de chargement des commandes: ${loading}`);
+
         },
         (errorMsg) => {
           
@@ -55,7 +52,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.acceptOrder(orderId);
-      console.log('✅ Commande acceptée:', response);
       await loadRestaurantOrders(); 
       return response;
     } catch (error) {
@@ -74,7 +70,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.prepareOrder(orderId);
-      console.log('👨‍🍳 Commande en préparation:', response);
       await loadRestaurantOrders(); 
       return response;
     } catch (error) {
@@ -93,7 +88,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.readyForPickup(orderId);
-      console.log('✅ Commande prête:', response);
       await loadRestaurantOrders(); 
       return response;
     } catch (error) {
@@ -112,7 +106,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
 
     try {
       const response = await apiClient.updateOrderStatus(orderId, status);
-      console.log('🔄 Statut commande mis à jour:', response);
       await loadRestaurantOrders(); 
       return response;
     } catch (error) {
@@ -125,7 +118,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     if (restaurant?._id) {
       try {
         await clearOrdersCache(restaurant._id);
-        console.log('🗑️ Cache des commandes invalidé');
         await loadRestaurantOrders(); 
       } catch (error) {
         console.error('Erreur lors de l\'invalidation du cache des commandes:', error);

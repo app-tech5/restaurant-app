@@ -11,7 +11,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const DashboardScreen = ({ navigation }) => {
   const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated, formatCurrency } = useRestaurant();
 
-  console.log("orders dans DashboardScreen", orders)
   const [refreshing, setRefreshing] = useState(false);
   const [calculatedStats, setCalculatedStats] = useState(null);
 
@@ -22,13 +21,9 @@ const DashboardScreen = ({ navigation }) => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    
-    console.log("stats dans Dashboard", stats)
-    
+
     if (Array.isArray(orders) && stats) {
-      console.log("orders dans Dashboard", orders)
       const calcStats = calculateRestaurantStats(orders, []);
-      console.log('Calculated Stats:', calcStats);
       setCalculatedStats(calcStats);
     }
   }, [orders, stats]);

@@ -20,7 +20,6 @@ export const useSettings = () => {
         settingsData = response.data;
 
       setSettings(settingsData);
-      console.log('🔧 Paramètres chargés:', settingsData);
 
     } catch (error) {
       console.error('Erreur chargement paramètres:', error);

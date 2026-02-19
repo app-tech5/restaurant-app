@@ -51,8 +51,6 @@ export const getOrderStatusColor = (status) => {
 };
 
 export const calculateRestaurantStats = (orders = [], menu = []) => {
-  console.log("orders dans calculateRestaurantStats", orders)
-  
   const safeOrders = Array.isArray(orders) ? orders : [];
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());

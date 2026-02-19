@@ -8,7 +8,6 @@ export const useRestaurantStats = (restaurant, isAuthenticated) => {
   
   const loadRestaurantStats = async () => {
     if (!isAuthenticated || !restaurant?._id) {
-      console.log('❌ Restaurant non authentifié, impossible de charger les stats');
       return;
     }
 
@@ -21,17 +20,15 @@ export const useRestaurantStats = (restaurant, isAuthenticated) => {
           
           setStats(data);
           if (fromCache) {
-            console.log('🔄 Stats chargées depuis le cache dans RestaurantContext');
+            // Stats chargées depuis le cache
           }
         },
         (data) => {
-          
+
           setStats(data);
-          console.log('🔄 Stats mises à jour depuis l\'API dans RestaurantContext');
         },
         (loading) => {
-          
-          console.log(`🔄 État de chargement des stats: ${loading}`);
+
         },
         (errorMsg) => {
           
@@ -47,7 +44,6 @@ export const useRestaurantStats = (restaurant, isAuthenticated) => {
     if (restaurant?._id) {
       try {
         await clearRestaurantStatsCache(restaurant._id);
-        console.log('🗑️ Cache des stats invalidé');
         await loadRestaurantStats(); 
       } catch (error) {
         console.error('Erreur lors de l\'invalidation du cache des stats:', error);

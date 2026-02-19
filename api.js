@@ -55,8 +55,6 @@ class ApiClient {
     };
 
     try {
-      console.log(`🚀 API Call: ${options.method || 'GET'} ${url}`);
-
       const response = await fetch(url, config);
 
       if (!response.ok) {
@@ -64,8 +62,7 @@ class ApiClient {
       }
 
       const data = await response.json();
-      console.log(`✅ API Success: ${endpoint}`)
-      
+
       return data;
 
     } catch (error) {
