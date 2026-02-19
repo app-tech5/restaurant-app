@@ -25,7 +25,7 @@ export const useAnalytics = (restaurant, isAuthenticated) => {
           
           setAnalytics(data);
           if (fromCache) {
-            // Analytics chargés depuis le cache
+            
           }
         },
         (data) => {

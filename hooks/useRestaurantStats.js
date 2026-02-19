@@ -20,7 +20,7 @@ export const useRestaurantStats = (restaurant, isAuthenticated) => {
           
           setStats(data);
           if (fromCache) {
-            // Stats chargées depuis le cache
+            
           }
         },
         (data) => {

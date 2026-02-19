@@ -22,7 +22,7 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
           
           setOrders(data);
           if (fromCache) {
-            // Commandes chargées depuis le cache
+            
           }
         },
         (data) => {

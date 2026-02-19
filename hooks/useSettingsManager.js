@@ -24,7 +24,7 @@ export const useSettingsManager = (isAuthenticated) => {
           setSettings(data);
           setError(null);
           if (fromCache) {
-            // Settings chargés depuis le cache
+            
           }
         },
         (response) => {

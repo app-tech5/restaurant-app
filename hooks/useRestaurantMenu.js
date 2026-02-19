@@ -22,7 +22,7 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
           
           setMenu(data);
           if (fromCache) {
-            // Menu chargé depuis le cache
+            
           }
         },
         (data) => {

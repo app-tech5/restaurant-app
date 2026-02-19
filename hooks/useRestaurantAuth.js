@@ -31,7 +31,7 @@ export const useRestaurantAuth = () => {
               await updateRestaurantCache(freshRestaurantData);
             }
           } catch (refreshError) {
-            // Could not refresh restaurant data, using cached data
+            
           }
           
         }
