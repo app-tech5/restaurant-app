@@ -1,5 +1,0 @@
-id: complex-component
-message: "Component uses useState. Check if it has too many state variables"
-language: JavaScript
-rule:
-  pattern: useState
