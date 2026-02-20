@@ -19,43 +19,33 @@ import apiClient from '../api';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { ScreenHeader } from '../components';
 import i18n from '../i18n';
-
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState(config.DEMO_MODE ? config.DEMO_EMAIL : '');
   const [password, setPassword] = useState(config.DEMO_MODE ? config.DEMO_PASSWORD : '');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useRestaurant();
-  
   useEffect(() => {
     const checkExistingLogin = async () => {
       try {
         const token = await AsyncStorage.getItem('restaurantToken');
         const restaurantData = await AsyncStorage.getItem('restaurantData');
-
         if (token && restaurantData) {
-          
           navigation.replace('DrawerNavigator');
         }
       } catch (error) {
         console.error('Error checking existing login:', error);
       }
     };
-
     checkExistingLogin();
   }, []);
-
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert(i18n.t('common.error'), i18n.t('auth.fillAllFields'));
       return;
     }
-
     setIsLoading(true);
-
     try {
-      
       const result = await login(email, password);
-
       if (result.success) {
         navigation.replace('DrawerNavigator');
       } else {
@@ -68,7 +58,6 @@ export default function LoginScreen({ navigation }) {
       setIsLoading(false);
     }
   };
-
   return (
     <LinearGradient colors={colors.auth.gradient1} style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
@@ -97,7 +86,6 @@ export default function LoginScreen({ navigation }) {
               <Text style={styles.appTitle}>{config.APP_NAME}</Text>
               <Text style={styles.appSubtitle}>{config.APP_SUBTITLE}</Text>
             </Animatable.View>
-
             {}
             <Animatable.View
               animation="fadeInUp"
@@ -106,7 +94,6 @@ export default function LoginScreen({ navigation }) {
             >
               <Text style={styles.welcomeText}>{i18n.t('auth.welcome')}</Text>
               <Text style={styles.subtitleText}>{i18n.t('auth.loginSubtitle')}</Text>
-
               <Input
                 placeholder={i18n.t('auth.email')}
                 leftIcon={
@@ -126,7 +113,6 @@ export default function LoginScreen({ navigation }) {
                 inputStyle={styles.inputText}
                 placeholderTextColor="#999"
               />
-
               <Input
                 placeholder={i18n.t('auth.password')}
                 leftIcon={
@@ -146,7 +132,6 @@ export default function LoginScreen({ navigation }) {
                 inputStyle={styles.inputText}
                 placeholderTextColor="#999"
               />
-
               <Button
                 title={i18n.t('auth.loginButton')}
                 loading={isLoading}
@@ -157,7 +142,6 @@ export default function LoginScreen({ navigation }) {
                 onPress={handleLogin}
                 raised
               />
-
               {config.DEMO_MODE && (
                 <Text style={styles.demoText}>
                   {i18n.t('auth.demoMode')}
@@ -170,7 +154,6 @@ export default function LoginScreen({ navigation }) {
     </LinearGradient>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

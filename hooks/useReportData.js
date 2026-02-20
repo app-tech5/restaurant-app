@@ -1,16 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
-
 export const useReportData = (reportType, period) => {
   const { stats, orders, loadRestaurantStats, loadRestaurantOrders } = useRestaurant();
-
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  
   useEffect(() => {
     loadReportData();
   }, [reportType, period]);
-
   const loadReportData = async () => {
     try {
       setIsLoading(true);
@@ -24,19 +20,15 @@ export const useReportData = (reportType, period) => {
       setIsLoading(false);
     }
   };
-
   const onRefresh = async () => {
     setRefreshing(true);
     await loadReportData();
     setRefreshing(false);
   };
-  
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
-
     const now = new Date();
     let startDate;
-
     switch (period) {
       case 'day':
         startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -51,16 +43,13 @@ export const useReportData = (reportType, period) => {
         startDate = new Date(now.getFullYear(), now.getMonth(), 1);
         break;
     }
-
     return orders.filter(order => new Date(order.createdAt) >= startDate);
   }, [orders, period]);
-  
   const baseMetrics = useMemo(() => {
     const totalOrders = filteredOrders.length;
     const deliveredOrders = filteredOrders.filter(order => order.status === 'delivered');
     const totalRevenue = deliveredOrders.reduce((sum, order) => sum + (order.total || 0), 0);
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
     return {
       totalOrders,
       totalRevenue,
@@ -68,12 +57,10 @@ export const useReportData = (reportType, period) => {
       deliveredOrders: deliveredOrders.length
     };
   }, [filteredOrders]);
-  
   const reportInfo = useMemo(() => {
     const now = new Date();
     let title = '';
     let periodText = '';
-
     switch (period) {
       case 'day':
         periodText = 'Aujourd\'hui';
@@ -86,7 +73,6 @@ export const useReportData = (reportType, period) => {
         periodText = 'Ce mois';
         break;
     }
-
     switch (reportType) {
       case 'daily':
         title = `${periodText} - Rapport journalier`;
@@ -106,18 +92,14 @@ export const useReportData = (reportType, period) => {
       default:
         title = `${periodText} - Rapport`;
     }
-
     return { title, periodText };
   }, [reportType, period]);
-
   return {
-    
     isLoading,
     refreshing,
     filteredOrders,
     baseMetrics,
     reportInfo,
-    
     onRefresh
   };
 };

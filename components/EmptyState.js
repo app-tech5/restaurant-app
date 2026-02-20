@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const EmptyState = ({
   icon = 'inbox',
   iconType = 'material',
@@ -24,17 +23,14 @@ const EmptyState = ({
         color={colors.grey[400]}
         containerStyle={[styles.iconContainer, iconStyle]}
       />
-
       <Text style={[styles.title, titleStyle]}>
         {title}
       </Text>
-
       {subtitle && (
         <Text style={[styles.subtitle, subtitleStyle]}>
           {subtitle}
         </Text>
       )}
-
       {action && (
         <View style={styles.actionContainer}>
           {action}
@@ -43,7 +39,6 @@ const EmptyState = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -71,5 +66,4 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-
 export default EmptyState;

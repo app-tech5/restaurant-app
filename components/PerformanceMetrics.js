@@ -2,12 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const PerformanceMetrics = ({ metrics, isLoading }) => {
   if (!metrics || isLoading) {
     return null;
   }
-
   const performanceItems = [
     {
       title: i18n.t('analytics.preparationTime'),
@@ -28,7 +26,6 @@ const PerformanceMetrics = ({ metrics, isLoading }) => {
       color: colors.error,
     },
   ];
-
   return (
     <View style={styles.container}>
       {performanceItems.map((item, index) => (
@@ -45,10 +42,8 @@ const PerformanceMetrics = ({ metrics, isLoading }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
-    
   },
   metricCard: {
     backgroundColor: colors.white,
@@ -76,5 +71,4 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
   },
 });
-
 export default PerformanceMetrics;

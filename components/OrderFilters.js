@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { colors } from '../global';
-
 const OrderFilters = ({ statusFilters, selectedStatus, onSelectStatus }) => {
   return (
     <ScrollView
@@ -43,7 +42,6 @@ const OrderFilters = ({ statusFilters, selectedStatus, onSelectStatus }) => {
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   filtersContainer: {
     marginBottom: 16,
@@ -103,5 +101,4 @@ const styles = StyleSheet.create({
     color: colors.text.white,
   },
 });
-
 export default OrderFilters;

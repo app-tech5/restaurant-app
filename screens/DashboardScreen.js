@@ -7,27 +7,21 @@ import { colors, constants } from '../global';
 import { calculateRestaurantStats } from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 const DashboardScreen = ({ navigation }) => {
   const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated, formatCurrency } = useRestaurant();
-
   const [refreshing, setRefreshing] = useState(false);
   const [calculatedStats, setCalculatedStats] = useState(null);
-
   useEffect(() => {
     if (isAuthenticated) {
       loadStats();
     }
   }, [isAuthenticated]);
-
   useEffect(() => {
-
     if (Array.isArray(orders) && stats) {
       const calcStats = calculateRestaurantStats(orders, []);
       setCalculatedStats(calcStats);
     }
   }, [orders, stats]);
-
   const loadStats = async () => {
     try {
       await Promise.all([
@@ -38,13 +32,11 @@ const DashboardScreen = ({ navigation }) => {
       console.error('Erreur chargement stats et commandes:', error);
     }
   };
-
   const onRefresh = async () => {
     setRefreshing(true);
     await loadStats();
     setRefreshing(false);
   };
-
   const statCards = [
     {
       title: i18n.t('dashboard.todayOrders'),
@@ -71,7 +63,6 @@ const DashboardScreen = ({ navigation }) => {
       gradient: [colors.info, colors.info],
     },
   ];
-
   if (!calculatedStats) {
     return (
       <View style={styles.container}>
@@ -80,11 +71,9 @@ const DashboardScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScreenHeader title={i18n.t('navigation.dashboard')} showDrawerMenu/>
-
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -101,7 +90,6 @@ const DashboardScreen = ({ navigation }) => {
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.title')}
           </Text>
-
           <View style={styles.statsGrid}>
             {statCards.map((card, index) => (
               <StatCard
@@ -116,13 +104,11 @@ const DashboardScreen = ({ navigation }) => {
             ))}
           </View>
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.quickActions')}
           </Text>
-
           <View style={styles.quickActions}>
             <ActionCard
               title={i18n.t('dashboard.viewOrders')}
@@ -133,7 +119,6 @@ const DashboardScreen = ({ navigation }) => {
               style={styles.quickActionCard}
               onPress={() => navigation.navigate('Orders')}
             />
-
             <ActionCard
               title={i18n.t('dashboard.manageMenu')}
               subtitle={i18n.t('dashboard.edit')}
@@ -143,7 +128,6 @@ const DashboardScreen = ({ navigation }) => {
               style={styles.quickActionCard}
               onPress={() => navigation.navigate('Menu')}
             />
-
             <ActionCard
               title={i18n.t('dashboard.viewAnalytics')}
               subtitle={i18n.t('dashboard.details')}
@@ -155,13 +139,11 @@ const DashboardScreen = ({ navigation }) => {
             />
           </View>
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.recentOrders')}
           </Text>
-
           {orders && orders.length > 0 ? (
             <View style={styles.recentOrders}>
               <Text style={styles.recentOrdersText}>
@@ -180,13 +162,11 @@ const DashboardScreen = ({ navigation }) => {
             />
           )}
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.restaurantStatus')}
           </Text>
-
           <View style={styles.restaurantStatus}>
             <StatusCard
               title={i18n.t('dashboard.activeItems')}
@@ -196,7 +176,6 @@ const DashboardScreen = ({ navigation }) => {
               size="medium"
               style={styles.statusCard}
             />
-
             <StatusCard
               title={i18n.t('dashboard.pendingOrders')}
               value={calculatedStats?.pendingOrders || 0}
@@ -211,7 +190,6 @@ const DashboardScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -242,7 +220,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-
   },
   quickActionCard: {
     width: '49%',
@@ -272,5 +249,4 @@ const styles = StyleSheet.create({
     width: '48%',
   },
 });
-
 export default DashboardScreen;

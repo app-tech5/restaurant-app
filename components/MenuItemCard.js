@@ -5,7 +5,6 @@ import { colors, constants } from '../global';
 import { formatCurrency } from '../utils/currencyUtils';
 import { useSettings } from '../contexts/SettingContext';
 import i18n from '../i18n';
-
 const MenuItemCard = ({
   item,
   onPress = null,
@@ -16,7 +15,6 @@ const MenuItemCard = ({
   style = {}
 }) => {
   const { currency } = useSettings();
-
   const {
     _id,
     name,
@@ -26,7 +24,6 @@ const MenuItemCard = ({
     available = true,
     image = null
   } = item;
-
   const handleDelete = () => {
     Alert.alert(
       i18n.t('common.confirm'),
@@ -41,11 +38,9 @@ const MenuItemCard = ({
       ]
     );
   };
-
   const handleToggleAvailability = () => {
     onToggleAvailability && onToggleAvailability(_id, !available);
   };
-
   return (
     <Card containerStyle={[styles.card, style]}>
       <TouchableOpacity
@@ -68,7 +63,6 @@ const MenuItemCard = ({
             </View>
           )}
         </View>
-
         {}
         <View style={styles.infoContainer}>
           <View style={styles.header}>
@@ -79,13 +73,11 @@ const MenuItemCard = ({
               {formatCurrency(price, currency)}
             </Text>
           </View>
-
           {description && (
             <Text style={styles.description} numberOfLines={2}>
               {description}
             </Text>
           )}
-
           <View style={styles.footer}>
             <View style={styles.categoryContainer}>
               <Icon
@@ -98,7 +90,6 @@ const MenuItemCard = ({
                 {category.name}
               </Text>
             </View>
-
             <View style={[styles.availabilityBadge, { backgroundColor: available ? colors.success : colors.error }]}>
               <Text style={styles.availabilityText}>
                 {available ? i18n.t('menu.available') : i18n.t('menu.unavailable')}
@@ -107,7 +98,6 @@ const MenuItemCard = ({
           </View>
         </View>
       </TouchableOpacity>
-
       {}
       {showActions && (
         <View style={styles.actionsContainer}>
@@ -127,7 +117,6 @@ const MenuItemCard = ({
               </Text>
             </TouchableOpacity>
           )}
-
           {onEdit && (
             <TouchableOpacity
               onPress={() => onEdit(item)}
@@ -144,7 +133,6 @@ const MenuItemCard = ({
               </Text>
             </TouchableOpacity>
           )}
-
           {onDelete && (
             <TouchableOpacity
               onPress={handleDelete}
@@ -166,7 +154,6 @@ const MenuItemCard = ({
     </Card>
   );
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -267,5 +254,4 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 });
-
 export default MenuItemCard;

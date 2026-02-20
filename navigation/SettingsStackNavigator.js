@@ -5,9 +5,7 @@ import { SettingsScreen, RestaurantProfileScreen, OpeningHoursScreen, DeliverySe
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const Stack = createStackNavigator();
-
 const SettingsStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -83,7 +81,6 @@ const SettingsStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 const LanguageSettingsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -95,7 +92,6 @@ const LanguageSettingsScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const NotificationSettingsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -107,5 +103,4 @@ const NotificationSettingsScreen = ({ navigation }) => {
     </View>
   );
 };
-
 export default SettingsStackNavigator;

@@ -5,9 +5,7 @@ import { useRestaurantOrders } from '../hooks/useRestaurantOrders';
 import { useRestaurantMenu } from '../hooks/useRestaurantMenu';
 import { useSettings } from '../hooks/useSettings';
 import { INITIAL_STATS } from '../utils/restaurantUtils';
-
 const RestaurantContext = createContext();
-
 export const useRestaurant = () => {
   const context = useContext(RestaurantContext);
   if (!context) {
@@ -15,9 +13,7 @@ export const useRestaurant = () => {
   }
   return context;
 };
-
 export const RestaurantProvider = ({ children }) => {
-  
   const {
     restaurant,
     isLoading,
@@ -27,7 +23,6 @@ export const RestaurantProvider = ({ children }) => {
     setRestaurant,
     setIsAuthenticated
   } = useRestaurantAuth();
-  
   const {
     settings,
     isLoading: settingsLoading,
@@ -37,13 +32,11 @@ export const RestaurantProvider = ({ children }) => {
     getCurrencySymbol,
     getCurrencyCode
   } = useSettings();
-  
   const {
     stats,
     loadRestaurantStats,
     invalidateRestaurantStatsCache
   } = useRestaurantStats(restaurant, isAuthenticated);
-  
   const {
     orders,
     loadRestaurantOrders,
@@ -53,7 +46,6 @@ export const RestaurantProvider = ({ children }) => {
     readyForPickup,
     invalidateOrdersCache
   } = useRestaurantOrders(restaurant, isAuthenticated);
-
   const {
     menu,
     loadMenu,
@@ -63,21 +55,15 @@ export const RestaurantProvider = ({ children }) => {
     toggleMenuItemAvailability,
     invalidateMenuCache
   } = useRestaurantMenu(restaurant, isAuthenticated);
-  
   const logout = async () => {
-    
     invalidateRestaurantStatsCache();
     invalidateOrdersCache();
     invalidateMenuCache();
-    
     await authLogout();
-    
     setRestaurant(null);
     setIsAuthenticated(false);
   };
-  
   const value = {
-    
     restaurant,
     isLoading,
     isAuthenticated,
@@ -85,7 +71,6 @@ export const RestaurantProvider = ({ children }) => {
     logout,
     setRestaurant,
     setIsAuthenticated,
-    
     settings,
     settingsLoading,
     settingsError,
@@ -93,11 +78,9 @@ export const RestaurantProvider = ({ children }) => {
     formatCurrency,
     getCurrencySymbol,
     getCurrencyCode,
-    
     stats,
     loadRestaurantStats,
     invalidateRestaurantStatsCache,
-    
     orders,
     loadRestaurantOrders,
     updateOrderStatus,
@@ -105,7 +88,6 @@ export const RestaurantProvider = ({ children }) => {
     prepareOrder,
     readyForPickup,
     invalidateOrdersCache,
-    
     menu,
     loadMenu,
     addMenuItem,
@@ -114,7 +96,6 @@ export const RestaurantProvider = ({ children }) => {
     toggleMenuItemAvailability,
     invalidateMenuCache,
   };
-
   return (
     <RestaurantContext.Provider value={value}>
       {children}

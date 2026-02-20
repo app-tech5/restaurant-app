@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { colors, constants } from '../global';
-
 const SettingRow = ({
   title,
   subtitle = null,
@@ -21,7 +20,6 @@ const SettingRow = ({
     if (rightComponent) {
       return rightComponent;
     }
-
     if (value !== null && typeof value === 'boolean') {
       return (
         <Switch
@@ -33,7 +31,6 @@ const SettingRow = ({
         />
       );
     }
-
     if (showArrow && onPress) {
       return (
         <Icon
@@ -44,7 +41,6 @@ const SettingRow = ({
         />
       );
     }
-
     if (value !== null && typeof value !== 'boolean') {
       return (
         <Text style={styles.valueText}>
@@ -52,12 +48,9 @@ const SettingRow = ({
         </Text>
       );
     }
-
     return null;
   };
-
   const Container = onPress ? TouchableOpacity : View;
-
   return (
     <Container
       style={[
@@ -79,7 +72,6 @@ const SettingRow = ({
             />
           </View>
         )}
-
         <View style={styles.textContainer}>
           <Text style={[
             styles.title,
@@ -88,7 +80,6 @@ const SettingRow = ({
           ]}>
             {title}
           </Text>
-
           {subtitle && (
             <Text style={[
               styles.subtitle,
@@ -99,14 +90,12 @@ const SettingRow = ({
           )}
         </View>
       </View>
-
       <View style={styles.rightContainer}>
         {renderRightContent()}
       </View>
     </Container>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -160,5 +149,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
-
 export default SettingRow;

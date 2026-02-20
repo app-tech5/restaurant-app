@@ -15,10 +15,8 @@ import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
-
 const PaymentSettingsScreen = ({ navigation }) => {
   const { restaurant, isAuthenticated, getCurrencySymbol } = useRestaurant();
-
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,10 +28,8 @@ const PaymentSettingsScreen = ({ navigation }) => {
     fixedFee: '0.30',
     percentageFee: '2.9'
   });
-
   useEffect(() => {
     if (restaurant) {
-      
       setFormData({
         cashPayment: restaurant.cashPayment !== undefined ? restaurant.cashPayment : true,
         cardPayment: restaurant.cardPayment !== undefined ? restaurant.cardPayment : true,
@@ -45,7 +41,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
       });
     }
   }, [restaurant]);
-
   const validateNumber = (value, fieldName, min = 0, max = null) => {
     const num = parseFloat(value);
     if (isNaN(num) || num < min) {
@@ -56,34 +51,26 @@ const PaymentSettingsScreen = ({ navigation }) => {
     }
     return true;
   };
-
   const handleSave = async () => {
-    
     if (!validateNumber(formData.commissionRate, 'commissionRate', 0, 100)) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('payment.invalidRate'));
       return;
     }
-
     if (!validateNumber(formData.minimumOrder, 'minimumOrder', 0)) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('payment.invalidAmount'));
       return;
     }
-
     if (!validateNumber(formData.fixedFee, 'fixedFee', 0)) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('payment.invalidFee'));
       return;
     }
-
     if (!validateNumber(formData.percentageFee, 'percentageFee', 0, 100)) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('payment.invalidFee'));
       return;
     }
-
     try {
       setIsLoading(true);
-      
       const updateData = {
-        
         cashPayment: formData.cashPayment,
         cardPayment: formData.cardPayment,
         onlinePayment: formData.onlinePayment,
@@ -92,9 +79,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
         fixedFee: formData.fixedFee,
         percentageFee: formData.percentageFee
       };
-      
       const response = await apiClient.updateRestaurantProfile(updateData);
-
       if (response.success) {
         Alert.alert(
           i18n.t('success.saved'),
@@ -114,13 +99,10 @@ const PaymentSettingsScreen = ({ navigation }) => {
       setIsLoading(false);
     }
   };
-
   const handleEdit = () => {
     setIsEditing(true);
   };
-
   const handleCancel = () => {
-    
     if (restaurant) {
       setFormData({
         cashPayment: restaurant.cashPayment !== undefined ? restaurant.cashPayment : true,
@@ -134,16 +116,13 @@ const PaymentSettingsScreen = ({ navigation }) => {
     }
     setIsEditing(false);
   };
-
   const updateFormData = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const currencySymbol = getCurrencySymbol();
-
   if (!isAuthenticated) {
     return (
       <View style={styles.container}>
@@ -159,7 +138,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -193,12 +171,10 @@ const PaymentSettingsScreen = ({ navigation }) => {
           )
         }
       />
-
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('payment.methods')}</Text>
-
           <View style={styles.infoField}>
             <View style={styles.methodInfo}>
               <Text style={styles.infoLabel}>{i18n.t('payment.cashPayment')}</Text>
@@ -218,7 +194,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-
           <View style={styles.infoField}>
             <View style={styles.methodInfo}>
               <Text style={styles.infoLabel}>{i18n.t('payment.cardPayment')}</Text>
@@ -238,7 +213,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-
           <View style={styles.infoField}>
             <View style={styles.methodInfo}>
               <Text style={styles.infoLabel}>{i18n.t('payment.onlinePayment')}</Text>
@@ -259,11 +233,9 @@ const PaymentSettingsScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('payment.fees')}</Text>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('payment.commissionRate')} (%)
@@ -278,7 +250,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
               editable={isEditing}
             />
           </View>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('payment.minimumOrder')} ({currencySymbol})
@@ -293,7 +264,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
               editable={isEditing}
             />
           </View>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('payment.fixedFee')} ({currencySymbol})
@@ -308,7 +278,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
               editable={isEditing}
             />
           </View>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('payment.percentageFee')} (%)
@@ -328,7 +297,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
     </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -474,5 +442,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 export default PaymentSettingsScreen;

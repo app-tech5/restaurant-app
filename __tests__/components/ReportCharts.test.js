@@ -1,4 +1,3 @@
-
 jest.mock('../../i18n', () => ({
   t: jest.fn((key, options) => {
     const translations = {
@@ -16,25 +15,20 @@ jest.mock('../../i18n', () => ({
       'reports.charts.units.orders': 'orders',
       'reports.charts.units.ordersAbbrev': 'ord'
     };
-
     let result = translations[key] || key;
-
     if (options) {
       Object.keys(options).forEach(optionKey => {
         const placeholder = `{{${optionKey}}}`;
         result = result.replace(new RegExp(placeholder, 'g'), options[optionKey]);
       });
     }
-
     return result;
   }),
   locale: 'en'
 }));
-
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import ReportCharts from '../../components/ReportCharts';
-
 jest.mock('react-native-elements', () => ({
   Card: ({ children, containerStyle }) => (
     <div style={containerStyle} testID="card">
@@ -42,11 +36,9 @@ jest.mock('react-native-elements', () => ({
     </div>
   )
 }));
-
 jest.mock('../../utils/restaurantUtils', () => ({
   formatPrice: jest.fn((price) => `$${price}`)
 }));
-
 describe('ReportCharts Component', () => {
   const mockCalculations = {
     ordersByStatus: {
@@ -79,39 +71,32 @@ describe('ReportCharts Component', () => {
     showTopRevenueItems: true,
     showPeakHours: true
   };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
   describe('Status Chart', () => {
     it('renders status chart with correct translations', () => {
       const { getByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
       expect(getByText('Status Distribution')).toBeTruthy();
       expect(getByText('Delivered')).toBeTruthy();
       expect(getByText('10')).toBeTruthy();
       expect(getByText('Ready')).toBeTruthy();
       expect(getByText('5')).toBeTruthy();
     });
-
     it('does not render cancelled status when count is 0', () => {
       const { queryByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
       expect(queryByText('Cancelled')).toBeNull();
     });
   });
-
   describe('Top Items Chart', () => {
     it('renders top items chart with correct translations', () => {
       const { getByText, getAllByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
       expect(getByText('Most Ordered Dishes')).toBeTruthy();
       const burgerElements = getAllByText('Burger');
       expect(burgerElements.length).toBeGreaterThan(0);
@@ -120,46 +105,38 @@ describe('ReportCharts Component', () => {
       expect(getByText('12 ord')).toBeTruthy();
     });
   });
-
   describe('Revenue Chart', () => {
     it('renders revenue chart with correct translations', () => {
       const { getByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
       expect(getByText('Revenue by Day')).toBeTruthy();
       expect(getByText('$100')).toBeTruthy();
       expect(getByText('$150')).toBeTruthy();
     });
-
     it('formats dates correctly for English locale', () => {
       const { getByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-      
       expect(getByText('Mon 1')).toBeTruthy();
       expect(getByText('Tue 2')).toBeTruthy();
     });
   });
-
   describe('Top Revenue Items Chart', () => {
     it('renders top revenue items chart with correct translations', () => {
       const { getByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
       expect(getByText('Most Profitable Dishes')).toBeTruthy();
       expect(getByText('$200')).toBeTruthy();
       expect(getByText('$180')).toBeTruthy();
     });
   });
-
   describe('Peak Hours Chart', () => {
     it('renders peak hours chart with correct translations', () => {
       const { getByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
       expect(getByText('Peak Hours')).toBeTruthy();
       expect(getByText('12h - 13h')).toBeTruthy();
       expect(getByText('8 orders')).toBeTruthy();
@@ -167,7 +144,6 @@ describe('ReportCharts Component', () => {
       expect(getByText('12 orders')).toBeTruthy();
     });
   });
-
   describe('Conditional Rendering', () => {
     it('does not render charts when show flags are false', () => {
       const hiddenCalculations = {
@@ -178,74 +154,58 @@ describe('ReportCharts Component', () => {
         showTopRevenueItems: false,
         showPeakHours: false
       };
-
       const { queryByText } = render(
         <ReportCharts calculations={hiddenCalculations} reportType="daily" />
       );
-
       expect(queryByText('Status Distribution')).toBeNull();
       expect(queryByText('Most Ordered Dishes')).toBeNull();
       expect(queryByText('Revenue by Day')).toBeNull();
       expect(queryByText('Most Profitable Dishes')).toBeNull();
       expect(queryByText('Peak Hours')).toBeNull();
     });
-
     it('does not render top items chart when topItems is empty', () => {
       const noTopItemsCalculations = {
         ...mockCalculations,
         topItems: []
       };
-
       const { queryByText } = render(
         <ReportCharts calculations={noTopItemsCalculations} reportType="daily" />
       );
-
       expect(queryByText('Most Ordered Dishes')).toBeNull();
     });
-
     it('does not render revenue chart when revenueByDay is empty', () => {
       const noRevenueCalculations = {
         ...mockCalculations,
         revenueByDay: []
       };
-
       const { queryByText } = render(
         <ReportCharts calculations={noRevenueCalculations} reportType="daily" />
       );
-
       expect(queryByText('Revenue by Day')).toBeNull();
     });
-
     it('does not render top revenue items chart when topRevenueItems is empty', () => {
       const noTopRevenueCalculations = {
         ...mockCalculations,
         topRevenueItems: []
       };
-
       const { queryByText } = render(
         <ReportCharts calculations={noTopRevenueCalculations} reportType="daily" />
       );
-
       expect(queryByText('Most Profitable Dishes')).toBeNull();
     });
-
     it('does not render peak hours chart when peakHours is empty', () => {
       const noPeakHoursCalculations = {
         ...mockCalculations,
         peakHours: []
       };
-
       const { queryByText } = render(
         <ReportCharts calculations={noPeakHoursCalculations} reportType="daily" />
       );
-
       expect(queryByText('Peak Hours')).toBeNull();
     });
   });
-
   describe('Language Switching', () => {
     it('displays French translations when locale is French', () => {
-      
       const i18n = require('../../i18n');
       i18n.t.mockImplementation((key, options) => {
         const frenchTranslations = {
@@ -263,24 +223,19 @@ describe('ReportCharts Component', () => {
           'reports.charts.units.orders': 'commandes',
           'reports.charts.units.ordersAbbrev': 'cmd'
         };
-
         let result = frenchTranslations[key] || key;
-
         if (options) {
           Object.keys(options).forEach(optionKey => {
             const placeholder = `{{${optionKey}}}`;
             result = result.replace(new RegExp(placeholder, 'g'), options[optionKey]);
           });
         }
-
         return result;
       });
       i18n.locale = 'fr';
-
       const { getByText } = render(
         <ReportCharts calculations={mockCalculations} reportType="daily" />
       );
-
       expect(getByText('Répartition par statut')).toBeTruthy();
       expect(getByText('Livrées')).toBeTruthy();
       expect(getByText('Plats les plus commandés')).toBeTruthy();

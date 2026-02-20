@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const OrderErrorState = ({ error, onRetry }) => {
   return (
     <View style={styles.errorContainer}>
@@ -26,7 +25,6 @@ const OrderErrorState = ({ error, onRetry }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   errorContainer: {
     flex: 1,
@@ -71,5 +69,4 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
-
 export default OrderErrorState;

@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { colors, constants } from '../global';
-
 const ActionCard = ({
   title,
   subtitle,
@@ -15,7 +14,6 @@ const ActionCard = ({
   disabled = false,
   ...props
 }) => {
-
   return (
     <TouchableOpacity
       style={[
@@ -37,7 +35,6 @@ const ActionCard = ({
           color={color}
         />
       </View>
-
       {}
       <View style={styles.content}>
         <Text
@@ -48,7 +45,6 @@ const ActionCard = ({
         >
           {title}
         </Text>
-
         {subtitle && (
           <Text
             style={[
@@ -60,7 +56,6 @@ const ActionCard = ({
           </Text>
         )}
       </View>
-
       {}
       <Icon
         name="chevron-right"
@@ -71,7 +66,6 @@ const ActionCard = ({
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -107,5 +101,4 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 });
-
 export default ActionCard;

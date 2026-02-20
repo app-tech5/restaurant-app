@@ -15,10 +15,8 @@ import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
-
 const DeliverySettingsScreen = ({ navigation }) => {
   const { restaurant, isAuthenticated, getCurrencySymbol } = useRestaurant();
-
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,10 +29,8 @@ const DeliverySettingsScreen = ({ navigation }) => {
     deliveryEnabled: true,
     pickupEnabled: true
   });
-
   useEffect(() => {
     if (restaurant) {
-      
       setFormData({
         deliveryRadius: restaurant.deliveryRadius || '5',
         fixedFee: restaurant.fixedFee || '2.50',
@@ -47,7 +43,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
       });
     }
   }, [restaurant]);
-
   const validateNumber = (value, fieldName) => {
     const num = parseFloat(value);
     if (isNaN(num) || num < 0) {
@@ -55,39 +50,30 @@ const DeliverySettingsScreen = ({ navigation }) => {
     }
     return true;
   };
-
   const handleSave = async () => {
-    
     if (!validateNumber(formData.deliveryRadius, 'deliveryRadius')) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('delivery.invalidRadius'));
       return;
     }
-
     if (!validateNumber(formData.fixedFee, 'fixedFee')) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('delivery.invalidFee'));
       return;
     }
-
     if (!validateNumber(formData.perKmFee, 'perKmFee')) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('delivery.invalidFee'));
       return;
     }
-
     if (formData.freeDeliveryEnabled && !validateNumber(formData.freeDeliveryThreshold, 'freeDeliveryThreshold')) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('delivery.invalidThreshold'));
       return;
     }
-
     if (!validateNumber(formData.estimatedTime, 'estimatedTime')) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('delivery.invalidTime'));
       return;
     }
-
     try {
       setIsLoading(true);
-      
       const updateData = {
-        
         deliveryRadius: formData.deliveryRadius,
         fixedFee: formData.fixedFee,
         perKmFee: formData.perKmFee,
@@ -97,9 +83,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
         deliveryEnabled: formData.deliveryEnabled,
         pickupEnabled: formData.pickupEnabled
       };
-      
       const response = await apiClient.updateRestaurantProfile(updateData);
-
       if (response.success) {
         Alert.alert(
           i18n.t('success.saved'),
@@ -119,13 +103,10 @@ const DeliverySettingsScreen = ({ navigation }) => {
       setIsLoading(false);
     }
   };
-
   const handleEdit = () => {
     setIsEditing(true);
   };
-
   const handleCancel = () => {
-    
     if (restaurant) {
       setFormData({
         deliveryRadius: restaurant.deliveryRadius || '5',
@@ -140,16 +121,13 @@ const DeliverySettingsScreen = ({ navigation }) => {
     }
     setIsEditing(false);
   };
-
   const updateFormData = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const currencySymbol = getCurrencySymbol();
-
   if (!isAuthenticated) {
     return (
       <View style={styles.container}>
@@ -165,7 +143,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -199,12 +176,10 @@ const DeliverySettingsScreen = ({ navigation }) => {
           )
         }
       />
-
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.serviceOptions')}</Text>
-
           <View style={styles.infoField}>
             <Text style={styles.infoLabel}>{i18n.t('delivery.deliveryEnabled')}</Text>
             <View style={[
@@ -221,7 +196,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-
           <View style={styles.infoField}>
             <Text style={styles.infoLabel}>{i18n.t('delivery.pickupEnabled')}</Text>
             <View style={[
@@ -239,11 +213,9 @@ const DeliverySettingsScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.availability')}</Text>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('delivery.deliveryRadius')} ({i18n.t('delivery.km')})
@@ -259,11 +231,9 @@ const DeliverySettingsScreen = ({ navigation }) => {
             />
           </View>
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.pricing')}</Text>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('delivery.fixedFee')} ({currencySymbol})
@@ -278,7 +248,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
               editable={isEditing}
             />
           </View>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('delivery.perKmFee')} ({currencySymbol})
@@ -293,7 +262,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
               editable={isEditing}
             />
           </View>
-
           <View style={styles.infoField}>
             <Text style={styles.infoLabel}>{i18n.t('delivery.freeDeliveryEnabled')}</Text>
             <View style={[
@@ -310,7 +278,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-
           {formData.freeDeliveryEnabled && (
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>
@@ -328,11 +295,9 @@ const DeliverySettingsScreen = ({ navigation }) => {
             </View>
           )}
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.estimatedTime')}</Text>
-
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
               {i18n.t('delivery.estimatedTime')} ({i18n.t('delivery.minutes')})
@@ -352,7 +317,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
     </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -489,5 +453,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 export default DeliverySettingsScreen;

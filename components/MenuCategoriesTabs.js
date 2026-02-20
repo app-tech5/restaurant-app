@@ -1,15 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native';
 import { colors, constants } from '../global';
-
 const MenuCategoriesTabs = ({ categories, selectedCategory, setSelectedCategory }) => {
   const renderCategoryTab = (category) => {
     const isActive = selectedCategory === category;
     const categoryLabel = category === 'all' ? 'Tous' : category;
-
     return (
       <TouchableOpacity
-        
         style={[
           styles.categoryTab,
           isActive && styles.activeCategoryTab
@@ -25,7 +22,6 @@ const MenuCategoriesTabs = ({ categories, selectedCategory, setSelectedCategory 
       </TouchableOpacity>
     );
   };
-
   return (
     <View style={styles.categoriesContainer}>
       <FlatList
@@ -39,7 +35,6 @@ const MenuCategoriesTabs = ({ categories, selectedCategory, setSelectedCategory 
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   categoriesContainer: {
     backgroundColor: colors.white,
@@ -69,5 +64,4 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
-
 export default MenuCategoriesTabs;

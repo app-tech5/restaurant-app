@@ -2,12 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const ChartSection = ({ isLoading }) => {
   if (isLoading) {
     return null;
   }
-
   return (
     <View style={styles.container}>
       <Text style={styles.placeholder}>
@@ -19,7 +17,6 @@ const ChartSection = ({ isLoading }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
@@ -35,5 +32,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 export default ChartSection;

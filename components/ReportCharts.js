@@ -4,7 +4,6 @@ import { Card } from 'react-native-elements';
 import { colors, constants } from '../global';
 import { formatPrice } from '../utils/restaurantUtils';
 import i18n from '../i18n';
-
 const ReportCharts = ({ calculations, reportType }) => {
   const renderStatusChart = () => {
     const { ordersByStatus } = calculations;
@@ -16,7 +15,6 @@ const ReportCharts = ({ calculations, reportType }) => {
       pending: { label: i18n.t('reports.charts.status.pending'), color: colors.grey[500] },
       cancelled: { label: i18n.t('reports.charts.status.cancelled'), color: colors.error }
     };
-
     return (
       <Card containerStyle={styles.chartCard}>
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.statusDistribution')}</Text>
@@ -36,12 +34,9 @@ const ReportCharts = ({ calculations, reportType }) => {
       </Card>
     );
   };
-
   const renderTopItemsChart = () => {
     const { topItems } = calculations;
-
     if (!topItems?.length) return null;
-
     return (
       <Card containerStyle={styles.chartCard}>
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.mostOrderedDishes')}</Text>
@@ -57,12 +52,9 @@ const ReportCharts = ({ calculations, reportType }) => {
       </Card>
     );
   };
-
   const renderRevenueChart = () => {
     const { revenueByDay } = calculations;
-
     if (!revenueByDay?.length) return null;
-
     return (
       <Card containerStyle={styles.chartCard}>
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.revenueByDay')}</Text>
@@ -77,12 +69,9 @@ const ReportCharts = ({ calculations, reportType }) => {
       </Card>
     );
   };
-
   const renderTopRevenueItemsChart = () => {
     const { topRevenueItems } = calculations;
-
     if (!topRevenueItems?.length) return null;
-
     return (
       <Card containerStyle={styles.chartCard}>
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.mostProfitableDishes')}</Text>
@@ -98,12 +87,9 @@ const ReportCharts = ({ calculations, reportType }) => {
       </Card>
     );
   };
-
   const renderPeakHoursChart = () => {
     const { peakHours } = calculations;
-
     if (!peakHours?.length) return null;
-
     return (
       <Card containerStyle={styles.chartCard}>
         <Text style={styles.chartTitle}>{i18n.t('reports.charts.peakHours')}</Text>
@@ -116,36 +102,28 @@ const ReportCharts = ({ calculations, reportType }) => {
       </Card>
     );
   };
-
   const charts = [];
-  
   if (calculations.showStatusChart) {
     charts.push(renderStatusChart());
   }
-
   if (calculations.showTopItems) {
     charts.push(renderTopItemsChart());
   }
-
   if (calculations.showRevenueChart) {
     charts.push(renderRevenueChart());
   }
-
   if (calculations.showTopRevenueItems) {
     charts.push(renderTopRevenueItemsChart());
   }
-
   if (calculations.showPeakHours) {
     charts.push(renderPeakHoursChart());
   }
-
   return <>{charts.map((chart, index) => (
     <React.Fragment key={`chart-${index}`}>
       {chart}
     </React.Fragment>
   ))}</>;
 };
-
 const styles = StyleSheet.create({
   chartCard: {
     borderRadius: constants.BORDER_RADIUS,
@@ -260,5 +238,4 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 });
-
 export default ReportCharts;

@@ -1,7 +1,5 @@
-
 export { default as SplashScreen } from './SplashScreen';
 export { default as LoginScreen } from './LoginScreen';
-
 export { default as DashboardScreen } from './DashboardScreen';
 export { default as OrdersScreen } from './OrdersScreen';
 export { default as MenuScreen } from './MenuScreen';

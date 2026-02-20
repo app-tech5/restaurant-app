@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { colors } from '../global';
 import HamburgerButton from './HamburgerButton';
-
 const ScreenHeader = ({
   title,
   subtitle = null,
@@ -20,7 +19,6 @@ const ScreenHeader = ({
   showDrawerMenu = false,
 }) => {
   const renderLeftComponent = () => {
-
     if (showDrawerMenu) {
       return (
         <HamburgerButton />
@@ -29,7 +27,6 @@ const ScreenHeader = ({
     if (leftComponent) {
       return leftComponent;
     }
-
     if (showBackButton) {
       return (
         <TouchableOpacity
@@ -46,10 +43,8 @@ const ScreenHeader = ({
         </TouchableOpacity>
       );
     }
-
     return null;
   };
-
   const renderRightComponent = () => {
     if (rightComponent) {
       return (
@@ -60,13 +55,11 @@ const ScreenHeader = ({
     }
     return null;
   };
-
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.leftContainer}>
         {renderLeftComponent()}
       </View>
-
       <View style={[styles.centerContainer, centerContainerStyle]}>
         <Text style={[styles.title, titleStyle]} numberOfLines={1}>
           {title}
@@ -77,14 +70,12 @@ const ScreenHeader = ({
           </Text>
         )}
       </View>
-
       <View style={styles.rightContainer}>
         {renderRightComponent()}
       </View>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -106,7 +97,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rightContainer: {
-    
     alignItems: 'flex-end',
   },
   backButton: {
@@ -125,5 +115,4 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 });
-
 export default ScreenHeader;

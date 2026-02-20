@@ -6,15 +6,12 @@ import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { useSettings } from '../contexts/SettingContext';
-
 const SupportScreen = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState('general');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  
   const { restaurant } = useRestaurant();
   const { appName, settings } = useSettings();
-
   const supportCategories = [
     { key: 'general', label: i18n.t('support.categories.general'), icon: 'help' },
     { key: 'technical', label: i18n.t('support.categories.technical'), icon: 'build' },
@@ -22,7 +19,6 @@ const SupportScreen = ({ navigation }) => {
     { key: 'billing', label: i18n.t('support.categories.billing'), icon: 'payment' },
     { key: 'account', label: i18n.t('support.categories.account'), icon: 'account-circle' },
   ];
-
   const faqItems = [
     {
       question: i18n.t('support.faq.menuEdit'),
@@ -45,7 +41,6 @@ const SupportScreen = ({ navigation }) => {
       category: 'general'
     }
   ];
-  
   const contactMethods = [
     {
       title: i18n.t('support.phone'),
@@ -66,13 +61,11 @@ const SupportScreen = ({ navigation }) => {
       action: () => Alert.alert(i18n.t('support.liveChat'), i18n.t('support.chatComingSoon'))
     }
   ];
-
   const handleSubmitSupport = () => {
     if (!subject.trim() || !message.trim()) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('support.contactForm.fillAllFields'));
       return;
     }
-    
     Alert.alert(
       i18n.t('support.contactForm.messageSent'),
       i18n.t('support.contactForm.messageSentSuccess', {
@@ -85,11 +78,9 @@ const SupportScreen = ({ navigation }) => {
       }}]
     );
   };
-
   const filteredFaq = faqItems.filter(item =>
     selectedCategory === 'general' || item.category === selectedCategory
   );
-
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -97,7 +88,6 @@ const SupportScreen = ({ navigation }) => {
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
-
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -131,11 +121,9 @@ const SupportScreen = ({ navigation }) => {
             </TouchableOpacity>
           ))}
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.frequentlyAskedQuestions')}</Text>
-
           {}
           <View style={styles.categoryFilters}>
             {supportCategories.map(category => (
@@ -162,7 +150,6 @@ const SupportScreen = ({ navigation }) => {
               </TouchableOpacity>
             ))}
           </View>
-
           {}
           {filteredFaq.map((faq, index) => (
             <Card key={index} containerStyle={styles.faqCard}>
@@ -171,11 +158,9 @@ const SupportScreen = ({ navigation }) => {
             </Card>
           ))}
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.contactForm.title')}</Text>
-
           <Card containerStyle={styles.contactForm}>
             <Input
               placeholder={i18n.t('support.contactForm.subjectPlaceholder')}
@@ -192,7 +177,6 @@ const SupportScreen = ({ navigation }) => {
                 />
               }
             />
-
             <Input
               placeholder={i18n.t('support.contactForm.messagePlaceholder')}
               value={message}
@@ -211,7 +195,6 @@ const SupportScreen = ({ navigation }) => {
                 />
               }
             />
-
             <Button
               title={i18n.t('support.contactForm.send')}
               onPress={handleSubmitSupport}
@@ -220,7 +203,6 @@ const SupportScreen = ({ navigation }) => {
             />
           </Card>
         </View>
-
         {}
         <View style={styles.section}>
           <Card containerStyle={styles.infoCard}>
@@ -248,7 +230,6 @@ const SupportScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -382,5 +363,4 @@ const styles = StyleSheet.create({
     marginBottom: constants.SPACING.xs,
   },
 });
-
 export default SupportScreen;

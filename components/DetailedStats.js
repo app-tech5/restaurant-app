@@ -2,12 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const DetailedStats = ({ metrics, isLoading }) => {
   if (!metrics || isLoading) {
     return null;
   }
-
   const stats = [
     {
       label: i18n.t('analytics.completedOrders'),
@@ -26,7 +24,6 @@ const DetailedStats = ({ metrics, isLoading }) => {
       value: '3 min',
     },
   ];
-
   return (
     <View style={styles.grid}>
       {stats.map((stat, index) => (
@@ -38,7 +35,6 @@ const DetailedStats = ({ metrics, isLoading }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
@@ -64,5 +60,4 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 });
-
 export default DetailedStats;

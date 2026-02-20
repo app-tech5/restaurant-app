@@ -1,5 +1,4 @@
 const noCommentsPlugin = require('eslint-plugin-no-comments');
-
 module.exports = [
   {
     ignores: [
@@ -33,14 +32,11 @@ module.exports = [
         __dirname: 'readonly',
         __filename: 'readonly',
         module: 'readonly',
-        
         fetch: 'readonly',
         alert: 'readonly',
         require: 'readonly',
         __DEV__: 'readonly',
-        
         Expo: 'readonly',
-        
         describe: 'readonly',
         it: 'readonly',
         test: 'readonly',
@@ -51,52 +47,33 @@ module.exports = [
       },
     },
     rules: {
-      
-      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
-      "no-console": ["warn", { allow: ["warn", "error"] }],
-      'no-comments/disallowComments': 'error',
-      "max-lines-per-function": ["warn", 50], 
-      "complexity": ["warn", 10],
-      "react/jsx-max-depth": ["warn", { "max": 4 }], 
-      
+      "no-multiple-empty-lines": ["error", { "max": 0, "maxEOF": 0 }],
+      // "no-console": ["warn", { allow: ["warn", "error"] }],
+      // 'no-comments/disallowComments': 'error',
+      // "max-lines-per-function": ["warn", 50], 
+      // "complexity": ["warn", 10],
+      // "react/jsx-max-depth": ["warn", { "max": 4 }], 
       'i18next/no-literal-string': [
         'error',
         {
-          
           ignore: [
-            
             '',
-            
             /^[a-zA-Z]$/,
-            
             /^[\d\s\.\-\+\=\<\>\[\]\(\)\{\}\*\+\?\^\$\|\\]*$/,
-            
             /^https?:\/\//,
             /^\/\w+/,
-            
             /^[a-zA-Z][a-zA-Z0-9\-_]*$/,
-            
             /^(import|export|from|require)$/,
-            
             /^[A-Z][a-zA-Z0-9]*$/,
-            
             /^(true|false|null|undefined|function|const|let|var|if|else|for|while|do|switch|case|default|try|catch|finally|throw|return|break|continue)$/,
-            
             /\.(js|jsx|ts|tsx|json|css|scss|html|xml)$/,
-            
             /^(id|url|api|http|https|www|com|org|net|io)$/i,
-            
             /^\d+\.\d+\.\d+$/,
-            
             /^\d{1,2}:\d{2}$/,
-            
             /^\d{1,2}\/\d{1,2}\/\d{4}$/,
-            
             /^\+?\d[\d\s\-\(\)]+$/,
-            
             /^@\w+\.\w+$/,
           ],
-          
           ignoreCallee: [
             'console.log',
             'console.error',
@@ -106,7 +83,6 @@ module.exports = [
             'require',
             'import',
           ],
-          
           ignoreAttribute: [
             'key',
             'testID',
@@ -132,7 +108,6 @@ module.exports = [
           ],
         },
       ],
-
     },
   },
   {

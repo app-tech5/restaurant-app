@@ -4,22 +4,17 @@ import { Card, Text } from 'react-native-elements';
 import { colors, constants } from '../global';
 import { useSettings } from '../hooks';
 import i18n from '../i18n';
-
 const ReportMetricsCards = ({ baseMetrics, reportType }) => {
   const { totalOrders, totalRevenue, averageOrderValue, averagePreparationTime } = baseMetrics;
   const { formatCurrency, settings, isLoading: settingsLoading } = useSettings();
-  
   const formatCurrencyFallback = (amount) => {
     if (typeof amount !== 'number') return '0.00€';
     return `${amount.toFixed(2)}€`;
   };
-
   const renderMetricCard = (value, labelKey, show = true) => {
     if (!show) return null;
-
     const label = i18n.t(`reports.metrics.${labelKey}`);
     const formatter = formatCurrency || formatCurrencyFallback;
-
     return (
       <Card containerStyle={styles.metricCard} key={labelKey}>
         <Text style={styles.metricValue}>
@@ -31,30 +26,23 @@ const ReportMetricsCards = ({ baseMetrics, reportType }) => {
       </Card>
     );
   };
-
   const metrics = [];
-  
   if (reportType !== 'orders') {
     metrics.push(renderMetricCard(totalRevenue, 'totalRevenue'));
   }
-
   metrics.push(renderMetricCard(totalOrders, 'totalOrders'));
-
   if (reportType === 'revenue' || reportType === 'daily' || reportType === 'weekly' || reportType === 'monthly') {
     metrics.push(renderMetricCard(averageOrderValue, 'averageOrderValue', averageOrderValue > 0));
   }
-
   if (reportType === 'orders' && averagePreparationTime > 0) {
     metrics.push(renderMetricCard(averagePreparationTime, 'averageTime'));
   }
-
   return (
     <View style={styles.metricsContainer}>
       {metrics}
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   metricsContainer: {
     flexDirection: 'row',
@@ -90,5 +78,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 export default ReportMetricsCards;

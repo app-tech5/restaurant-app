@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const OrderStatsHeader = ({ orderStats }) => {
   return (
     <View style={styles.statsContainer}>
@@ -23,7 +22,6 @@ const OrderStatsHeader = ({ orderStats }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   statsContainer: {
     backgroundColor: colors.background.primary,
@@ -53,5 +51,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 });
-
 export default OrderStatsHeader;

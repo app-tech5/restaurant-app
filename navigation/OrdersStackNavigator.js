@@ -5,9 +5,7 @@ import { OrdersScreen, OrderDetailsScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const Stack = createStackNavigator();
-
 const OrdersStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -55,7 +53,6 @@ const OrdersStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 const OrderHistoryScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -67,5 +64,4 @@ const OrderHistoryScreen = ({ navigation }) => {
     </View>
   );
 };
-
 export default OrdersStackNavigator;

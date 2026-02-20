@@ -4,7 +4,6 @@ import { MenuItemCard, EmptyState } from './';
 import { colors, constants } from '../global';
 import { RefreshControl } from 'react-native';
 import i18n from '../i18n';
-
 const MenuList = ({
   filteredItems,
   refreshing,
@@ -25,7 +24,6 @@ const MenuList = ({
       onToggleAvailability={onToggleAvailability}
     />
   );
-
   const renderEmpty = () => {
     if (searchQuery || selectedCategory !== 'all') {
       return (
@@ -36,7 +34,6 @@ const MenuList = ({
         />
       );
     }
-
     return (
       <EmptyState
         icon="restaurant-menu"
@@ -55,7 +52,6 @@ const MenuList = ({
       />
     );
   };
-
   return (
     <FlatList
       data={filteredItems}
@@ -75,7 +71,6 @@ const MenuList = ({
     />
   );
 };
-
 const styles = StyleSheet.create({
   listContainer: {
     padding: constants.SPACING.md,
@@ -93,5 +88,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
 export default MenuList;

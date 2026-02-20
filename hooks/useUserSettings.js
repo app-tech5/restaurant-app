@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react';
 import apiClient from '../api';
-
 export const useUserSettings = () => {
   const [userSettings, setUserSettings] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     loadUserSettings();
   }, []);
-
   const loadUserSettings = async () => {
     try {
       setLoading(true);
       const response = await apiClient.getUserSettings();
-
       if (response.success) {
         setUserSettings(response.data);
         setError(null);
@@ -24,7 +20,6 @@ export const useUserSettings = () => {
     } catch (err) {
       console.error('Error loading user settings:', err);
       setError(err.message);
-      
       setUserSettings({
         notifications: {
           newOrders: true,
@@ -41,11 +36,9 @@ export const useUserSettings = () => {
       setLoading(false);
     }
   };
-
   const updateNotifications = async (notifications) => {
     try {
       const response = await apiClient.updateNotifications(notifications);
-
       if (response.success) {
         setUserSettings(prev => ({
           ...prev,
@@ -62,11 +55,9 @@ export const useUserSettings = () => {
       return { success: false, error: err.message };
     }
   };
-
   const updateRestaurantSettings = async (restaurantSettings) => {
     try {
       const response = await apiClient.updateRestaurantSettings(restaurantSettings);
-
       if (response.success) {
         setUserSettings(prev => ({
           ...prev,
@@ -83,11 +74,9 @@ export const useUserSettings = () => {
       return { success: false, error: err.message };
     }
   };
-
   const updateUserSettings = async (settingsData) => {
     try {
       const response = await apiClient.updateUserSettings(settingsData);
-
       if (response.success) {
         setUserSettings(response.data);
         setError(null);
@@ -101,7 +90,6 @@ export const useUserSettings = () => {
       return { success: false, error: err.message };
     }
   };
-
   return {
     userSettings,
     loading,

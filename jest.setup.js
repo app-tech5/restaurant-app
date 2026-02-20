@@ -1,5 +1,4 @@
 import '@testing-library/jest-native/extend-expect';
-
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
@@ -12,7 +11,6 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   multiRemove: jest.fn(),
   multiMerge: jest.fn(),
 }));
-
 const mockT = jest.fn((key, options) => {
   const translations = {
     'notifications.newOrder': 'Nouvelle commande',
@@ -42,20 +40,15 @@ const mockT = jest.fn((key, options) => {
     'common.noData': 'Aucune donnée disponible',
     'common.cancel': 'Annuler',
   };
-
   let result = translations[key] || key;
-  
   if (options) {
-    
     Object.keys(options).forEach(optionKey => {
       result = result.replace(new RegExp(`{{${optionKey}}}`, 'g'), options[optionKey]);
       result = result.replace(new RegExp(`{{count}}`, 'g'), options[optionKey]);
     });
   }
-
   return result;
 });
-
 jest.mock('i18n-js', () => ({
   I18n: jest.fn().mockImplementation(() => ({
     t: mockT,
@@ -64,7 +57,6 @@ jest.mock('i18n-js', () => ({
     translations: { en: {}, fr: {} },
   })),
 }));
-
 jest.mock('../i18n', () => ({
   t: mockT,
   default: {
@@ -74,12 +66,10 @@ jest.mock('../i18n', () => ({
     translations: { en: {}, fr: {} },
   },
 }));
-
 jest.mock('expo-font', () => ({
   loadAsync: jest.fn(),
   isLoaded: jest.fn(() => true),
 }));
-
 jest.mock('expo-localization', () => ({
   locale: 'fr-FR',
   locales: ['fr-FR'],
@@ -88,7 +78,6 @@ jest.mock('expo-localization', () => ({
   region: 'FR',
   isRTL: false,
 }));
-
 jest.mock('react-native-reanimated', () => ({
   useSharedValue: jest.fn(() => ({ value: 0 })),
   useAnimatedStyle: jest.fn(() => ({})),
@@ -96,19 +85,14 @@ jest.mock('react-native-reanimated', () => ({
   runOnJS: jest.fn((fn) => fn()),
   runOnUI: jest.fn((fn) => fn()),
 }));
-
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
-
 jest.mock('react-native-maps', () => {
   const React = require('react');
   const { View } = require('react-native');
-
   const MockMapView = React.forwardRef((props, ref) => (
     <View ref={ref} {...props} testID="mock-map-view" />
   ));
-
   const MockMarker = (props) => <View {...props} testID="mock-marker" />;
-
   return {
     __esModule: true,
     default: MockMapView,
@@ -116,7 +100,6 @@ jest.mock('react-native-maps', () => {
     PROVIDER_GOOGLE: 'google',
   };
 });
-
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(() =>
     Promise.resolve({ status: 'granted' })
@@ -131,7 +114,6 @@ jest.mock('expo-location', () => ({
     })
   ),
 }));
-
 jest.mock('react-native-modal', () => 'MockModal');
 jest.mock('react-native-linear-gradient', () => 'MockLinearGradient');
 jest.mock('expo-linear-gradient', () => 'MockExpoLinearGradient');
@@ -162,12 +144,9 @@ jest.mock('expo-location', () => ({
     coords: { latitude: 0, longitude: 0 }
   })),
 }));
-
 global.fetch = jest.fn();
-
 global.console = {
   ...console,
-  
   log: jest.fn(),
   info: jest.fn(),
   debug: jest.fn(),

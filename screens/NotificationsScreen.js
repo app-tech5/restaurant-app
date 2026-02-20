@@ -6,12 +6,9 @@ import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { formatTimeAgo } from '../utils/timeUtils';
 import { mockNotifications } from '../__mocks__/mockNotifications';
-
 const NotificationsScreen = ({ navigation, initialNotifications = mockNotifications }) => {
   const [notifications, setNotifications] = useState(initialNotifications);
-
   const [filter, setFilter] = useState('all'); 
-
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'order':
@@ -24,7 +21,6 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
         return { name: 'notifications', color: colors.primary };
     }
   };
-
   const markAsRead = (notificationId) => {
     setNotifications(prev =>
       prev.map(notif =>
@@ -32,13 +28,10 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
       )
     );
   };
-
   const handleNotificationPress = (notification) => {
-    
     if (!notification.read) {
       markAsRead(notification.id);
     }
-    
     switch (notification.action) {
       case 'view_order':
         navigation.navigate('Orders', {
@@ -52,17 +45,14 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
         navigation.navigate('Reviews', { screen: 'ReviewsMain' });
         break;
       default:
-        
         break;
     }
   };
-
   const markAllAsRead = () => {
     setNotifications(prev =>
       prev.map(notif => ({ ...notif, read: true }))
     );
   };
-
   const clearAllNotifications = () => {
     Alert.alert(
       i18n.t('notifications.actions.clearAllTitle'),
@@ -77,10 +67,8 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
       ]
     );
   };
-
   const getFilteredNotifications = () => {
     let filtered = notifications;
-
     switch (filter) {
       case 'unread':
         filtered = filtered.filter(n => !n.read);
@@ -94,20 +82,16 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
       default:
         break;
     }
-
     return filtered.sort((a, b) => b.timestamp - a.timestamp);
   };
-
   const filteredNotifications = getFilteredNotifications();
   const unreadCount = notifications.filter(n => !n.read).length;
-
   const filterOptions = [
     { key: 'all', label: i18n.t('notifications.filters.all'), count: notifications.length },
     { key: 'unread', label: i18n.t('notifications.filters.unread'), count: unreadCount },
     { key: 'orders', label: i18n.t('notifications.filters.orders'), count: notifications.filter(n => n.type === 'order').length },
     { key: 'system', label: i18n.t('notifications.filters.system'), count: notifications.filter(n => n.type === 'system').length },
   ];
-
   const renderFilterTab = (option) => (
     <TouchableOpacity
       key={option.key}
@@ -134,10 +118,8 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
       />
     </TouchableOpacity>
   );
-
   const renderNotification = ({ item }) => {
     const iconConfig = getNotificationIcon(item.type);
-
     return (
       <ListItem
         onPress={() => handleNotificationPress(item)}
@@ -153,7 +135,6 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
           size={24}
           containerStyle={styles.notificationIcon}
         />
-
         <ListItem.Content>
           <View style={styles.notificationContent}>
             <ListItem.Title style={styles.notificationTitle}>
@@ -167,14 +148,11 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
             </Text>
           </View>
         </ListItem.Content>
-
         {!item.read && <View style={styles.unreadIndicator} testID="unread-indicator" />}
-
         <ListItem.Chevron />
       </ListItem>
     );
   };
-
   const renderEmpty = () => (
     <EmptyState
       icon="notifications-off"
@@ -186,7 +164,6 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
       }
     />
   );
-
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -205,12 +182,10 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
           )
         }
       />
-
       {}
       <View style={styles.filtersContainer}>
         {filterOptions.map(renderFilterTab)}
       </View>
-
       {}
       <FlatList
         data={filteredNotifications}
@@ -223,7 +198,6 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -319,5 +293,4 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-
 export default NotificationsScreen;

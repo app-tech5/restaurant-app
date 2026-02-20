@@ -5,9 +5,7 @@ import { MenuScreen, AddEditMenuItemScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const Stack = createStackNavigator();
-
 const MenuStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -64,7 +62,6 @@ const MenuStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 const MenuCategoriesScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -76,7 +73,6 @@ const MenuCategoriesScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const MenuAnalyticsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -88,5 +84,4 @@ const MenuAnalyticsScreen = ({ navigation }) => {
     </View>
   );
 };
-
 export default MenuStackNavigator;

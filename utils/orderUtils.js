@@ -1,6 +1,5 @@
 import { colors } from '../global';
 import i18n from '../i18n';
-
 export const getStatusColor = (status) => {
   switch (status?.toLowerCase()) {
     case 'pending': return colors.warning;
@@ -11,7 +10,6 @@ export const getStatusColor = (status) => {
     default: return colors.grey[500];
   }
 };
-
 export const getStatusIcon = (status) => {
   switch (status?.toLowerCase()) {
     case 'pending': return 'time-outline';
@@ -22,47 +20,38 @@ export const getStatusIcon = (status) => {
     default: return 'help-circle-outline';
   }
 };
-
 export const getStatusText = (status) => {
   if (!status) return i18n.t('orders.status.unknown', 'Unknown');
   return i18n.t(`orders.status.${status.toLowerCase()}`, status);
 };
-
 export const formatDate = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
-
 export const formatTimeAgo = (dateString) => {
   if (!dateString) return '';
   const now = new Date();
   const date = new Date(dateString);
   const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-
   if (diffInHours < 1) return i18n.t('orders.justNow', 'Just now');
   if (diffInHours < 24) return `${diffInHours}h ${i18n.t('orders.ago', 'ago')}`;
-
   const diffInDays = Math.floor(diffInHours / 24);
   if (diffInDays < 7) return `${diffInDays}d ${i18n.t('orders.ago', 'ago')}`;
-
   const diffInWeeks = Math.floor(diffInDays / 7);
   return `${diffInWeeks}w ${i18n.t('orders.ago', 'ago')}`;
 };
-
 export const formatEstimatedTime = (dateString) => {
   if (!dateString) return null;
   const date = new Date(dateString);
   const now = new Date();
   const diff = date - now;
   const minutes = Math.floor(diff / 60000);
-
   if (minutes < 0) return i18n.t('orders.delivered', 'Delivered');
   if (minutes < 60) return `${minutes}min`;
   const hours = Math.floor(minutes / 60);
   return `${hours}h ${minutes % 60}min`;
 };
-
 export const calculateOrderStats = (orders = []) => {
   const stats = {
     total: orders.length,
@@ -72,17 +61,14 @@ export const calculateOrderStats = (orders = []) => {
     delivered: 0,
     cancelled: 0,
   };
-
   orders.forEach(order => {
     const status = order.status?.toLowerCase();
     if (stats[status] !== undefined) {
       stats[status]++;
     }
   });
-
   return stats;
 };
-
 export const getStatusFilters = (orderStats) => {
   return [
     { label: i18n.t('orders.all', 'All'), value: null, count: orderStats.total },

@@ -2,14 +2,12 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const PeriodSelector = ({ selectedPeriod, onPeriodChange }) => {
   const periods = [
     { key: 'today', label: i18n.t('analytics.periods.today') },
     { key: 'week', label: i18n.t('analytics.periods.week') },
     { key: 'month', label: i18n.t('analytics.periods.month') }
   ];
-
   return (
     <View style={styles.container}>
       {periods.map(period => (
@@ -32,7 +30,6 @@ const PeriodSelector = ({ selectedPeriod, onPeriodChange }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -59,5 +56,4 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
-
 export default PeriodSelector;

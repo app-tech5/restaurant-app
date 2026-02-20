@@ -3,9 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { RestaurantProfileScreen } from '../screens';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const Stack = createStackNavigator();
-
 const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -38,5 +36,4 @@ const ProfileStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 export default ProfileStackNavigator;

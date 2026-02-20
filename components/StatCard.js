@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, constants } from '../global';
-
 const StatCard = ({
   title,
   value,
@@ -18,10 +17,8 @@ const StatCard = ({
   onPress = null,
   ...props
 }) => {
-
   const CardContent = () => (
     <View style={[styles.card, styles.mediumContainer, { backgroundColor }, 
-    
     ]} {...props}>
       <View style={styles.iconContainer}>
         <Icon
@@ -31,16 +28,13 @@ const StatCard = ({
           color={color}
         />
       </View>
-
       <View style={styles.content}>
         <Text style={[styles.title, { fontSize: 14 }]}>
           {title}
         </Text>
-
         <Text style={[styles.value, { fontSize: 20, color }]}>
           {value}
         </Text>
-
         {subtitle && (
           <Text style={[styles.subtitle, { fontSize: 11 }]}>
             {subtitle}
@@ -49,7 +43,6 @@ const StatCard = ({
       </View>
     </View>
   );
-
   if (gradient) {
     return (
       <LinearGradient
@@ -61,10 +54,8 @@ const StatCard = ({
       </LinearGradient>
     );
   }
-
   return <CardContent />;
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -112,5 +103,4 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
-
 export default StatCard;

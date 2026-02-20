@@ -5,7 +5,6 @@ import { useUserSettings } from '../hooks/useUserSettings';
 import { ScreenHeader, SettingRow } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const SettingsScreen = ({ navigation }) => {
   const { settings, currency, language, refreshSettings, changeLanguage, getAvailableLanguages } = useSettings();
   const {
@@ -14,53 +13,40 @@ const SettingsScreen = ({ navigation }) => {
     updateNotifications,
     updateRestaurantSettings
   } = useUserSettings();
-
   const handleNotificationToggle = async (key, value) => {
     if (!userSettings) return;
-
     const updatedNotifications = {
       ...userSettings.notifications,
       [key]: value
     };
-
     const result = await updateNotifications(updatedNotifications);
-
     if (!result.success) {
       Alert.alert(i18n.t('errors.serverError'), result.error);
     }
   };
-
   const handleRestaurantSettingToggle = async (key, value) => {
     if (!userSettings) return;
-
     const updatedSettings = {
       ...userSettings.restaurantSettings,
       [key]: value
     };
-
     const result = await updateRestaurantSettings(updatedSettings);
-
     if (!result.success) {
       Alert.alert(i18n.t('errors.serverError'), result.error);
     }
   };
-
   const handleLanguageChange = async () => {
     try {
-      
       const availableLanguages = await getAvailableLanguages();
-      
       const languageOptions = availableLanguages.map(lang => ({
         text: `${lang.name} (${lang.code.toUpperCase()})`,
         onPress: () => handleLanguageSelection(lang.code),
         style: lang.code === i18n.locale ? 'destructive' : 'default'
       }));
-      
       languageOptions.push({
         text: i18n.t('common.cancel'),
         style: 'cancel'
       });
-
       Alert.alert(
         i18n.t('settings.changeLanguage'),
         i18n.t('settings.selectLanguage'),
@@ -71,15 +57,11 @@ const SettingsScreen = ({ navigation }) => {
       Alert.alert(i18n.t('errors.error'), 'Unable to load languages');
     }
   };
-
   const handleLanguageSelection = async (languageCode) => {
     try {
-      
       await changeLanguage(languageCode);
-      
       const { changeLanguage: changeI18nLanguage } = require('../i18n');
       changeI18nLanguage(languageCode);
-
       Alert.alert(
         i18n.t('success.saved'),
         i18n.t('settings.languageChanged', { language: languageCode.toUpperCase() }),
@@ -90,7 +72,6 @@ const SettingsScreen = ({ navigation }) => {
       Alert.alert(i18n.t('errors.error'), 'Unable to change language');
     }
   };
-
   const handleCurrencyChange = () => {
     Alert.alert(
       i18n.t('settings.changeCurrency'),
@@ -98,23 +79,18 @@ const SettingsScreen = ({ navigation }) => {
       [{ text: i18n.t('common.ok') }]
     );
   };
-
   const handleRestaurantProfile = () => {
     navigation.navigate('RestaurantProfile');
   };
-
   const handleOpeningHours = () => {
     navigation.navigate('OpeningHours');
   };
-
   const handleDeliverySettings = () => {
     navigation.navigate('DeliverySettings');
   };
-
   const handlePaymentSettings = () => {
     navigation.navigate('PaymentSettings');
   };
-
   const handleAbout = () => {
     Alert.alert(
       i18n.t('settings.aboutTitle'),
@@ -122,7 +98,6 @@ const SettingsScreen = ({ navigation }) => {
       [{ text: i18n.t('common.ok') }]
     );
   };
-
   const handlePrivacy = () => {
     Alert.alert(
       i18n.t('settings.privacyTitle'),
@@ -130,7 +105,6 @@ const SettingsScreen = ({ navigation }) => {
       [{ text: i18n.t('common.ok') }]
     );
   };
-
   const handleTerms = () => {
     Alert.alert(
       i18n.t('settings.termsTitle'),
@@ -138,11 +112,9 @@ const SettingsScreen = ({ navigation }) => {
       [{ text: i18n.t('common.ok') }]
     );
   };
-
   const handleHelp = () => {
     navigation.navigate('Support');
   };
-
   const handleContact = () => {
     Alert.alert(
       i18n.t('settings.contactTitle'),
@@ -150,7 +122,6 @@ const SettingsScreen = ({ navigation }) => {
       [{ text: i18n.t('common.ok') }]
     );
   };
-
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -158,7 +129,6 @@ const SettingsScreen = ({ navigation }) => {
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
-
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -193,7 +163,6 @@ const SettingsScreen = ({ navigation }) => {
             }
           />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.servicesSection')}</Text>
@@ -210,7 +179,6 @@ const SettingsScreen = ({ navigation }) => {
             onPress={handlePaymentSettings}
           />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.notificationsSettings')}</Text>
@@ -271,7 +239,6 @@ const SettingsScreen = ({ navigation }) => {
             }
           />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.preferencesSection')}</Text>
@@ -290,7 +257,6 @@ const SettingsScreen = ({ navigation }) => {
             value={currency?.code || 'USD'}
           />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.supportHelpSection')}</Text>
@@ -307,7 +273,6 @@ const SettingsScreen = ({ navigation }) => {
             onPress={handleContact}
           />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.informationSection')}</Text>
@@ -330,7 +295,6 @@ const SettingsScreen = ({ navigation }) => {
             onPress={handleTerms}
           />
         </View>
-
         {}
         <View style={styles.versionContainer}>
           <Text style={styles.versionText}>
@@ -341,7 +305,6 @@ const SettingsScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -373,5 +336,4 @@ const styles = StyleSheet.create({
     color: colors.grey[500],
   },
 });
-
 export default SettingsScreen;

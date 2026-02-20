@@ -1,10 +1,8 @@
-
 export const STAT_CARD_SIZES = {
   SMALL: 'small',
   MEDIUM: 'medium',
   LARGE: 'large',
 };
-
 export const SIZE_CONFIGS = {
   [STAT_CARD_SIZES.SMALL]: {
     iconSize: 20,
@@ -25,14 +23,11 @@ export const SIZE_CONFIGS = {
     subtitleSize: 12,
   },
 };
-
 export const getSizeConfig = (size = STAT_CARD_SIZES.MEDIUM) => {
   return SIZE_CONFIGS[size] || SIZE_CONFIGS[STAT_CARD_SIZES.MEDIUM];
 };
-
 export const getContainerStyles = (size = STAT_CARD_SIZES.MEDIUM) => {
   const { constants } = require('../global');
-
   switch (size) {
     case STAT_CARD_SIZES.SMALL:
       return {

@@ -17,11 +17,9 @@ import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 const AddEditMenuItemScreen = ({ route, navigation }) => {
   const { mode, item } = route.params || {};
   const { addMenuItem, updateMenuItem } = useRestaurant();
-
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -35,9 +33,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     tags: ''
   });
   const [errors, setErrors] = useState({});
-
   const isEditMode = mode === 'edit';
-
   useEffect(() => {
     if (isEditMode && item) {
       setFormData({
@@ -53,18 +49,14 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
       });
     }
   }, [isEditMode, item]);
-
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.name.trim()) {
       newErrors.name = i18n.t('menu.validation.nameRequired');
     }
-
     if (!formData.description.trim()) {
       newErrors.description = i18n.t('menu.validation.descriptionRequired');
     }
-
     if (!formData.price.trim()) {
       newErrors.price = i18n.t('menu.validation.priceRequired');
     } else {
@@ -73,15 +65,12 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         newErrors.price = i18n.t('menu.validation.pricePositiveNumber');
       }
     }
-
     if (!formData.category.trim()) {
       newErrors.category = i18n.t('menu.validation.categoryRequired');
     }
-
     if (!formData.image.trim()) {
       newErrors.image = i18n.t('menu.validation.imageRequired');
     }
-
     if (!formData.preparation_time.trim()) {
       newErrors.preparation_time = i18n.t('menu.validation.prepTimeRequired');
     } else {
@@ -90,19 +79,15 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         newErrors.preparation_time = i18n.t('menu.validation.prepTimePositiveNumber');
       }
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSave = async () => {
     if (!validateForm()) {
       return;
     }
-
     try {
       setIsLoading(true);
-
       const menuItemData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
@@ -114,7 +99,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()).filter(i => i) : [],
         tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t) : []
       };
-
       if (isEditMode) {
         await updateMenuItem(item._id, menuItemData);
         Alert.alert(
@@ -143,13 +127,10 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
       setIsLoading(false);
     }
   };
-
   const handlePriceChange = (text) => {
-    
     const cleanedText = text.replace(/[^0-9.,]/g, '');
     setFormData(prev => ({ ...prev, price: cleanedText }));
   };
-
   const commonCategories = [
     i18n.t('menu.categoryTypes.appetizers'),
     i18n.t('menu.categoryTypes.mainCourses'),
@@ -158,7 +139,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     i18n.t('menu.categoryTypes.sides'),
     i18n.t('menu.categoryTypes.specialties')
   ];
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -181,7 +161,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           }
         />
-
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
             {}
@@ -196,7 +175,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
             </View>
-
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.itemDescriptionLabel')}</Text>
@@ -211,7 +189,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
             </View>
-
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.imageUrl')} *</Text>
@@ -224,7 +201,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
             </View>
-
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.price')} *</Text>
@@ -238,7 +214,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
             </View>
-
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.preparationTime')} *</Text>
@@ -252,7 +227,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.preparation_time && <Text style={styles.errorText}>{errors.preparation_time}</Text>}
             </View>
-
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.category')} *</Text>
@@ -264,7 +238,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 maxLength={50}
               />
               {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
-
               {}
               <View style={styles.categorySuggestions}>
                 <Text style={styles.suggestionsLabel}>{i18n.t('menu.suggestions')} :</Text>
@@ -289,7 +262,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 </View>
               </View>
             </View>
-
             {}
             <View style={styles.field}>
               <View style={styles.switchRow}>
@@ -307,7 +279,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 />
               </View>
             </View>
-
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.ingredients')}</Text>
@@ -324,7 +295,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 {i18n.t('menu.ingredientsHint')}
               </Text>
             </View>
-
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('common.tags')}</Text>
@@ -339,7 +309,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 {i18n.t('menu.tagsHint')}
               </Text>
             </View>
-
             {}
             <View style={styles.buttonContainer}>
               <Button
@@ -350,7 +319,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 disabled={isLoading}
               />
             </View>
-
             {}
             <View style={styles.infoContainer}>
               <Text style={styles.infoText}>
@@ -366,7 +334,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -493,5 +460,4 @@ const styles = StyleSheet.create({
     marginBottom: constants.SPACING.xs,
   },
 });
-
 export default AddEditMenuItemScreen;

@@ -1,12 +1,10 @@
 import i18n from '../i18n';
-
 export const formatTimeAgo = (timestamp) => {
   const now = new Date();
   const diff = now - timestamp;
   const absMinutes = Math.abs(Math.floor(diff / (1000 * 60)));
   const absHours = Math.abs(Math.floor(diff / (1000 * 60 * 60)));
   const absDays = Math.abs(Math.floor(diff / (1000 * 60 * 60 * 24)));
-  
   if (absMinutes === 0) {
     return i18n.t('notifications.timeAgo.minutes', { count: 0 });
   } else if (absMinutes < 60) {

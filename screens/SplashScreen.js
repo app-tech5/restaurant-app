@@ -6,7 +6,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../global';
 import i18n from '../i18n';
 import { config } from '../config';
-
 export default function SplashScreen({ navigation }) {
   return (
     <View style={styles.container}>
@@ -30,7 +29,6 @@ export default function SplashScreen({ navigation }) {
           </View>
         </Animatable.View>
       </View>
-
       <Animatable.View style={styles.container2} animation="fadeInUpBig">
         <View style={styles.button}>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -52,7 +50,6 @@ export default function SplashScreen({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -7,19 +7,15 @@ import { useMenuFilters, useMenuActions } from '../hooks';
 import { colors } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 const MenuScreen = ({ navigation }) => {
   const { menu, isAuthenticated } = useRestaurant();
-
   const menuFilters = useMenuFilters(menu);
   const menuActions = useMenuActions(navigation);
-
   useEffect(() => {
     if (isAuthenticated) {
       menuActions.loadMenuItems();
     }
   }, [isAuthenticated]);
-
   if (!menu) {
     return (
       <View style={styles.container}>
@@ -32,7 +28,6 @@ const MenuScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScreenHeader
@@ -40,18 +35,15 @@ const MenuScreen = ({ navigation }) => {
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
-
       <MenuSearchBar
         searchQuery={menuFilters.searchQuery}
         setSearchQuery={menuFilters.setSearchQuery}
       />
-
       <MenuCategoriesTabs
         categories={menuFilters.categories}
         selectedCategory={menuFilters.selectedCategory}
         setSelectedCategory={menuFilters.setSelectedCategory}
       />
-
       <MenuList
         filteredItems={menuFilters.filteredItems}
         refreshing={menuActions.refreshing}
@@ -63,7 +55,6 @@ const MenuScreen = ({ navigation }) => {
         onToggleAvailability={menuActions.handleToggleAvailability}
         onAddFirstItem={menuActions.handleAddMenuItem}
       />
-
       <FAB
         icon={{ name: 'add', color: 'white' }}
         color={colors.primary}
@@ -73,12 +64,10 @@ const MenuScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.grey[50],
   },
 });
-
 export default MenuScreen;

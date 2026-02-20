@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const MenuSearchBar = ({ searchQuery, setSearchQuery }) => {
   return (
     <SearchBar
@@ -17,7 +16,6 @@ const MenuSearchBar = ({ searchQuery, setSearchQuery }) => {
     />
   );
 };
-
 const styles = StyleSheet.create({
   searchContainer: {
     backgroundColor: 'transparent',
@@ -37,5 +35,4 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
   },
 });
-
 export default MenuSearchBar;

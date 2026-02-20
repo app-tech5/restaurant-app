@@ -1,18 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const STORAGE_KEYS = {
   RESTAURANT_DATA: 'restaurantData',
   RESTAURANT_TOKEN: 'restaurantToken',
   SETTINGS: 'restaurantSettings',
   CACHE_VERSION: 'restaurantCacheVersion'
 };
-
 export const updateRestaurantCache = async (restaurantData, token = null) => {
   try {
     if (restaurantData) {
       await AsyncStorage.setItem(STORAGE_KEYS.RESTAURANT_DATA, JSON.stringify(restaurantData));
     }
-
     if (token) {
       await AsyncStorage.setItem(STORAGE_KEYS.RESTAURANT_TOKEN, token);
     }
@@ -21,26 +18,22 @@ export const updateRestaurantCache = async (restaurantData, token = null) => {
     throw error;
   }
 };
-
 export const getRestaurantFromCache = async () => {
   try {
     const restaurantData = await AsyncStorage.getItem(STORAGE_KEYS.RESTAURANT_DATA);
     const token = await AsyncStorage.getItem(STORAGE_KEYS.RESTAURANT_TOKEN);
-
     if (restaurantData && token) {
       return {
         restaurant: JSON.parse(restaurantData),
         token
       };
     }
-
     return null;
   } catch (error) {
     console.error('❌ Erreur récupération restaurant:', error);
     return null;
   }
 };
-
 export const clearRestaurantCache = async () => {
   try {
     await AsyncStorage.multiRemove([
@@ -52,7 +45,6 @@ export const clearRestaurantCache = async () => {
     throw error;
   }
 };
-
 export const saveSettings = async (settings) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
@@ -61,7 +53,6 @@ export const saveSettings = async (settings) => {
     throw error;
   }
 };
-
 export const getSettings = async () => {
   try {
     const settings = await AsyncStorage.getItem(STORAGE_KEYS.SETTINGS);
@@ -71,7 +62,6 @@ export const getSettings = async () => {
     return null;
   }
 };
-
 export const clearSettings = async () => {
   try {
     await AsyncStorage.removeItem(STORAGE_KEYS.SETTINGS);
@@ -80,7 +70,6 @@ export const clearSettings = async () => {
     throw error;
   }
 };
-
 export const clearAllStorage = async () => {
   try {
     await AsyncStorage.clear();
@@ -89,12 +78,10 @@ export const clearAllStorage = async () => {
     throw error;
   }
 };
-
 export const getStorageInfo = async () => {
   try {
     const keys = await AsyncStorage.getAllKeys();
     const stores = {};
-
     for (const key of keys) {
       try {
         const value = await AsyncStorage.getItem(key);
@@ -103,7 +90,6 @@ export const getStorageInfo = async () => {
         stores[key] = 'Erreur parsing';
       }
     }
-
     return {
       totalKeys: keys.length,
       keys,

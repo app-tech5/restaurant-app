@@ -12,10 +12,8 @@ import {
   formatEstimatedTime
 } from '../utils/orderUtils';
 import i18n from '../i18n';
-
 const OrderItem = ({ order, onPress, onCancel }) => {
   const { currency } = useSettings();
-
   return (
     <View style={styles.orderItemContainer}>
       {}
@@ -25,7 +23,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
           <Ionicons name={getStatusIcon(order.status)} size={12} color={colors.text.white} />
         </View>
       </View>
-
       <TouchableOpacity
         style={styles.orderItem}
         onPress={() => onPress(order)}
@@ -48,7 +45,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
             </Text>
           </View>
         </View>
-
         {}
         <View style={styles.restaurantSection}>
           <View style={styles.restaurantIcon}>
@@ -63,7 +59,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
             </Text>
           </View>
         </View>
-
         {}
         <View style={styles.orderDetails}>
           <View style={styles.detailItem}>
@@ -84,7 +79,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
             </Text>
           </View>
         </View>
-
         {}
         <View style={styles.additionalInfo}>
           {}
@@ -96,7 +90,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
               </Text>
             </View>
           )}
-
           {}
           {order.delivery?.type && (
             <View style={styles.infoItem}>
@@ -110,7 +103,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
               </Text>
             </View>
           )}
-
           {}
           {order.status?.toLowerCase() === 'out_for_delivery' && order.delivery?.estimatedTime && (
             <View style={styles.infoItem}>
@@ -120,7 +112,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
               </Text>
             </View>
           )}
-
           {}
           {order.status?.toLowerCase() === 'out_for_delivery' && order.driver?.userId && (
             <View style={styles.infoItem}>
@@ -131,7 +122,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
             </View>
           )}
         </View>
-
         {}
         <View style={styles.orderActions}>
           {order.status?.toLowerCase() === 'pending' && onCancel && (
@@ -159,7 +149,6 @@ const OrderItem = ({ order, onPress, onCancel }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   orderItemContainer: {
     flexDirection: 'row',
@@ -360,5 +349,4 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
 });
-
 export default OrderItem;

@@ -5,9 +5,7 @@ import { ReportsScreen, ReportDetailsScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const Stack = createStackNavigator();
-
 const ReportsStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -47,5 +45,4 @@ const ReportsStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 export default ReportsStackNavigator;

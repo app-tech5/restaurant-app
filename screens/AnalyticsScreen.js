@@ -14,7 +14,6 @@ import { colors, constants } from '../global';
 import { useAnalytics } from '../hooks/useAnalytics';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 const AnalyticsScreen = ({ navigation }) => {
   const { restaurant, isAuthenticated } = useRestaurant();
   const {
@@ -25,7 +24,6 @@ const AnalyticsScreen = ({ navigation }) => {
     changePeriod,
     refreshAnalytics
   } = useAnalytics(restaurant, isAuthenticated);
-
   if (error) {
     return (
       <View style={styles.container}>
@@ -42,7 +40,6 @@ const AnalyticsScreen = ({ navigation }) => {
       </View>
     );
   }
-
   if (isLoading && !derivedMetrics) {
     return (
       <View style={styles.container}>
@@ -55,7 +52,6 @@ const AnalyticsScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScreenHeader
@@ -63,7 +59,6 @@ const AnalyticsScreen = ({ navigation }) => {
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
-
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -79,7 +74,6 @@ const AnalyticsScreen = ({ navigation }) => {
           selectedPeriod={period}
           onPeriodChange={changePeriod}
         />
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.mainMetrics')}</Text>
@@ -88,13 +82,11 @@ const AnalyticsScreen = ({ navigation }) => {
             isLoading={isLoading}
           />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.evolution')}</Text>
           <ChartSection isLoading={isLoading} />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.performance')}</Text>
@@ -103,7 +95,6 @@ const AnalyticsScreen = ({ navigation }) => {
             isLoading={isLoading}
           />
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.detailedStats')}</Text>
@@ -116,7 +107,6 @@ const AnalyticsScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -147,5 +137,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 export default AnalyticsScreen;

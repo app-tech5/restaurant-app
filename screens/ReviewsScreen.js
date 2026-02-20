@@ -5,26 +5,22 @@ import { ScreenHeader, EmptyState } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
-
 const ReviewsScreen = ({ navigation }) => {
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
-
   const [stats, setStats] = useState({
     totalReviews: 0,
     averageRating: 0,
     ratingCounts: {}
   });
-
   useEffect(() => {
     const loadReviews = async () => {
       try {
         setLoading(true);
         const response = await apiClient.getRestaurantReviews();
-
         if (response.success) {
           const { reviews, stats } = response.data;
           setReviews(reviews);
@@ -40,17 +36,12 @@ const ReviewsScreen = ({ navigation }) => {
         setLoading(false);
       }
     };
-
     loadReviews();
   }, []);
-
   useEffect(() => {
-    
     let filtered = [...reviews];
-    
     switch (filter) {
       case 'recent':
-        
         filtered = filtered.slice(0, 3);
         break;
       case 'positive':
@@ -62,7 +53,6 @@ const ReviewsScreen = ({ navigation }) => {
       default:
         break;
     }
-    
     switch (sortBy) {
       case 'oldest':
         filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -78,18 +68,14 @@ const ReviewsScreen = ({ navigation }) => {
         filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
         break;
     }
-
     setFilteredReviews(filtered);
   }, [reviews, filter, sortBy]);
-
   const getAverageRating = () => {
     return stats.averageRating || 0;
   };
-
   const getTotalReviews = () => {
     return stats.totalReviews || 0;
   };
-
   const getRatingLabel = (rating) => {
     if (rating >= 4.5) return i18n.t('reviews.rating.excellent');
     if (rating >= 3.5) return i18n.t('reviews.rating.veryGood');
@@ -97,7 +83,6 @@ const ReviewsScreen = ({ navigation }) => {
     if (rating >= 1.5) return i18n.t('reviews.rating.average');
     return i18n.t('reviews.rating.poor');
   };
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(i18n.locale === 'fr' ? 'fr-FR' : 'en-US', {
@@ -106,21 +91,18 @@ const ReviewsScreen = ({ navigation }) => {
       day: 'numeric'
     });
   };
-
   const filterOptions = [
     { key: 'all', label: i18n.t('reviews.filters.all') },
     { key: 'recent', label: i18n.t('reviews.filters.recent') },
     { key: 'positive', label: i18n.t('reviews.filters.positive') },
     { key: 'negative', label: i18n.t('reviews.filters.negative') },
   ];
-
   const sortOptions = [
     { key: 'newest', label: i18n.t('reviews.sort.newest') },
     { key: 'oldest', label: i18n.t('reviews.sort.oldest') },
     { key: 'highest', label: i18n.t('reviews.sort.highest') },
     { key: 'lowest', label: i18n.t('reviews.sort.lowest') },
   ];
-
   const renderFilterTab = (option) => (
     <TouchableOpacity
       key={option.key}
@@ -138,7 +120,6 @@ const ReviewsScreen = ({ navigation }) => {
       </Text>
     </TouchableOpacity>
   );
-
   const renderSortButton = () => (
     <TouchableOpacity
       style={styles.sortButton}
@@ -154,7 +135,6 @@ const ReviewsScreen = ({ navigation }) => {
       </Text>
     </TouchableOpacity>
   );
-
   const renderReviewItem = ({ item }) => (
     <View style={styles.reviewCard}>
       <View style={styles.reviewHeader}>
@@ -178,9 +158,7 @@ const ReviewsScreen = ({ navigation }) => {
           <Text style={styles.reviewDate}>{formatDate(item.createdAt)}</Text>
         </View>
       </View>
-
       <Text style={styles.reviewComment}>{item.comment || item.text}</Text>
-
       {item.reply && (
         <View style={styles.replyContainer}>
           <View style={styles.replyHeader}>
@@ -194,7 +172,6 @@ const ReviewsScreen = ({ navigation }) => {
       )}
     </View>
   );
-
   const renderStatsHeader = () => (
     <View style={styles.statsContainer}>
       <View style={styles.statItem}>
@@ -219,7 +196,6 @@ const ReviewsScreen = ({ navigation }) => {
       </View>
     </View>
   );
-
   if (loading) {
     return (
       <View style={styles.container}>
@@ -235,7 +211,6 @@ const ReviewsScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -244,15 +219,12 @@ const ReviewsScreen = ({ navigation }) => {
         onLeftPress={() => navigation.goBack()}
         rightComponent={renderSortButton()}
       />
-
       {}
       {renderStatsHeader()}
-
       {}
       <View style={styles.filtersContainer}>
         {filterOptions.map(renderFilterTab)}
       </View>
-
       {}
       <FlatList
         data={filteredReviews}
@@ -271,7 +243,6 @@ const ReviewsScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -456,5 +427,4 @@ const styles = StyleSheet.create({
     color: colors.grey[500],
   },
 });
-
 export default ReviewsScreen;

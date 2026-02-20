@@ -15,10 +15,8 @@ import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
-
 const RestaurantProfileScreen = ({ navigation }) => {
   const { restaurant, isAuthenticated } = useRestaurant();
-
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -42,7 +40,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
     is_closed: false,
     isActivated: true
   });
-
   useEffect(() => {
     if (restaurant) {
       setFormData({
@@ -68,30 +65,23 @@ const RestaurantProfileScreen = ({ navigation }) => {
       });
     }
   }, [restaurant]);
-
   const handleSave = async () => {
-    
     if (!formData.name.trim()) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.nameRequired'));
       return;
     }
-
     if (!formData.email.trim()) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.emailRequired'));
       return;
     }
-    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.invalidEmail'));
       return;
     }
-
     try {
       setIsLoading(true);
-
       const response = await apiClient.updateRestaurantProfile(formData);
-
       if (response.success) {
         Alert.alert(
           i18n.t('success.saved'),
@@ -108,9 +98,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
       setIsLoading(false);
     }
   };
-
   const handleCancel = () => {
-    
     if (restaurant) {
       setFormData({
         name: restaurant.name || '',
@@ -136,7 +124,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
     }
     setIsEditing(false);
   };
-
   if (!restaurant) {
     return (
       <View style={styles.container}>
@@ -149,7 +136,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -175,7 +161,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
           )
         }
       />
-
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -189,7 +174,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.generalInfo')}</Text>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.restaurantName')}</Text>
               <TextInput
@@ -200,7 +184,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.email')}</Text>
               <TextInput
@@ -213,7 +196,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.phone')}</Text>
               <TextInput
@@ -225,7 +207,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.address')}</Text>
               <TextInput
@@ -239,7 +220,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.description')}</Text>
@@ -256,11 +236,9 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.locationInfo')}</Text>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.country')}</Text>
               <TextInput
@@ -271,7 +249,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.city')}</Text>
               <TextInput
@@ -282,7 +259,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-
             <View style={styles.rowField}>
               <View style={[styles.field, styles.halfField]}>
                 <Text style={styles.fieldLabel}>{i18n.t('common.latitude')}</Text>
@@ -308,11 +284,9 @@ const RestaurantProfileScreen = ({ navigation }) => {
               </View>
             </View>
           </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
-
             <View style={styles.rowField}>
               <View style={[styles.field, styles.halfField]}>
                 <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.openingTime')}</Text>
@@ -335,7 +309,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 />
               </View>
             </View>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.collectTime')}</Text>
               <TextInput
@@ -348,11 +321,9 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.serviceOptions')}</Text>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.serviceModes')}</Text>
               <TextInput
@@ -364,7 +335,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.restaurantImage')}</Text>
@@ -379,11 +349,9 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.businessInfo')}</Text>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.theme')}</Text>
               <TextInput
@@ -394,7 +362,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.commissionRate')}</Text>
               <TextInput
@@ -406,7 +373,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.rewards')}</Text>
               <TextInput
@@ -420,11 +386,9 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
-
             <View style={styles.infoField}>
               <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.status')}</Text>
               <View style={[
@@ -441,7 +405,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-
             <View style={styles.infoField}>
               <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.isClosed')}</Text>
               <View style={[
@@ -458,7 +421,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-
             <View style={styles.infoField}>
               <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
               <View style={[
@@ -475,12 +437,10 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-
             <View style={styles.infoField}>
               <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.restaurantId')}</Text>
               <Text style={styles.infoValue}>{restaurant._id}</Text>
             </View>
-
             <View style={styles.infoField}>
               <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.type')}</Text>
               <Text style={styles.infoValue}>
@@ -494,7 +454,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -641,5 +600,4 @@ const styles = StyleSheet.create({
     color: colors.error,
   },
 });
-
 export default RestaurantProfileScreen;

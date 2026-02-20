@@ -15,7 +15,6 @@ import { colors, constants } from '../global';
 import { getOrderStatusLabel, getOrderStatusColor, formatPrice } from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 const OrderDetailsScreen = ({ route, navigation }) => {
   const { order } = route.params;
   const {
@@ -25,9 +24,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     readyForPickup,
     formatCurrency
   } = useRestaurant();
-
   const [isLoading, setIsLoading] = useState(false);
-
   if (!order) {
     return (
       <SafeAreaView style={styles.container}>
@@ -46,10 +43,8 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-
     );
   }
-
   const {
     _id,
     customerName,
@@ -63,10 +58,8 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     notes,
     paymentMethod
   } = order;
-
   const statusLabel = getOrderStatusLabel(status);
   const statusColor = getOrderStatusColor(status);
-
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     return {
@@ -77,7 +70,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       })
     };
   };
-
   const formatEstimatedTime = (minutes) => {
     if (!minutes) return 'Non spécifié';
     const hours = Math.floor(minutes / 60);
@@ -87,7 +79,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     }
     return `${mins}min`;
   };
-
   const handleStatusChange = async (newStatus) => {
     Alert.alert(
       i18n.t('alerts.confirmStatusChangeTitle'),
@@ -118,7 +109,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       ]
     );
   };
-
   const handleAccept = async () => {
     try {
       setIsLoading(true);
@@ -131,7 +121,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       setIsLoading(false);
     }
   };
-  
   const handlePrepare = async () => {
     try {
       setIsLoading(true);
@@ -144,7 +133,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       setIsLoading(false);
     }
   };
-  
   const handleReady = async () => {
     try {
       setIsLoading(true);
@@ -157,10 +145,8 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       setIsLoading(false);
     }
   };
-  
   const getActionButtons = () => {
     const buttons = [];
-
     switch (status) {
       case 'pending':
         buttons.push(
@@ -183,7 +169,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           />
         );
         break;
-
       case 'accepted':
         buttons.push(
           <Button
@@ -196,7 +181,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           />
         );
         break;
-
       case 'preparing':
         buttons.push(
           <Button
@@ -209,7 +193,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           />
         );
         break;
-
       case 'ready':
         buttons.push(
           <Text key="ready-text" style={styles.readyText}>
@@ -217,16 +200,12 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           </Text>
         );
         break;
-
       default:
         break;
     }
-
     return buttons;
   };
-
   const orderDateTime = formatDateTime(createdAt);
-
   return (
     <SafeAreaView style={styles.container}>
   <ScreenHeader
@@ -234,7 +213,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     showBackButton
     onLeftPress={() => navigation.goBack()}
   />
-
   <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
     {}
     <Card containerStyle={styles.statusCard}>
@@ -246,7 +224,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         </View>
         <Text style={styles.orderId}>#{_id.slice(-6)}</Text>
       </View>
-
       <View style={styles.orderInfo}>
         <Text style={styles.orderDate}>
           {orderDateTime.date} {i18n.t('orderDetails.at')} {orderDateTime.time}
@@ -258,7 +235,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         )}
       </View>
     </Card>
-
     {}
     {getActionButtons().length > 0 && (
       <Card containerStyle={styles.actionsCard}>
@@ -268,29 +244,24 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         </View>
       </Card>
     )}
-
     {}
     <Card containerStyle={styles.customerCard}>
       <Text style={styles.cardTitle}>{i18n.t('orderDetails.customerInfo')}</Text>
-
       <View style={styles.customerInfo}>
         <View style={styles.infoRow}>
           <Icon name="person" size={20} color={colors.grey[600]} />
           <Text style={styles.infoText}>{customerName}</Text>
         </View>
-
         <View style={styles.infoRow}>
           <Icon name="phone" size={20} color={colors.grey[600]} />
           <Text style={styles.infoText}>{customerPhone}</Text>
         </View>
-
         {customerAddress && (
           <View style={styles.infoRow}>
             <Icon name="location-on" size={20} color={colors.grey[600]} />
             <Text style={styles.infoText}>{customerAddress}</Text>
           </View>
         )}
-
         {paymentMethod && (
           <View style={styles.infoRow}>
             <Icon name="payment" size={20} color={colors.grey[600]} />
@@ -302,11 +273,9 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         )}
       </View>
     </Card>
-
     {}
     <Card containerStyle={styles.itemsCard}>
       <Text style={styles.cardTitle}>{i18n.t('orderDetails.orderedItems')}</Text>
-
       {items.map((item, index) => (
         <View key={index} style={styles.itemRow}>
           <View style={styles.itemInfo}>
@@ -319,13 +288,11 @@ const OrderDetailsScreen = ({ route, navigation }) => {
           <Text style={styles.itemPrice}>{formatCurrency(item.price * item.quantity)}</Text>
         </View>
       ))}
-
       <View style={styles.totalRow}>
         <Text style={styles.totalLabel}>{i18n.t('orderDetails.total')}</Text>
         <Text style={styles.totalAmount}>{formatCurrency(total)}</Text>
       </View>
     </Card>
-
     {}
     {notes && (
       <Card containerStyle={styles.notesCard}>
@@ -335,10 +302,8 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     )}
   </ScrollView>
 </SafeAreaView>
-
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -579,5 +544,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-
 export default OrderDetailsScreen;

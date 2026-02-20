@@ -4,10 +4,8 @@ import { Icon } from 'react-native-elements';
 import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const ReportsScreen = ({ navigation }) => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
-
   const reportTypes = [
     {
       id: 'daily',
@@ -58,14 +56,12 @@ const ReportsScreen = ({ navigation }) => {
       available: false, 
     },
   ];
-
   const periodOptions = [
     { key: 'week', label: i18n.t('reports.periodWeek') },
     { key: 'month', label: i18n.t('reports.periodMonth') },
     { key: 'quarter', label: i18n.t('reports.periodQuarter') },
     { key: 'year', label: i18n.t('reports.periodYear') },
   ];
-
   const handleGenerateReport = (reportType) => {
     if (!reportType.available) {
       Alert.alert(
@@ -75,7 +71,6 @@ const ReportsScreen = ({ navigation }) => {
       );
       return;
     }
-    
     Alert.alert(
       i18n.t('reports.reportGeneratedTitle'),
       i18n.t('reports.reportGeneratedMessage', { reportTitle: reportType.title, period: selectedPeriod }),
@@ -86,7 +81,6 @@ const ReportsScreen = ({ navigation }) => {
       ]
     );
   };
-
   const handleExportReport = (reportType) => {
     Alert.alert(
       i18n.t('reports.exportTitle'),
@@ -98,7 +92,6 @@ const ReportsScreen = ({ navigation }) => {
       ]
     );
   };
-
   const renderReportCard = (report) => (
     <TouchableOpacity
       key={report.id}
@@ -118,14 +111,12 @@ const ReportsScreen = ({ navigation }) => {
             color={report.color}
           />
         </View>
-
         {!report.available && (
           <View style={styles.comingSoonBadge}>
             <Text style={styles.comingSoonText}>{i18n.t('reports.comingSoon')}</Text>
           </View>
         )}
       </View>
-
       <View style={styles.reportContent}>
         <Text style={[styles.reportTitle, !report.available && styles.disabledText]}>
           {report.title}
@@ -134,7 +125,6 @@ const ReportsScreen = ({ navigation }) => {
           {report.description}
         </Text>
       </View>
-
       <View style={styles.reportActions}>
         <TouchableOpacity
           style={styles.actionButton}
@@ -142,7 +132,6 @@ const ReportsScreen = ({ navigation }) => {
         >
           <Text style={styles.actionButtonText}>{i18n.t('reports.generate')}</Text>
         </TouchableOpacity>
-
         {report.available && (
           <TouchableOpacity
             style={[styles.actionButton, styles.secondaryButton]}
@@ -154,7 +143,6 @@ const ReportsScreen = ({ navigation }) => {
       </View>
     </TouchableOpacity>
   );
-
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -162,7 +150,6 @@ const ReportsScreen = ({ navigation }) => {
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
-
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -190,7 +177,6 @@ const ReportsScreen = ({ navigation }) => {
             ))}
           </View>
         </View>
-
         {}
         <View style={styles.reportsSection}>
           <Text style={styles.sectionTitle}>{i18n.t('reports.availableReports')}</Text>
@@ -198,7 +184,6 @@ const ReportsScreen = ({ navigation }) => {
             {reportTypes.map(renderReportCard)}
           </View>
         </View>
-
         {}
         <View style={styles.infoSection}>
           <View style={styles.infoCard}>
@@ -221,7 +206,6 @@ const ReportsScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -378,5 +362,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-
 export default ReportsScreen;

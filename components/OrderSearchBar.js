@@ -3,7 +3,6 @@ import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const OrderSearchBar = ({ searchQuery, onSearchChange, onClearSearch }) => {
   return (
     <View style={styles.searchContainer}>
@@ -23,7 +22,6 @@ const OrderSearchBar = ({ searchQuery, onSearchChange, onClearSearch }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
@@ -55,5 +53,4 @@ const styles = StyleSheet.create({
     padding: 4,
   },
 });
-
 export default OrderSearchBar;

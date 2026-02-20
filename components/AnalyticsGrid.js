@@ -3,12 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import { AnalyticsCard } from './index';
 import { constants } from '../global';
 import i18n from '../i18n';
-
 const AnalyticsGrid = ({ metrics, isLoading }) => {
   if (!metrics || isLoading) {
     return null;
   }
-
   const analyticsCards = [
     {
       title: i18n.t('analytics.revenue'),
@@ -39,7 +37,6 @@ const AnalyticsGrid = ({ metrics, isLoading }) => {
       icon: 'trending-up',
     },
   ];
-
   return (
     <View style={styles.grid}>
       {analyticsCards.map((card, index) => (
@@ -56,7 +53,6 @@ const AnalyticsGrid = ({ metrics, isLoading }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
@@ -68,5 +64,4 @@ const styles = StyleSheet.create({
     marginBottom: constants.SPACING.md,
   },
 });
-
 export default AnalyticsGrid;

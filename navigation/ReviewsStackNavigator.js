@@ -5,9 +5,7 @@ import { ReviewsScreen } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
-
 const Stack = createStackNavigator();
-
 const ReviewsStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -40,5 +38,4 @@ const ReviewsStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 export default ReviewsStackNavigator;

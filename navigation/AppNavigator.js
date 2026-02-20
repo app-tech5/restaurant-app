@@ -1,24 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
 import DrawerNavigator from './DrawerNavigator';
 import { useRestaurant } from '../contexts/RestaurantContext';
-
 const Stack = createStackNavigator();
-
 export default function AppNavigator() {
   const navigationRef = useRef();
   const { isAuthenticated, isLoading } = useRestaurant();
-  
   useEffect(() => {
     if (!isLoading && navigationRef.current) {
       const navigation = navigationRef.current;
-
       if (isAuthenticated) {
-        
         if (navigation.getCurrentRoute()?.name !== 'DrawerNavigator') {
           navigation.reset({
             index: 0,
@@ -26,7 +20,6 @@ export default function AppNavigator() {
           });
         }
       } else {
-        
         const currentRoute = navigation.getCurrentRoute()?.name;
         if (currentRoute !== 'Splash' && currentRoute !== 'Login') {
           navigation.reset({
@@ -37,7 +30,6 @@ export default function AppNavigator() {
       }
     }
   }, [isAuthenticated, isLoading]);
-
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator

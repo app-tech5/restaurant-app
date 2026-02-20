@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import i18n from '../i18n';
-
 export const useMenuActions = (navigation) => {
   const {
     loadMenu,
@@ -10,9 +9,7 @@ export const useMenuActions = (navigation) => {
     toggleMenuItemAvailability,
     isAuthenticated
   } = useRestaurant();
-
   const [refreshing, setRefreshing] = useState(false);
-
   const loadMenuItems = async () => {
     try {
       await loadMenu();
@@ -20,21 +17,17 @@ export const useMenuActions = (navigation) => {
       console.error('Erreur chargement menu:', error);
     }
   };
-
   const onRefresh = async () => {
     setRefreshing(true);
     await loadMenuItems();
     setRefreshing(false);
   };
-
   const handleAddMenuItem = () => {
     navigation.navigate('AddEditMenuItem', { mode: 'add' });
   };
-
   const handleEditMenuItem = (item) => {
     navigation.navigate('AddEditMenuItem', { mode: 'edit', item });
   };
-
   const handleDeleteMenuItem = async (itemId) => {
     Alert.alert(
       i18n.t('common.confirm'),
@@ -55,7 +48,6 @@ export const useMenuActions = (navigation) => {
       ]
     );
   };
-
   const handleToggleAvailability = async (itemId, available) => {
     try {
       await toggleMenuItemAvailability(itemId, available);
@@ -63,7 +55,6 @@ export const useMenuActions = (navigation) => {
       console.error('Erreur changement disponibilité:', error);
     }
   };
-
   return {
     refreshing,
     loadMenuItems,

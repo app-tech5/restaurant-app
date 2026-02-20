@@ -1,13 +1,10 @@
-
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../global';
-
 const HamburgerButton = () => {
   const navigation = useNavigation();
-
   return (
     <TouchableOpacity
       onPress={() => navigation.openDrawer()}
@@ -18,11 +15,9 @@ const HamburgerButton = () => {
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   button: {
     padding: 4,
   },
 });
-
 export default HamburgerButton;

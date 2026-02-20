@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, constants } from '../global';
 import { getOrderStatusLabel, getOrderStatusColor } from '../utils/restaurantUtils';
-
 const OrderStatusBadge = ({
   status,
   size = 'medium',
@@ -11,7 +10,6 @@ const OrderStatusBadge = ({
 }) => {
   const label = getOrderStatusLabel(status);
   const backgroundColor = getOrderStatusColor(status);
-
   const getSizeStyles = () => {
     switch (size) {
       case 'small':
@@ -31,9 +29,7 @@ const OrderStatusBadge = ({
         };
     }
   };
-
   const sizeStyles = getSizeStyles();
-
   return (
     <View style={[styles.container, sizeStyles.container, { backgroundColor }, style]}>
       <Text style={[styles.text, sizeStyles.text, textStyle]}>
@@ -42,7 +38,6 @@ const OrderStatusBadge = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
@@ -79,5 +74,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
 export default OrderStatusBadge;

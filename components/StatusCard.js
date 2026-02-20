@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { colors, constants } from '../global';
-
 const StatusCard = ({
   title,
   value,
@@ -14,7 +13,6 @@ const StatusCard = ({
   style = {},
   ...props
 }) => {
-  
   const sizeConfig = {
     small: {
       container: styles.smallContainer,
@@ -35,9 +33,7 @@ const StatusCard = ({
       valueSize: 28,
     },
   };
-
   const config = sizeConfig[size] || sizeConfig.medium;
-
   return (
     <View
       style={[
@@ -57,7 +53,6 @@ const StatusCard = ({
           color={color}
         />
       </View>
-
       {}
       <View style={styles.content}>
         <Text
@@ -68,7 +63,6 @@ const StatusCard = ({
         >
           {title}
         </Text>
-
         <Text
           style={[
             styles.value,
@@ -81,7 +75,6 @@ const StatusCard = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -128,5 +121,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
 export default StatusCard;

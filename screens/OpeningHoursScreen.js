@@ -15,10 +15,8 @@ import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
-
 const OpeningHoursScreen = ({ navigation }) => {
   const { restaurant, isAuthenticated } = useRestaurant();
-
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -26,7 +24,6 @@ const OpeningHoursScreen = ({ navigation }) => {
     closingTime: '',
     is_closed: false
   });
-
   useEffect(() => {
     if (restaurant) {
       setFormData({
@@ -36,45 +33,35 @@ const OpeningHoursScreen = ({ navigation }) => {
       });
     }
   }, [restaurant]);
-
   const validateTime = (time) => {
     const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
     return timeRegex.test(time);
   };
-
   const handleSave = async () => {
-    
     if (!formData.is_closed) {
       if (!formData.openingTime.trim() || !formData.closingTime.trim()) {
         Alert.alert(i18n.t('errors.validationError'), i18n.t('openingHours.validationError'));
         return;
       }
-
       if (!validateTime(formData.openingTime) || !validateTime(formData.closingTime)) {
         Alert.alert(i18n.t('errors.validationError'), i18n.t('openingHours.invalidTime'));
         return;
       }
-      
       const openTime = new Date(`2000-01-01T${formData.openingTime}:00`);
       const closeTime = new Date(`2000-01-01T${formData.closingTime}:00`);
-
       if (closeTime <= openTime) {
         Alert.alert(i18n.t('errors.validationError'), i18n.t('openingHours.closeBeforeOpen'));
         return;
       }
     }
-
     try {
       setIsLoading(true);
-
       const updateData = {
         openingTime: formData.is_closed ? '' : formData.openingTime,
         closingTime: formData.is_closed ? '' : formData.closingTime,
         is_closed: formData.is_closed
       };
-
       const response = await apiClient.updateRestaurantProfile(updateData);
-
       if (response.success) {
         Alert.alert(
           i18n.t('success.saved'),
@@ -94,13 +81,10 @@ const OpeningHoursScreen = ({ navigation }) => {
       setIsLoading(false);
     }
   };
-
   const handleEdit = () => {
     setIsEditing(true);
   };
-
   const handleCancel = () => {
-    
     if (restaurant) {
       setFormData({
         openingTime: restaurant.openingTime || '09:00',
@@ -110,14 +94,12 @@ const OpeningHoursScreen = ({ navigation }) => {
     }
     setIsEditing(false);
   };
-
   const updateFormData = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   if (!isAuthenticated) {
     return (
       <View style={styles.container}>
@@ -133,7 +115,6 @@ const OpeningHoursScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -167,12 +148,10 @@ const OpeningHoursScreen = ({ navigation }) => {
           )
         }
       />
-
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
-
           <View style={styles.infoField}>
             <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.status')}</Text>
             <View style={[
@@ -190,11 +169,9 @@ const OpeningHoursScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
-
           {!formData.is_closed ? (
             <>
               <View style={styles.field}>
@@ -211,7 +188,6 @@ const OpeningHoursScreen = ({ navigation }) => {
                   editable={isEditing}
                 />
               </View>
-
               <View style={styles.field}>
                 <Text style={styles.fieldLabel}>
                   {i18n.t('restaurantProfile.closingTime')}
@@ -239,7 +215,6 @@ const OpeningHoursScreen = ({ navigation }) => {
     </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -385,5 +360,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 export default OpeningHoursScreen;

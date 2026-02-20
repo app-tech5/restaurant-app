@@ -15,12 +15,9 @@ import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
 import i18n from '../i18n';
 import { colors } from '../global';
 import { useRestaurant } from '../contexts/RestaurantContext';
-
 const Drawer = createDrawerNavigator();
-
 function CustomDrawerContent(props) {
   const { logout } = useRestaurant();
-
   const handleLogout = async () => {
     Alert.alert(
       i18n.t('navigation.logout'),
@@ -36,7 +33,6 @@ function CustomDrawerContent(props) {
           onPress: async () => {
             try {
               await logout();
-              
             } catch (error) {
               console.error('Erreur lors de la déconnexion:', error);
               Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion');
@@ -46,7 +42,6 @@ function CustomDrawerContent(props) {
       ]
     );
   };
-
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
@@ -77,7 +72,6 @@ function CustomDrawerContent(props) {
     </DrawerContentScrollView>
   );
 }
-
 export default function DrawerNavigator() {
   return (
     <Drawer.Navigator
@@ -119,7 +113,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Orders"
@@ -135,7 +128,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Menu"
@@ -151,7 +143,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Analytics"
@@ -167,7 +158,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Reviews"
@@ -183,7 +173,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Reports"
@@ -199,7 +188,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Notifications"
@@ -215,7 +203,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Support"
@@ -231,7 +218,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Profile"
@@ -247,7 +233,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
       {}
       <Drawer.Screen
         name="Settings"

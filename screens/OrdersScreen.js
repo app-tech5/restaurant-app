@@ -5,7 +5,6 @@ import { OrderCard, Loading, EmptyState, ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 const OrdersScreen = ({ navigation }) => {
   const {
     orders,
@@ -16,16 +15,13 @@ const OrdersScreen = ({ navigation }) => {
     readyForPickup,
     isAuthenticated
   } = useRestaurant();
-
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('all'); 
-
   useEffect(() => {
     if (isAuthenticated) {
       loadOrders();
     }
   }, [isAuthenticated]);
-
   const loadOrders = async () => {
     try {
       await loadRestaurantOrders();
@@ -33,13 +29,11 @@ const OrdersScreen = ({ navigation }) => {
       console.error('Erreur chargement commandes:', error);
     }
   };
-
   const onRefresh = async () => {
     setRefreshing(true);
     await loadOrders();
     setRefreshing(false);
   };
-
   const handleAcceptOrder = async (orderId) => {
     try {
       await acceptOrder(orderId);
@@ -47,7 +41,6 @@ const OrdersScreen = ({ navigation }) => {
       console.error(i18n.t('errors.acceptOrder'), error);
     }
   };
-
   const handlePrepareOrder = async (orderId) => {
     try {
       await prepareOrder(orderId);
@@ -55,7 +48,6 @@ const OrdersScreen = ({ navigation }) => {
       console.error(i18n.t('errors.prepareOrder'), error);
     }
   };
-
   const handleReadyForPickup = async (orderId) => {
     try {
       await readyForPickup(orderId);
@@ -63,15 +55,11 @@ const OrdersScreen = ({ navigation }) => {
       console.error(i18n.t('errors.readyOrder'), error);
     }
   };
-
   const handleOrderPress = (order) => {
-    
     navigation.navigate('OrderDetails', { order });
   };
-
   const getFilteredOrders = (status) => {
     if (!orders) return [];
-
     switch (status) {
       case 'pending':
         return orders.filter(order => order.status === 'pending');
@@ -83,9 +71,7 @@ const OrdersScreen = ({ navigation }) => {
         return orders;
     }
   };
-
   const filteredOrders = getFilteredOrders(activeTab);
-
   const renderOrder = ({ item }) => (
     <OrderCard
       order={item}
@@ -95,7 +81,6 @@ const OrdersScreen = ({ navigation }) => {
       onReady={handleReadyForPickup}
     />
   );
-
   const renderEmpty = () => {
     const emptyMessages = {
       all: {
@@ -115,9 +100,7 @@ const OrdersScreen = ({ navigation }) => {
         subtitle: i18n.t('orders.empty.ready.subtitle')
       }
     };
-
     const message = emptyMessages[activeTab];
-
     return (
       <EmptyState
         icon="receipt"
@@ -126,7 +109,6 @@ const OrdersScreen = ({ navigation }) => {
       />
     );
   };
-
   if (!orders) {
     return (
       <View style={styles.container}>
@@ -139,7 +121,6 @@ const OrdersScreen = ({ navigation }) => {
       </View>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScreenHeader
@@ -147,7 +128,6 @@ const OrdersScreen = ({ navigation }) => {
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
-
       {}
       <View style={styles.tabsContainer}>
         {[
@@ -183,7 +163,6 @@ const OrdersScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
-
       <FlatList
         data={filteredOrders}
         renderItem={renderOrder}
@@ -203,7 +182,6 @@ const OrdersScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -260,5 +238,4 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 });
-
 export default OrdersScreen;

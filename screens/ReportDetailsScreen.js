@@ -12,13 +12,10 @@ import { ScreenHeader, ReportMetricsCards, ReportCharts } from '../components';
 import { useReportData, useReportCalculations } from '../hooks';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
-
 const ReportDetailsScreen = ({ route, navigation }) => {
   const { reportType, period } = route.params || {};
-
   const { isLoading, refreshing, filteredOrders, baseMetrics, reportInfo, onRefresh } = useReportData(reportType, period);
   const calculations = useReportCalculations(filteredOrders, reportType);
-
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -33,7 +30,6 @@ const ReportDetailsScreen = ({ route, navigation }) => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -41,7 +37,6 @@ const ReportDetailsScreen = ({ route, navigation }) => {
         showBackButton
         onLeftPress={() => navigation.goBack()}
       />
-
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -58,13 +53,11 @@ const ReportDetailsScreen = ({ route, navigation }) => {
           <Text style={styles.reportTitle}>{reportInfo.title}</Text>
           <Text style={styles.reportPeriod}>{reportInfo.periodText}</Text>
         </Card>
-
         {}
         <ReportMetricsCards
           baseMetrics={baseMetrics}
           reportType={reportType}
         />
-
         {}
         <ReportCharts
           calculations={calculations}
@@ -74,7 +67,6 @@ const ReportDetailsScreen = ({ route, navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -120,5 +112,4 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
   },
 });
-
 export default ReportDetailsScreen;

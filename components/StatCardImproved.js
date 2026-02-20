@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, constants } from '../global';
-
 const StatCardImproved = ({
   title,
   value,
@@ -19,7 +18,6 @@ const StatCardImproved = ({
   disabled = false,
   ...props
 }) => {
-  
   const sizeConfig = {
     small: {
       container: styles.smallContainer,
@@ -43,9 +41,7 @@ const StatCardImproved = ({
       subtitleSize: 12,
     },
   };
-
   const config = sizeConfig[size] || sizeConfig.medium;
-  
   const cardContent = (
     <>
       {}
@@ -57,7 +53,6 @@ const StatCardImproved = ({
           color={gradient ? colors.white : color}
         />
       </View>
-
       {}
       <View style={styles.content}>
         <Text
@@ -71,7 +66,6 @@ const StatCardImproved = ({
         >
           {title}
         </Text>
-
         <Text
           style={[
             styles.value,
@@ -83,7 +77,6 @@ const StatCardImproved = ({
         >
           {value}
         </Text>
-
         {subtitle && (
           <Text
             style={[
@@ -100,13 +93,11 @@ const StatCardImproved = ({
       </View>
     </>
   );
-  
   const baseCardStyle = [
     styles.card,
     config.container,
     style
   ];
-  
   const CardComponent = onPress ? TouchableOpacity : View;
   const cardProps = onPress ? {
     onPress,
@@ -114,7 +105,6 @@ const StatCardImproved = ({
     activeOpacity: 0.7,
     ...props
   } : props;
-  
   if (gradient) {
     return (
       <CardComponent {...cardProps}>
@@ -129,7 +119,6 @@ const StatCardImproved = ({
       </CardComponent>
     );
   }
-
   return (
     <CardComponent
       {...cardProps}
@@ -139,7 +128,6 @@ const StatCardImproved = ({
     </CardComponent>
   );
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -191,5 +179,4 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
-
 export default StatCardImproved;

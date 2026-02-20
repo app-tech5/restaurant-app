@@ -1,43 +1,34 @@
 import { useState, useEffect, useMemo } from 'react';
 import apiClient from '../api';
 import { loadWithSmartCache, clearOrdersCache } from '../utils/cacheUtils';
-
 export const useAnalytics = (restaurant, isAuthenticated) => {
   const [analytics, setAnalytics] = useState(null);
   const [period, setPeriod] = useState('today');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
   const loadAnalytics = async (selectedPeriod = period) => {
     if (!isAuthenticated || !restaurant?._id) {
       return;
     }
-
     try {
       setIsLoading(true);
       setError(null);
-      
       await loadWithSmartCache(
         restaurant._id, 
         `analytics_${selectedPeriod}`, 
         () => apiClient.getRestaurantAnalytics(selectedPeriod), 
         (data, fromCache) => {
-          
           setAnalytics(data);
           if (fromCache) {
-            
           }
         },
         (data) => {
-
           setAnalytics(data);
         },
         (loading) => {
-          
           setIsLoading(loading);
         },
         (errorMsg) => {
-          
           setError(errorMsg);
           console.error('Erreur chargement analytics:', errorMsg);
         }
@@ -49,18 +40,14 @@ export const useAnalytics = (restaurant, isAuthenticated) => {
       setIsLoading(false);
     }
   };
-  
   useEffect(() => {
     if (isAuthenticated && restaurant?._id) {
       loadAnalytics(period);
     }
   }, [period, isAuthenticated, restaurant?._id]);
-  
   const derivedMetrics = useMemo(() => {
     if (!analytics) return null;
-
     return {
-      
       revenue: {
         value: analytics.totalRevenue || 0,
         trend: analytics.trends?.revenue || 0,
@@ -81,7 +68,6 @@ export const useAnalytics = (restaurant, isAuthenticated) => {
         trend: 0, 
         formatted: `${(analytics.averageOrderValue || 0).toFixed(2)}€`
       },
-      
       preparationTime: {
         value: analytics.averagePreparationTime || 0,
         formatted: `${analytics.averagePreparationTime || 0} min`
@@ -95,29 +81,23 @@ export const useAnalytics = (restaurant, isAuthenticated) => {
         value: analytics.cancellationRate || 0,
         formatted: `${(analytics.cancellationRate || 0).toFixed(1)}%`
       },
-      
       completedOrders: analytics.completedOrders || 0,
       onTimeDeliveryRate: analytics.onTimeDeliveryRate || 0,
       totalDeliveries: analytics.totalDeliveries || 0
     };
   }, [analytics]);
-  
   const changePeriod = async (newPeriod) => {
     setPeriod(newPeriod);
   };
-  
   const refreshAnalytics = () => {
     loadAnalytics(period);
   };
-
   return {
-    
     analytics,
     derivedMetrics,
     period,
     isLoading,
     error,
-    
     changePeriod,
     refreshAnalytics,
     loadAnalytics

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { colors } from '../global';
-
 const Loading = ({
   size = 'large',
   color = colors.primary,
@@ -20,7 +19,6 @@ const Loading = ({
       )}
     </View>
   );
-
   if (fullScreen) {
     return (
       <View style={styles.fullScreen}>
@@ -28,10 +26,8 @@ const Loading = ({
       </View>
     );
   }
-
   return content;
 };
-
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -50,5 +46,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 export default Loading;

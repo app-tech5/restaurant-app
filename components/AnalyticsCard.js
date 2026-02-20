@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { colors, constants } from '../global';
-
 const AnalyticsCard = ({
   title,
   value,
@@ -26,7 +25,6 @@ const AnalyticsCard = ({
         return colors.grey[600];
     }
   };
-
   const getChangeIcon = () => {
     switch (changeType) {
       case 'positive':
@@ -37,7 +35,6 @@ const AnalyticsCard = ({
         return 'trending-flat';
     }
   };
-
   const formatChange = (change) => {
     if (typeof change === 'number') {
       const sign = change >= 0 ? '+' : '';
@@ -45,7 +42,6 @@ const AnalyticsCard = ({
     }
     return change;
   };
-
   return (
     <Card containerStyle={[styles.card, style]}>
       <View style={styles.header}>
@@ -61,7 +57,6 @@ const AnalyticsCard = ({
             {title}
           </Text>
         </View>
-
         {change !== null && (
           <View style={styles.changeContainer}>
             <Icon
@@ -76,11 +71,9 @@ const AnalyticsCard = ({
           </View>
         )}
       </View>
-
       <Text style={[styles.value, valueStyle]}>
         {value}
       </Text>
-
       {chart && (
         <View style={styles.chartContainer}>
           {chart}
@@ -89,7 +82,6 @@ const AnalyticsCard = ({
     </Card>
   );
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -98,9 +90,7 @@ const styles = StyleSheet.create({
     marginBottom: constants.SPACING.sm,
   },
   header: {
-    
     justifyContent: 'space-between',
-    
     marginBottom: constants.SPACING.sm,
   },
   titleContainer: {
@@ -136,5 +126,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
 export default AnalyticsCard;

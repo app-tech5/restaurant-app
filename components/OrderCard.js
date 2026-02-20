@@ -5,7 +5,6 @@ import { colors, constants } from '../global';
 import { getOrderStatusLabel, getOrderStatusColor, formatPrice } from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { useSettings } from '../contexts/SettingContext';
-
 const OrderCard = ({
   order,
   onPress = null,
@@ -25,12 +24,9 @@ const OrderCard = ({
     createdAt,
     estimatedTime
   } = order;
-
   const { currency } = useSettings();
-
   const statusLabel = getOrderStatusLabel(status);
   const statusColor = getOrderStatusColor(status);
-
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString(i18n.locale, {
@@ -38,10 +34,8 @@ const OrderCard = ({
       minute: '2-digit'
     });
   };
-
   const getActionButtons = () => {
     const buttons = [];
-
     if (status === 'pending' && onAccept) {
       buttons.push({
         title: i18n.t('orders.acceptOrder'),
@@ -50,7 +44,6 @@ const OrderCard = ({
         icon: 'check'
       });
     }
-
     if (status === 'accepted' && onPrepare) {
       buttons.push({
         title: i18n.t('orders.prepareOrder'),
@@ -59,7 +52,6 @@ const OrderCard = ({
         icon: 'play-arrow'
       });
     }
-
     if (status === 'preparing' && onReady) {
       buttons.push({
         title: i18n.t('orders.readyForPickup'),
@@ -68,12 +60,9 @@ const OrderCard = ({
         icon: 'done'
       });
     }
-
     return buttons;
   };
-
   const actionButtons = showActions ? getActionButtons() : [];
-
   return (
     <Card containerStyle={[styles.card, style]}>
       <TouchableOpacity
@@ -91,14 +80,12 @@ const OrderCard = ({
               {formatTime(createdAt)}
             </Text>
           </View>
-
           <View style={[styles.statusBadge, { backgroundColor: statusColor }]}>
             <Text style={styles.statusText}>
               {statusLabel}
             </Text>
           </View>
         </View>
-
         {}
         <View style={styles.customerInfo}>
           <Icon
@@ -111,7 +98,6 @@ const OrderCard = ({
           <Text style={styles.customerName}>{customerName}</Text>
           <Text style={styles.customerPhone}>{customerPhone}</Text>
         </View>
-
         {}
         <View style={styles.itemsContainer}>
           <Text style={styles.itemsTitle}>
@@ -128,7 +114,6 @@ const OrderCard = ({
             </Text>
           )}
         </View>
-
         {}
         <View style={styles.footer}>
           <View style={styles.totalContainer}>
@@ -137,7 +122,6 @@ const OrderCard = ({
               {formatPrice(total, currency?.symbol || '€')}
             </Text>
           </View>
-
           {estimatedTime && (
             <View style={styles.timeContainer}>
               <Icon
@@ -153,7 +137,6 @@ const OrderCard = ({
           )}
         </View>
       </TouchableOpacity>
-
       {}
       {actionButtons.length > 0 && (
         <View style={styles.actionsContainer}>
@@ -179,7 +162,6 @@ const OrderCard = ({
     </Card>
   );
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: constants.BORDER_RADIUS,
@@ -305,5 +287,4 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 });
-
 export default OrderCard;

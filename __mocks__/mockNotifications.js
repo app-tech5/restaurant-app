@@ -1,5 +1,4 @@
 import i18n from '../i18n';
-
 export const mockNotifications = [
   {
     id: '1',
@@ -40,18 +39,14 @@ export const mockNotifications = [
     actionData: { orderId: '1230' }
   }
 ];
-
 export const generateMockNotifications = (count = 5) => {
   const types = ['order', 'system', 'review'];
   const notifications = [];
-
   for (let i = 0; i < count; i++) {
     const type = types[i % types.length];
     const isRead = Math.random() > 0.5;
     const timeOffset = Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000); 
-
     let title, message, action, actionData;
-
     switch (type) {
       case 'order':
         title = i18n.t('notifications.newOrder');
@@ -75,7 +70,6 @@ export const generateMockNotifications = (count = 5) => {
         action = 'view_reviews';
         break;
     }
-
     notifications.push({
       id: `mock-${i + 1}`,
       type,
@@ -87,12 +81,9 @@ export const generateMockNotifications = (count = 5) => {
       actionData
     });
   }
-
   return notifications;
 };
-
 export const emptyNotifications = [];
-
 export const allReadNotifications = mockNotifications.map(notification => ({
   ...notification,
   read: true
