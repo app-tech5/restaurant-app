@@ -1,7 +1,7 @@
 
 export const config = {
   
-  DEMO_MODE: __DEV__, 
+  DEMO_MODE: true, 
   
   DEMO_EMAIL: 'demo@restaurant.com',
   DEMO_PASSWORD: 'password123',
