@@ -6,9 +6,7 @@ export const config = {
   DEMO_EMAIL: 'demo@restaurant.com',
   DEMO_PASSWORD: 'password123',
 
-  API_BASE_URL: __DEV__
-    ? 'http://localhost:5000/api'  
-    : 'https://api.goodfood.com/api', 
+  API_BASE_URL: 'http://localhost:5000/api',
 
   API_TIMEOUT: 10000, 
   
