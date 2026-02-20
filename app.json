@@ -1,34 +1,64 @@
 {
   "expo": {
     "name": "Good Food Restaurant",
+    "slug": "good-food-restaurant",
+    "version": "1.0.0",
+    "orientation": "portrait",
     "icon": "./assets/images/logo512.png",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splash-screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "version": "1.0.0",
-    "slug": "good-food-restaurant",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
+      "supportsTablet": true,
       "bundleIdentifier": "com.goodfood.restaurant",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "requireFullScreen": false,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Cette app utilise votre position pour gérer la localisation des restaurants",
+        "CFBundleAllowMixedLocalizations": true
+      }
     },
     "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo512.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.goodfood.restaurant",
+      "versionCode": 1,
       "permissions": [
         "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION",
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ],
-      "package": "com.goodfood.restaurant",
-      "versionCode": 1
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/logo512.png",
+      "name": "Good Food Restaurant",
+      "shortName": "Good Food",
+      "lang": "fr-FR",
+      "scope": "/",
+      "themeColor": "#ffffff",
+      "description": "Application de gestion de restaurant Good Food"
     },
     "plugins": [
       "expo-font",
       "expo-localization",
       "expo-location"
     ],
-    "jsEngine": "hermes"
+    "jsEngine": "hermes",
+    "locales": {
+      "fr": "./lang/fr.json",
+      "en": "./lang/en.json"
+    },
+    "scheme": "goodfoodrestaurant",
+    "extra": {
+      "apiUrl": "https://api.goodfood.com"
+    },
+    "primaryColor": "#FF6B35"
   }
 }
