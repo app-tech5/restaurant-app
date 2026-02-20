@@ -48,11 +48,11 @@ module.exports = [
     },
     rules: {
       "no-multiple-empty-lines": ["error", { "max": 0, "maxEOF": 0 }],
-      // "no-console": ["warn", { allow: ["warn", "error"] }],
-      // 'no-comments/disallowComments': 'error',
-      // "max-lines-per-function": ["warn", 50], 
-      // "complexity": ["warn", 10],
-      // "react/jsx-max-depth": ["warn", { "max": 4 }], 
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      'no-comments/disallowComments': 'error',
+      "max-lines-per-function": ["warn", 50], 
+      "complexity": ["warn", 10],
+      "react/jsx-max-depth": ["warn", { "max": 4 }], 
       'i18next/no-literal-string': [
         'error',
         {
