@@ -20,7 +20,7 @@
       "buildNumber": "1.0.0",
       "requireFullScreen": false,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Cette app utilise votre position pour gérer la localisation des restaurants",
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to manage restaurant locations",
         "CFBundleAllowMixedLocalizations": true
       }
     },
@@ -43,7 +43,7 @@
       "lang": "fr-FR",
       "scope": "/",
       "themeColor": "#ffffff",
-      "description": "Application de gestion de restaurant Good Food"
+      "description": "Good Food restaurant management application"
     },
     "plugins": [
       "expo-font",
