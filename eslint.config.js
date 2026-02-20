@@ -47,7 +47,7 @@ module.exports = [
       },
     },
     rules: {
-      "no-multiple-empty-lines": ["error", { "max": 0, "maxEOF": 0 }],
+      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       'no-comments/disallowComments': 'error',
       "max-lines-per-function": ["warn", 50], 
