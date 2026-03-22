@@ -150,38 +150,41 @@ class ApiClient {
     return await this.apiCall('/restaurant/stats');
   }
   async getRestaurantOrders(status = null) {
-    const endpoint = status ? `/restaurant/orders?status=${status}` : '/restaurant/orders';
+    const endpoint = status ? `/resource/orders?status=${status}` : '/resource/orders';
     return await this.apiCall(endpoint);
   }
   async acceptOrder(orderId) {
     if (isDemoMode()) {
       return { success: true, message: 'Commande acceptée' };
     }
-    return await this.apiCall(`/restaurant/orders/${orderId}/accept`, {
-      method: 'POST',
+    return await this.apiCall(`/resource/orders/${orderId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: 'accepted' }),
     });
   }
   async prepareOrder(orderId) {
     if (isDemoMode()) {
       return { success: true, message: 'Préparation démarrée' };
     }
-    return await this.apiCall(`/restaurant/orders/${orderId}/prepare`, {
-      method: 'POST',
+    return await this.apiCall(`/resource/orders/${orderId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: 'preparing' }),
     });
   }
   async readyForPickup(orderId) {
     if (isDemoMode()) {
       return { success: true, message: 'Commande prête' };
     }
-    return await this.apiCall(`/restaurant/orders/${orderId}/ready`, {
-      method: 'POST',
+    return await this.apiCall(`/resource/orders/${orderId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: 'ready' }),
     });
   }
   async updateOrderStatus(orderId, status) {
     if (isDemoMode()) {
       return { success: true, message: `Statut changé à ${status}` };
     }
-    return await this.apiCall(`/restaurant/orders/${orderId}/status`, {
+    return await this.apiCall(`/resource/orders/${orderId}`, {
       method: 'PUT',
       body: JSON.stringify({ status }),
     });
