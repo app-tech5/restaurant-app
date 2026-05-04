@@ -132,7 +132,7 @@ class ApiClient {
   async acceptOrder(orderId) {
     return await this.apiCall(`/resource/orders/${orderId}`, {
       method: 'PUT',
-      body: JSON.stringify({ status: 'accepted' }),
+      body: JSON.stringify({ status: 'preparing' }),
     });
   }
 

@@ -1,5 +1,5 @@
 export const config = {
-  DEMO_MODE: true, 
+  DEMO_MODE: false, 
   DEMO_EMAIL: 'demo@restaurant.com',
   DEMO_PASSWORD: 'password123',
   API_BASE_URL: 'http://localhost:5000/api',
