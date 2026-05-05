@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import { useSettings } from '../contexts/SettingContext';
 import { StatCard, ActionCard, StatusCard, Loading, EmptyState, ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import { calculateRestaurantStats } from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const DashboardScreen = ({ navigation }) => {
-  const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated, formatCurrency } = useRestaurant();
+  const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated } = useRestaurant();
+  const { formatCurrency } = useSettings();
   const [refreshing, setRefreshing] = useState(false);
   const [calculatedStats, setCalculatedStats] = useState(null);
   useEffect(() => {

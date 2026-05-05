@@ -2,11 +2,11 @@ import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { Card, Text } from 'react-native-elements';
 import { colors, constants } from '../global';
-import { useSettings } from '../hooks';
+import { useSettings } from '../contexts/SettingContext';
 import i18n from '../i18n';
 const ReportMetricsCards = ({ baseMetrics, reportType }) => {
   const { totalOrders, totalRevenue, averageOrderValue, averagePreparationTime } = baseMetrics;
-  const { formatCurrency, settings, isLoading: settingsLoading } = useSettings();
+  const { formatCurrency } = useSettings();
   const formatCurrencyFallback = (amount) => {
     if (typeof amount !== 'number') return '0.00€';
     return `${amount.toFixed(2)}€`;

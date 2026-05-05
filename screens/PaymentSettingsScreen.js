@@ -11,12 +11,14 @@ import {
   Platform
 } from 'react-native';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import { useSettings } from '../contexts/SettingContext';
 import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
 const PaymentSettingsScreen = ({ navigation }) => {
-  const { restaurant, isAuthenticated, getCurrencySymbol } = useRestaurant();
+  const { restaurant, isAuthenticated } = useRestaurant();
+  const { getCurrencySymbol } = useSettings();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({

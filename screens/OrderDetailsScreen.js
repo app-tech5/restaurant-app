@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import { useSettings } from '../contexts/SettingContext';
 import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import { getOrderStatusLabel, getOrderStatusColor, formatPrice } from '../utils/restaurantUtils';
@@ -22,8 +23,8 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     acceptOrder,
     prepareOrder,
     readyForPickup,
-    formatCurrency
   } = useRestaurant();
+  const { formatCurrency } = useSettings();
   const [isLoading, setIsLoading] = useState(false);
   if (!order) {
     return (

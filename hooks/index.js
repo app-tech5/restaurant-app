@@ -6,5 +6,5 @@ export { useMenuFilters } from './useMenuFilters';
 export { useMenuActions } from './useMenuActions';
 export { useReportData } from './useReportData';
 export { useReportCalculations } from './useReportCalculations';
-export { useSettings } from './useSettings';
+export { useSettings } from '../contexts/SettingContext';
 export { useSettingsManager } from './useSettingsManager';

@@ -96,6 +96,15 @@ export const useSettingsManager = (isAuthenticated) => {
   const currency = getCurrency(settings);
   const language = getLanguage(settings);
   const appName = getAppName(settings);
+  const formatCurrency = (amount, options = {}) => {
+    if (!settings?.currency) {
+      return `${amount?.toFixed(2) || '0.00'}€`;
+    }
+    const { symbol = settings.currency.symbol, code = settings.currency.code } = options;
+    return `${amount?.toFixed(2) || '0.00'}${symbol || code}`;
+  };
+  const getCurrencySymbol = () => settings?.currency?.symbol || '€';
+  const getCurrencyCode = () => settings?.currency?.code || 'EUR';
   return {
     settings,
     loading,
@@ -106,6 +115,11 @@ export const useSettingsManager = (isAuthenticated) => {
     getAvailableLanguages,
     currency,
     language,
-    appName
+    appName,
+    formatCurrency,
+    getCurrencySymbol,
+    getCurrencyCode,
+    loadSettings: refreshSettings,
+    isLoading: loading,
   };
 };

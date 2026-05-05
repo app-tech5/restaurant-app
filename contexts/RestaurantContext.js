@@ -3,8 +3,6 @@ import { useRestaurantAuth } from '../hooks/useRestaurantAuth';
 import { useRestaurantStats } from '../hooks/useRestaurantStats';
 import { useRestaurantOrders } from '../hooks/useRestaurantOrders';
 import { useRestaurantMenu } from '../hooks/useRestaurantMenu';
-import { useSettings } from '../hooks/useSettings';
-import { INITIAL_STATS } from '../utils/restaurantUtils';
 const RestaurantContext = createContext();
 export const useRestaurant = () => {
   const context = useContext(RestaurantContext);
@@ -23,15 +21,6 @@ export const RestaurantProvider = ({ children }) => {
     setRestaurant,
     setIsAuthenticated
   } = useRestaurantAuth();
-  const {
-    settings,
-    isLoading: settingsLoading,
-    error: settingsError,
-    loadSettings,
-    formatCurrency,
-    getCurrencySymbol,
-    getCurrencyCode
-  } = useSettings();
   const {
     stats,
     loadRestaurantStats,
@@ -71,13 +60,6 @@ export const RestaurantProvider = ({ children }) => {
     logout,
     setRestaurant,
     setIsAuthenticated,
-    settings,
-    settingsLoading,
-    settingsError,
-    loadSettings,
-    formatCurrency,
-    getCurrencySymbol,
-    getCurrencyCode,
     stats,
     loadRestaurantStats,
     invalidateRestaurantStatsCache,
