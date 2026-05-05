@@ -1,58 +1,132 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Alert, Text } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, FlatList, TouchableOpacity, Alert, Text, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, Icon } from 'react-native-elements';
 import { ScreenHeader, EmptyState } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { formatTimeAgo } from '../utils/timeUtils';
-import { mockNotifications } from '../__mocks__/mockNotifications';
-const NotificationsScreen = ({ navigation, initialNotifications = mockNotifications }) => {
-  const [notifications, setNotifications] = useState(initialNotifications);
-  const [filter, setFilter] = useState('all'); 
-  const getNotificationIcon = (type) => {
-    switch (type) {
-      case 'order':
-        return { name: 'restaurant', color: colors.primary };
-      case 'system':
-        return { name: 'info', color: colors.info };
-      case 'review':
-        return { name: 'star', color: colors.accent };
-      default:
-        return { name: 'notifications', color: colors.primary };
+import apiClient from '../api';
+
+const ORDER_TYPES = new Set(['order', 'order_status', 'delivery_update', 'payment']);
+const SYSTEM_TYPES = new Set(['system', 'promotion', 'account', 'new_restaurant', 'review']);
+
+const getNotificationIcon = (type) => {
+  switch (type) {
+    case 'order':
+    case 'order_status':
+      return { name: 'restaurant', color: colors.primary };
+    case 'delivery_update':
+      return { name: 'local-shipping', color: colors.primary };
+    case 'payment':
+      return { name: 'payment', color: colors.accent };
+    case 'review':
+      return { name: 'star', color: colors.accent };
+    case 'system':
+    case 'account':
+      return { name: 'info', color: colors.info };
+    case 'promotion':
+      return { name: 'campaign', color: colors.accent };
+    case 'new_restaurant':
+      return { name: 'storefront', color: colors.primary };
+    default:
+      return { name: 'notifications', color: colors.primary };
+  }
+};
+
+const notificationTimeMs = (n) => {
+  const t = n.createdAt || n.updatedAt;
+  if (!t) return 0;
+  const ms = new Date(t).getTime();
+  return Number.isFinite(ms) ? ms : 0;
+};
+
+const NotificationsScreen = ({ navigation }) => {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [filter, setFilter] = useState('all');
+
+  const loadNotifications = useCallback(async ({ silent } = {}) => {
+    if (silent) setRefreshing(true);
+    else setLoading(true);
+    try {
+      const list = await apiClient.getNotifications();
+      setNotifications(Array.isArray(list) ? list : []);
+    } catch {
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  const markAsRead = async (notification) => {
+    if (notification.isRead) return;
+    try {
+      await apiClient.updateNotification(notification._id, { isRead: true });
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === notification._id ? { ...n, isRead: true } : n))
+      );
+    } catch {
+      // keep UI unchanged on failure
     }
   };
-  const markAsRead = (notificationId) => {
-    setNotifications(prev =>
-      prev.map(notif =>
-        notif.id === notificationId ? { ...notif, read: true } : notif
-      )
-    );
-  };
-  const handleNotificationPress = (notification) => {
-    if (!notification.read) {
-      markAsRead(notification.id);
-    }
-    switch (notification.action) {
-      case 'view_order':
+
+  const handleNotificationPress = async (notification) => {
+    await markAsRead(notification);
+
+    const action = notification.action;
+    const orderIdFromAction = notification.actionData?.orderId;
+    const relatedId = notification.relatedEntity;
+    const relatedModel = notification.relatedEntityModel;
+
+    if (action === 'view_order' && orderIdFromAction) {
+      try {
+        const order = await apiClient.getOrderById(orderIdFromAction);
         navigation.navigate('Orders', {
           screen: 'OrderDetails',
-          params: {
-            orderId: notification.actionData.orderId
-          }
+          params: { order },
         });
-        break;
-      case 'view_reviews':
-        navigation.navigate('Reviews', { screen: 'ReviewsMain' });
-        break;
-      default:
-        break;
+      } catch {
+        navigation.navigate('Orders', { screen: 'OrdersMain' });
+      }
+      return;
+    }
+
+    if (relatedModel === 'Order' && relatedId) {
+      try {
+        const order = await apiClient.getOrderById(relatedId);
+        navigation.navigate('Orders', {
+          screen: 'OrderDetails',
+          params: { order },
+        });
+      } catch {
+        navigation.navigate('Orders', { screen: 'OrdersMain' });
+      }
+      return;
+    }
+
+    if (action === 'view_reviews' || relatedModel === 'Review') {
+      navigation.navigate('Reviews', { screen: 'ReviewsMain' });
     }
   };
-  const markAllAsRead = () => {
-    setNotifications(prev =>
-      prev.map(notif => ({ ...notif, read: true }))
-    );
+
+  const markAllAsRead = async () => {
+    const unread = notifications.filter((n) => !n.isRead);
+    try {
+      await Promise.all(
+        unread.map((n) => apiClient.updateNotification(n._id, { isRead: true }))
+      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    } catch {
+      // ignore
+    }
   };
+
   const clearAllNotifications = () => {
     Alert.alert(
       i18n.t('notifications.actions.clearAllTitle'),
@@ -62,70 +136,80 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
         {
           text: i18n.t('notifications.actions.clearAllConfirm'),
           style: 'destructive',
-          onPress: () => setNotifications([])
-        }
+          onPress: async () => {
+            try {
+              await Promise.all(
+                notifications.map((n) => apiClient.deleteNotification(n._id))
+              );
+              setNotifications([]);
+            } catch {
+              // ignore
+            }
+          },
+        },
       ]
     );
   };
+
   const getFilteredNotifications = () => {
     let filtered = notifications;
     switch (filter) {
       case 'unread':
-        filtered = filtered.filter(n => !n.read);
+        filtered = filtered.filter((n) => !n.isRead);
         break;
       case 'orders':
-        filtered = filtered.filter(n => n.type === 'order');
+        filtered = filtered.filter((n) => ORDER_TYPES.has(n.type));
         break;
       case 'system':
-        filtered = filtered.filter(n => n.type === 'system');
+        filtered = filtered.filter((n) => SYSTEM_TYPES.has(n.type));
         break;
       default:
         break;
     }
-    return filtered.sort((a, b) => b.timestamp - a.timestamp);
+    return [...filtered].sort((a, b) => notificationTimeMs(b) - notificationTimeMs(a));
   };
+
   const filteredNotifications = getFilteredNotifications();
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const orderCount = notifications.filter((n) => ORDER_TYPES.has(n.type)).length;
+  const systemCount = notifications.filter((n) => SYSTEM_TYPES.has(n.type)).length;
+
   const filterOptions = [
     { key: 'all', label: i18n.t('notifications.filters.all'), count: notifications.length },
     { key: 'unread', label: i18n.t('notifications.filters.unread'), count: unreadCount },
-    { key: 'orders', label: i18n.t('notifications.filters.orders'), count: notifications.filter(n => n.type === 'order').length },
-    { key: 'system', label: i18n.t('notifications.filters.system'), count: notifications.filter(n => n.type === 'system').length },
+    { key: 'orders', label: i18n.t('notifications.filters.orders'), count: orderCount },
+    { key: 'system', label: i18n.t('notifications.filters.system'), count: systemCount },
   ];
+
   const renderFilterTab = (option) => (
     <TouchableOpacity
       key={option.key}
-      style={[
-        styles.filterTab,
-        filter === option.key && styles.activeFilterTab
-      ]}
+      style={[styles.filterTab, filter === option.key && styles.activeFilterTab]}
       onPress={() => setFilter(option.key)}
     >
-      <Text style={[
-        styles.filterTabText,
-        filter === option.key && styles.activeFilterTabText
-      ]}>
+      <Text
+        style={[styles.filterTabText, filter === option.key && styles.activeFilterTabText]}
+      >
         {option.label}
       </Text>
       <Badge
         value={option.count}
         containerStyle={styles.filterBadge}
-        badgeStyle={[
-          styles.filterBadgeStyle,
-          filter === option.key && styles.activeFilterBadge
-        ]}
+        badgeStyle={[styles.filterBadgeStyle, filter === option.key && styles.activeFilterBadge]}
         textStyle={styles.filterBadgeText}
       />
     </TouchableOpacity>
   );
+
   const renderNotification = ({ item }) => {
     const iconConfig = getNotificationIcon(item.type);
+    const timeLabel = formatTimeAgo(new Date(item.createdAt || item.updatedAt || Date.now()));
     return (
       <ListItem
         onPress={() => handleNotificationPress(item)}
         containerStyle={[
           styles.notificationItem,
-          !item.read && styles.unreadNotification
+          !item.isRead && styles.unreadNotification,
         ]}
       >
         <Icon
@@ -137,22 +221,17 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
         />
         <ListItem.Content>
           <View style={styles.notificationContent}>
-            <ListItem.Title style={styles.notificationTitle}>
-              {item.title}
-            </ListItem.Title>
-            <ListItem.Subtitle style={styles.notificationMessage}>
-              {item.message}
-            </ListItem.Subtitle>
-            <Text style={styles.notificationTime}>
-              {formatTimeAgo(item.timestamp)}
-            </Text>
+            <ListItem.Title style={styles.notificationTitle}>{item.title}</ListItem.Title>
+            <ListItem.Subtitle style={styles.notificationMessage}>{item.message}</ListItem.Subtitle>
+            <Text style={styles.notificationTime}>{timeLabel}</Text>
           </View>
         </ListItem.Content>
-        {!item.read && <View style={styles.unreadIndicator} testID="unread-indicator" />}
+        {!item.isRead && <View style={styles.unreadIndicator} testID="unread-indicator" />}
         <ListItem.Chevron />
       </ListItem>
     );
   };
+
   const renderEmpty = () => (
     <EmptyState
       icon="notifications-off"
@@ -160,10 +239,11 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
       subtitle={
         filter === 'all'
           ? i18n.t('notifications.empty.all')
-          : i18n.t('notifications.empty.filter', { filter: filter })
+          : i18n.t('notifications.empty.filter', { filter })
       }
     />
   );
+
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -182,26 +262,36 @@ const NotificationsScreen = ({ navigation, initialNotifications = mockNotificati
           )
         }
       />
-      {}
-      <View style={styles.filtersContainer}>
-        {filterOptions.map(renderFilterTab)}
-      </View>
-      {}
-      <FlatList
-        data={filteredNotifications}
-        renderItem={renderNotification}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={renderEmpty}
-        showsVerticalScrollIndicator={false}
-      />
+      <View style={styles.filtersContainer}>{filterOptions.map(renderFilterTab)}</View>
+      {loading ? (
+        <View style={styles.loadingWrap}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      ) : (
+        <FlatList
+          data={filteredNotifications}
+          renderItem={renderNotification}
+          keyExtractor={(item) => String(item._id)}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={renderEmpty}
+          showsVerticalScrollIndicator={false}
+          refreshing={refreshing}
+          onRefresh={() => loadNotifications({ silent: true })}
+        />
+      )}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.grey[50],
+  },
+  loadingWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   filtersContainer: {
     flexDirection: 'row',
@@ -293,4 +383,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
+
 export default NotificationsScreen;

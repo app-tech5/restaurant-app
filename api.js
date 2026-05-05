@@ -267,6 +267,30 @@ class ApiClient {
     const data = buildRestaurantAnalyticsData(period, orders, reviews);
     return { success: true, data };
   }
+
+  async getNotifications() {
+    const raw = await this.apiCall('/resource/notifications');
+    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw?.data)) return raw.data;
+    return [];
+  }
+
+  async updateNotification(notificationId, patch) {
+    return await this.apiCall(`/resource/notifications/${notificationId}`, {
+      method: 'PUT',
+      body: JSON.stringify(patch),
+    });
+  }
+
+  async deleteNotification(notificationId) {
+    return await this.apiCall(`/resource/notifications/${notificationId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getOrderById(orderId) {
+    return await this.apiCall(`/resource/orders/${orderId}`);
+  }
 }
 
 const apiClient = new ApiClient();
