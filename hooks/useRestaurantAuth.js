@@ -2,10 +2,20 @@ import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from '../api';
 import { updateRestaurantCache, clearRestaurantCache } from '../utils/restaurantUtils';
+import { getNativePushToken } from '../services/pushNotifications';
 export const useRestaurantAuth = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const syncPushToken = async () => {
+    try {
+      const token = await getNativePushToken();
+      if (token) {
+        await apiClient.updateDeviceToken(token);
+      }
+    } catch (error) {
+    }
+  };
   useEffect(() => {
     const initializeRestaurant = async () => {
       try {
@@ -17,6 +27,7 @@ export const useRestaurantAuth = () => {
           setIsAuthenticated(true);
           apiClient.token = token;
           apiClient.restaurant = parsedRestaurant;
+          apiClient.userId = parsedRestaurant?._id || parsedRestaurant?.id || null;
           try {
             const freshRestaurantData = await apiClient.getRestaurantProfile();
             if (freshRestaurantData) {
@@ -25,6 +36,7 @@ export const useRestaurantAuth = () => {
             }
           } catch (refreshError) {
           }
+          await syncPushToken();
         }
       } catch (error) {
         console.error('Error initializing restaurant:', error);
@@ -57,6 +69,7 @@ export const useRestaurantAuth = () => {
             } catch (refreshError) {
             }
           }
+          await syncPushToken();
           return { success: true, restaurant: restaurantData };
         } else {
           throw new Error('Données restaurant non disponibles');

@@ -203,6 +203,14 @@ class ApiClient {
     });
   }
 
+  async updateDeviceToken(deviceToken) {
+    if (!this.userId || !deviceToken) return null;
+    return await this.apiCall(`/resource/users/${this.userId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ deviceToken }),
+    });
+  }
+
   async addMenuItem(menuItem) {
     const rid = this.resolveRestaurantPlaceId();
     const body = { ...menuItem, ...(rid ? { restaurant: rid } : {}) };

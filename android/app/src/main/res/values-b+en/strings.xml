@@ -1,0 +1,24 @@
+<resources>
+  <string name="app">"[object Object]"</string>
+  <string name="navigation">"[object Object]"</string>
+  <string name="auth">"[object Object]"</string>
+  <string name="dashboard">"[object Object]"</string>
+  <string name="orders">"[object Object]"</string>
+  <string name="orderDetails">"[object Object]"</string>
+  <string name="alerts">"[object Object]"</string>
+  <string name="menu">"[object Object]"</string>
+  <string name="analytics">"[object Object]"</string>
+  <string name="reports">"[object Object]"</string>
+  <string name="notifications">"[object Object]"</string>
+  <string name="charts">"[object Object]"</string>
+  <string name="reviews">"[object Object]"</string>
+  <string name="support">"[object Object]"</string>
+  <string name="restaurantProfile">"[object Object]"</string>
+  <string name="settings">"[object Object]"</string>
+  <string name="payment">"[object Object]"</string>
+  <string name="delivery">"[object Object]"</string>
+  <string name="openingHours">"[object Object]"</string>
+  <string name="common">"[object Object]"</string>
+  <string name="errors">"[object Object]"</string>
+  <string name="success">"[object Object]"</string>
+</resources>
