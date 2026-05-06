@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "716731554402",
+    "project_id": "good-food-c84d4",
+    "storage_bucket": "good-food-c84d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716731554402:android:f355077ce5d0673f5e8f3b",
+        "android_client_info": {
+          "package_name": "com.goodfood.restaurant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxFRb-JlMF8i-ecZ3x6Ug8Wc6CgglzGEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716731554402:android:0a9f32ae97c8d5a15e8f3b",
+        "android_client_info": {
+          "package_name": "com.goodfoods.goodfoods"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxFRb-JlMF8i-ecZ3x6Ug8Wc6CgglzGEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

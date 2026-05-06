@@ -41,6 +41,7 @@ export const getNativePushToken = async () => {
 
     return String(tokenData);
   } catch (error) {
+    console.error('Error getting native push token', error);
     return null;
   }
 };
