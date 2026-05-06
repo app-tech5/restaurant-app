@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from '../api';
-import { updateRestaurantCache, clearRestaurantCache } from '../utils/restaurantUtils';
 import { getNativePushToken } from '../services/pushNotifications';
+import { getRestaurantFromCache, updateRestaurantCache } from '../utils/storageUtils';
 export const useRestaurantAuth = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,22 +18,20 @@ export const useRestaurantAuth = () => {
   useEffect(() => {
     const initializeRestaurant = async () => {
       try {
-        const restaurantData = await AsyncStorage.getItem('restaurantData');
-        const token = await AsyncStorage.getItem('restaurantToken');
-        if (restaurantData && token) {
-          const parsedRestaurant = JSON.parse(restaurantData);
-          setRestaurant(parsedRestaurant);
+        const cached = await getRestaurantFromCache();
+        if (cached?.restaurant && cached?.token) {
+          const authenticatedUser = cached.restaurant;
+          apiClient.token = cached.token;
+          apiClient.userId = authenticatedUser._id || authenticatedUser.id || null;
+          apiClient.restaurant = authenticatedUser;
           setIsAuthenticated(true);
-          apiClient.token = token;
-          apiClient.restaurant = parsedRestaurant;
-          apiClient.userId = parsedRestaurant?._id || parsedRestaurant?.id || null;
           try {
             const freshRestaurantData = await apiClient.getRestaurantProfile();
             if (freshRestaurantData) {
               setRestaurant(freshRestaurantData);
-              await updateRestaurantCache(freshRestaurantData);
             }
           } catch (refreshError) {
+            setRestaurant(null);
           }
           await syncPushToken();
         }
@@ -45,35 +42,29 @@ export const useRestaurantAuth = () => {
       }
     };
     initializeRestaurant();
-  }, 
-  []
-);
+  }, []);
   const login = async (email, password) => {
     try {
       setIsLoading(true);
       const config = require('../config').default || require('../config');
-      let response;
-      response = await apiClient.restaurantLogin(email, password);
+      const response = await apiClient.restaurantLogin(email, password);
       if (response.user && response.token) {
-        const restaurantData = apiClient.restaurant || response.user;
-        if (restaurantData) {
-          setRestaurant(restaurantData);
-          setIsAuthenticated(true);
-          await updateRestaurantCache(restaurantData, response.token);
-          if (!config.DEMO_MODE) {
-            try {
-              const freshRestaurantData = await apiClient.getRestaurantProfile();
-              if (freshRestaurantData) {
-                setRestaurant(freshRestaurantData);
-              }
-            } catch (refreshError) {
+        const authenticatedUser = response.user;
+        await updateRestaurantCache(authenticatedUser, response.token);
+        setIsAuthenticated(true);
+        let restaurantProfile = null;
+        if (!config.DEMO_MODE) {
+          try {
+            const freshRestaurantData = await apiClient.getRestaurantProfile();
+            if (freshRestaurantData) {
+              restaurantProfile = freshRestaurantData;
             }
+          } catch (refreshError) {
           }
-          await syncPushToken();
-          return { success: true, restaurant: restaurantData };
-        } else {
-          throw new Error('Données restaurant non disponibles');
         }
+        setRestaurant(restaurantProfile || apiClient.restaurant || null);
+        await syncPushToken();
+        return { success: true, restaurant: restaurantProfile || null };
       } else {
         throw new Error('Réponse de connexion invalide');
       }
@@ -89,7 +80,6 @@ export const useRestaurantAuth = () => {
       await apiClient.logout();
       setRestaurant(null);
       setIsAuthenticated(false);
-      await clearRestaurantCache();
     } catch (error) {
       console.error('Logout error:', error);
       throw error;
