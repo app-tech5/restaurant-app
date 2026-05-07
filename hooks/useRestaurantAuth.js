@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import apiClient from '../api';
 import { getNativePushToken } from '../services/pushNotifications';
-import { getRestaurantFromCache, updateRestaurantCache } from '../utils/storageUtils';
+import {
+  getRestaurantFromCache,
+  updateRestaurantCache,
+  getDeviceTokenFromCache,
+  saveDeviceTokenToCache,
+} from '../utils/storageUtils';
 export const useRestaurantAuth = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -9,8 +14,10 @@ export const useRestaurantAuth = () => {
   const syncPushToken = async () => {
     try {
       const token = await getNativePushToken();
-      if (token) {
+      const cachedDeviceToken = await getDeviceTokenFromCache();
+      if (token && token !== cachedDeviceToken) {
         await apiClient.updateDeviceToken(token);
+        await saveDeviceTokenToCache(token);
       }
     } catch (error) {
     }

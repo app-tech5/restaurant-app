@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEYS = {
   RESTAURANT_DATA: 'restaurantData',
   RESTAURANT_TOKEN: 'restaurantToken',
+  DEVICE_TOKEN: 'restaurantDeviceToken',
   SETTINGS: 'restaurantSettings',
   CACHE_VERSION: 'restaurantCacheVersion'
 };
@@ -38,11 +39,28 @@ export const clearRestaurantCache = async () => {
   try {
     await AsyncStorage.multiRemove([
       STORAGE_KEYS.RESTAURANT_DATA,
-      STORAGE_KEYS.RESTAURANT_TOKEN
+      STORAGE_KEYS.RESTAURANT_TOKEN,
+      STORAGE_KEYS.DEVICE_TOKEN
     ]);
   } catch (error) {
     console.error('❌ Erreur nettoyage cache restaurant:', error);
     throw error;
+  }
+};
+export const getDeviceTokenFromCache = async () => {
+  try {
+    return await AsyncStorage.getItem(STORAGE_KEYS.DEVICE_TOKEN);
+  } catch (error) {
+    console.error('❌ Erreur récupération device token:', error);
+    return null;
+  }
+};
+export const saveDeviceTokenToCache = async (deviceToken) => {
+  try {
+    if (!deviceToken) return;
+    await AsyncStorage.setItem(STORAGE_KEYS.DEVICE_TOKEN, deviceToken);
+  } catch (error) {
+    console.error('❌ Erreur sauvegarde device token:', error);
   }
 };
 export const saveSettings = async (settings) => {
