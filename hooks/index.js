@@ -8,3 +8,4 @@ export { useReportData } from './useReportData';
 export { useReportCalculations } from './useReportCalculations';
 export { useSettings } from '../contexts/SettingContext';
 export { useSettingsManager } from './useSettingsManager';
+export { useNotificationNavigation } from './useNotificationNavigation';

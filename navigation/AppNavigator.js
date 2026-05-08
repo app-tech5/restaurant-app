@@ -5,10 +5,13 @@ import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
 import DrawerNavigator from './DrawerNavigator';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import { useNotificationNavigation } from '../hooks/useNotificationNavigation';
 const Stack = createStackNavigator();
 export default function AppNavigator() {
   const navigationRef = useRef();
   const { isAuthenticated, isLoading } = useRestaurant();
+  useNotificationNavigation(navigationRef, isAuthenticated);
+
   useEffect(() => {
     if (!isLoading && navigationRef.current) {
       const navigation = navigationRef.current;
@@ -30,6 +33,7 @@ export default function AppNavigator() {
       }
     }
   }, [isAuthenticated, isLoading]);
+
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
