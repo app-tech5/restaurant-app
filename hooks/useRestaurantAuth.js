@@ -7,6 +7,7 @@ import {
   getDeviceTokenFromCache,
   saveDeviceTokenToCache,
 } from '../utils/storageUtils';
+import { withRestaurantAccountEmail } from '../utils/restaurantUtils';
 export const useRestaurantAuth = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +36,7 @@ export const useRestaurantAuth = () => {
           try {
             const freshRestaurantData = await apiClient.getRestaurantProfile();
             if (freshRestaurantData) {
-              setRestaurant(freshRestaurantData);
+              setRestaurant(withRestaurantAccountEmail(freshRestaurantData, authenticatedUser));
             }
           } catch (refreshError) {
             setRestaurant(null);
@@ -69,9 +70,13 @@ export const useRestaurantAuth = () => {
           } catch (refreshError) {
           }
         }
-        setRestaurant(restaurantProfile || apiClient.restaurant || null);
+        const merged =
+          withRestaurantAccountEmail(restaurantProfile, authenticatedUser) ||
+          apiClient.restaurant ||
+          null;
+        setRestaurant(merged);
         await syncPushToken();
-        return { success: true, restaurant: restaurantProfile || null };
+        return { success: true, restaurant: merged };
       } else {
         throw new Error('Réponse de connexion invalide');
       }

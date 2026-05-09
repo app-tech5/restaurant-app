@@ -36,6 +36,31 @@ export const ORDER_STATUS_COLORS = {
 export const isRestaurantAuthenticated = (restaurant) => {
   return restaurant && restaurant._id;
 };
+
+/** Email compte : champ direct, ou utilisateur lié `users.value` (API Restaurant). */
+export const getRestaurantEmailForDisplay = (restaurant) => {
+  if (!restaurant) return '';
+  if (typeof restaurant.email === 'string' && restaurant.email.trim()) {
+    return restaurant.email.trim();
+  }
+  const linked = restaurant.users?.value;
+  if (linked && typeof linked === 'object' && typeof linked.email === 'string' && linked.email.trim()) {
+    return linked.email.trim();
+  }
+  return '';
+};
+
+/** Fusionne le document Restaurant avec l'email du compte (réponse login / cache User). */
+export const withRestaurantAccountEmail = (profileDoc, accountUser) => {
+  if (!profileDoc) return accountUser || null;
+  const fromProfile = getRestaurantEmailForDisplay(profileDoc);
+  const fromAccount =
+    accountUser && typeof accountUser.email === 'string' && accountUser.email.trim()
+      ? accountUser.email.trim()
+      : '';
+  const email = fromProfile || fromAccount;
+  return email ? { ...profileDoc, email } : { ...profileDoc };
+};
 export const getOrderStatusLabel = (status) => {
   return ORDER_STATUS_LABELS[status] || status;
 };

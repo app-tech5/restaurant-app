@@ -15,8 +15,9 @@ import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
+import { getRestaurantEmailForDisplay } from '../utils/restaurantUtils';
 const RestaurantProfileScreen = ({ navigation }) => {
-  const { restaurant, isAuthenticated } = useRestaurant();
+  const { restaurant } = useRestaurant();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -44,8 +45,8 @@ const RestaurantProfileScreen = ({ navigation }) => {
     if (restaurant) {
       setFormData({
         name: restaurant.name || '',
-        email: restaurant.email || '',
-        phone: restaurant.phone || '',
+        email: getRestaurantEmailForDisplay(restaurant),
+        phone: restaurant.phone || restaurant.display_phone || '',
         address: restaurant.address || '',
         description: restaurant.description || '',
         country: restaurant.country || '',
@@ -102,8 +103,8 @@ const RestaurantProfileScreen = ({ navigation }) => {
     if (restaurant) {
       setFormData({
         name: restaurant.name || '',
-        email: restaurant.email || '',
-        phone: restaurant.phone || '',
+        email: getRestaurantEmailForDisplay(restaurant),
+        phone: restaurant.phone || restaurant.display_phone || '',
         address: restaurant.address || '',
         description: restaurant.description || '',
         country: restaurant.country || '',
