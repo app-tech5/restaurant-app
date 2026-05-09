@@ -6,8 +6,9 @@ import { Loading, ScreenHeader, MenuSearchBar, MenuCategoriesTabs, MenuList } fr
 import { useMenuFilters, useMenuActions } from '../hooks';
 import { colors } from '../global';
 import i18n from '../i18n';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 const MenuScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const { menu, isAuthenticated } = useRestaurant();
   const menuFilters = useMenuFilters(menu);
   const menuActions = useMenuActions(navigation);
@@ -60,6 +61,7 @@ const MenuScreen = ({ navigation }) => {
         color={colors.primary}
         placement="right"
         onPress={menuActions.handleAddMenuItem}
+        style={{ marginBottom: 16 + insets.bottom }}
       />
     </SafeAreaView>
   );
