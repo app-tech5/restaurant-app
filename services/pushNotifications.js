@@ -9,7 +9,27 @@ const loadNotificationsModule = () => {
   }
 };
 
+const loadRnfMessaging = () => {
+  if (Platform.OS === 'web') return null;
+  try {
+    return require('@react-native-firebase/messaging').default;
+  } catch (error) {
+    return null;
+  }
+};
+
 const LAST_NOTIFICATION_DATA_KEY = 'lastNotificationData';
+const LOCAL_ECHO_KEY = '__localForegroundEcho';
+let foregroundPresentationConfigured = false;
+
+/** Must match my-backend `fcm.js` android.notification.channelId */
+export const ANDROID_DEFAULT_PUSH_CHANNEL_ID = 'default';
+
+let androidChannelsEnsured = false;
+
+/** Android: immediate local notification needs channel on trigger (see expo parseTrigger). */
+const immediateNotificationTrigger =
+  Platform.OS === 'android' ? { channelId: ANDROID_DEFAULT_PUSH_CHANNEL_ID } : null;
 
 const pickOrderId = (data) => {
   if (!data || typeof data !== 'object') return null;
@@ -58,6 +78,86 @@ const extractNotificationData = (source) => {
   return directData || remoteMessageData || {};
 };
 
+const ensureForegroundPresentation = (Notifications) => {
+  if (foregroundPresentationConfigured) return;
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
+  foregroundPresentationConfigured = true;
+};
+
+const skipLocalBannerOrderPush = (data) => data && typeof data === 'object'
+  && pickOrderId(data)
+  && (!data.type || String(data.type) === 'order');
+
+export async function ensureAndroidPushChannelsConfigured() {
+  if (Platform.OS !== 'android' || androidChannelsEnsured) return;
+  const Notifications = loadNotificationsModule();
+  if (!Notifications) return;
+  try {
+    await Notifications.setNotificationChannelAsync(ANDROID_DEFAULT_PUSH_CHANNEL_ID, {
+      name: 'Commandes',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      enableVibrate: true,
+    });
+    androidChannelsEnsured = true;
+  } catch {
+  }
+}
+
+export async function scheduleSystemStyleLocalNotification({ title, body, data }) {
+  const Notifications = loadNotificationsModule();
+  if (!Notifications) return;
+  await ensureAndroidPushChannelsConfigured();
+
+  const payload = data && typeof data === 'object' ? { ...data } : {};
+
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: title || 'New order',
+      body: body || '',
+      ...(Platform.OS === 'ios' ? { sound: 'default' } : {}),
+      data: payload,
+    },
+    trigger: immediateNotificationTrigger,
+  });
+}
+
+const scheduleForegroundLocalNotification = async (Notifications, source) => {
+  const content = source?.request?.content
+    ? source.request.content
+    : {
+      title: source?.notification?.title || null,
+      body: source?.notification?.body || '',
+      data: source?.data || {},
+    };
+  if (!content) return;
+
+  const existingData = content.data && typeof content.data === 'object' ? content.data : {};
+  if (existingData[LOCAL_ECHO_KEY]) return;
+
+  await ensureAndroidPushChannelsConfigured();
+
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: content.title || 'New order',
+      body: content.body || '',
+      ...(Platform.OS === 'ios' ? { sound: 'default' } : {}),
+      data: {
+        ...existingData,
+        [LOCAL_ECHO_KEY]: '1',
+      },
+    },
+    trigger: immediateNotificationTrigger,
+  });
+};
+
 export const getNativePushToken = async () => {
   const Notifications = loadNotificationsModule();
   if (!Notifications) {
@@ -65,6 +165,8 @@ export const getNativePushToken = async () => {
   }
 
   try {
+    await ensureAndroidPushChannelsConfigured();
+
     const permission = await Notifications.getPermissionsAsync();
     let finalStatus = permission.status;
     if (finalStatus !== 'granted') {
@@ -113,9 +215,10 @@ export const addNotificationTapListener = (onTap) => {
   };
 };
 
+/** Only data from the interaction that opened / responded to a notification — not "last push received". */
 export const getInitialNotificationData = async () => {
   const Notifications = loadNotificationsModule();
-  if (!Notifications) return readLastNotificationData();
+  if (!Notifications) return null;
 
   try {
     const response = await Notifications.getLastNotificationResponseAsync();
@@ -124,9 +227,9 @@ export const getInitialNotificationData = async () => {
       await saveLastNotificationData(data);
       return data;
     }
-    return readLastNotificationData();
-  } catch (error) {
-    return readLastNotificationData();
+    return null;
+  } catch {
+    return null;
   }
 };
 
@@ -135,15 +238,33 @@ export const addNotificationReceivedListener = (onReceive) => {
   if (!Notifications || typeof onReceive !== 'function') {
     return () => {};
   }
+  const messaging = loadRnfMessaging();
 
-  const subscription = Notifications.addNotificationReceivedListener(async (notification) => {
+  ensureForegroundPresentation(Notifications);
+
+  const subscriptionExpo = Notifications.addNotificationReceivedListener(async (notification) => {
     const data = extractNotificationData(notification);
+    if (!data?.[LOCAL_ECHO_KEY] && !skipLocalBannerOrderPush(data)) {
+      await scheduleForegroundLocalNotification(Notifications, notification);
+    }
     await saveLastNotificationData(data);
     onReceive(data);
   });
 
+  const unsubscribeRnf = messaging
+    ? messaging().onMessage(async (remoteMessage) => {
+      const data = extractNotificationData(remoteMessage);
+      if (!data?.[LOCAL_ECHO_KEY] && !skipLocalBannerOrderPush(data)) {
+        await scheduleForegroundLocalNotification(Notifications, remoteMessage);
+      }
+      await saveLastNotificationData(data);
+      onReceive(data);
+    })
+    : null;
+
   return () => {
-    if (subscription?.remove) subscription.remove();
+    if (subscriptionExpo?.remove) subscriptionExpo.remove();
+    if (typeof unsubscribeRnf === 'function') unsubscribeRnf();
   };
 };
 

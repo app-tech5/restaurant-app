@@ -76,7 +76,12 @@
     "total": "Total",
     "preparationTime": "Temps de préparation",
     "estimatedTime": "Temps estimé",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "incomingOrderTitle": "Nouvelle commande",
+    "incomingOrderSubtitle": "Commande #{{id}}",
+    "incomingOrderView": "Voir",
+    "incomingOrderPrimaryCta": "Voir la commande",
+    "incomingOrderLater": "Plus tard"
   },
 
   "menu": {
