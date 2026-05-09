@@ -2,13 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { colors, constants } from '../global';
-import { getOrderStatusLabel, getOrderStatusColor, formatPrice } from '../utils/restaurantUtils';
+import {
+  getOrderStatusLabel,
+  getOrderStatusColor,
+  formatPrice,
+  getRestaurantOrderCustomerFields,
+} from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { useSettings } from '../contexts/SettingContext';
 const OrderCard = ({
   order,
   onPress = null,
   onAccept = null,
+  onReject = null,
   onPrepare = null,
   onReady = null,
   showActions = true,
@@ -16,14 +22,13 @@ const OrderCard = ({
 }) => {
   const {
     _id,
-    customerName,
-    customerPhone,
     items = [],
     totalPrice: total,
     status,
     createdAt,
     estimatedTime
   } = order;
+  const { customerName, customerPhone } = getRestaurantOrderCustomerFields(order);
   const { currency } = useSettings();
   const statusLabel = getOrderStatusLabel(status);
   const statusColor = getOrderStatusColor(status);
@@ -42,6 +47,14 @@ const OrderCard = ({
         onPress: () => onAccept(_id),
         color: '#4CAF50',
         icon: 'check'
+      });
+    }
+    if (status === 'pending' && onReject) {
+      buttons.push({
+        title: i18n.t('orders.reject'),
+        onPress: () => onReject(_id),
+        color: colors.error,
+        icon: 'close'
       });
     }
     if (status === 'accepted' && onPrepare) {

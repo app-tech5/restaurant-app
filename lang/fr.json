@@ -37,6 +37,28 @@
     "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter ?"
   },
 
+  "orderDetails": {
+    "title": "Détails de la commande",
+    "notFound": "Commande introuvable",
+    "back": "Retour",
+    "at": "à",
+    "estimatedTime": "Temps estimé",
+    "actions": "Actions",
+    "customerInfo": "Informations client",
+    "payment": "Paiement",
+    "paymentCard": "Carte bancaire",
+    "paymentCash": "Espèces",
+    "orderedItems": "Articles commandés",
+    "quantity": "Quantité",
+    "unitTimesQty": "{{price}} × {{quantity}}",
+    "includingAddOns": "options incluses",
+    "itemsSubtotal": "Sous-total articles",
+    "deliveryFee": "Frais de livraison",
+    "taxes": "Taxes",
+    "total": "Total",
+    "specialNotes": "Notes spéciales"
+  },
+
   "dashboard": {
     "title": "Tableau de bord",
     "todayOrders": "Commandes du jour",

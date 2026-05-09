@@ -137,6 +137,11 @@
     "paymentCash": "Cash",
     "orderedItems": "Ordered items",
     "quantity": "Quantity",
+    "unitTimesQty": "{{price}} × {{quantity}}",
+    "includingAddOns": "incl. add-ons",
+    "itemsSubtotal": "Items subtotal",
+    "deliveryFee": "Delivery fee",
+    "taxes": "Taxes",
     "total": "Total",
     "specialNotes": "Special Notes"
   },

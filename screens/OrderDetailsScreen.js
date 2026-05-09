@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,11 +13,23 @@ import { useRestaurant } from '../contexts/RestaurantContext';
 import { useSettings } from '../contexts/SettingContext';
 import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
-import { getOrderStatusLabel, getOrderStatusColor, formatPrice } from '../utils/restaurantUtils';
+import {
+  getOrderStatusLabel,
+  getOrderStatusColor,
+  getRestaurantOrderCustomerFields,
+  getOrderLineAmount,
+} from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const OrderDetailsScreen = ({ route, navigation }) => {
-  const { order } = route.params;
+  const paramsOrder = route.params?.order;
+  const [order, setOrder] = useState(paramsOrder);
+  useEffect(() => {
+    const next = route.params?.order;
+    if (next?._id) {
+      setOrder(next);
+    }
+  }, [route.params?.order?._id]);
   const {
     updateOrderStatus,
     acceptOrder,
@@ -48,17 +60,33 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   }
   const {
     _id,
-    customerName,
-    customerPhone,
-    customerAddress,
     items = [],
-    total,
     status,
     createdAt,
     estimatedTime,
     notes,
-    paymentMethod
   } = order;
+  const {
+    customerName,
+    customerPhone,
+    customerAddress,
+    paymentMethod,
+    total,
+  } = getRestaurantOrderCustomerFields(order);
+  const toMoney = (v) => {
+    const n = typeof v === 'number' ? v : Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  const itemsSubtotal = items.reduce(
+    (sum, item) => sum + getOrderLineAmount(item),
+    0
+  );
+  const deliveryFee = toMoney(order.delivery?.deliveryFee);
+  const taxAmount = toMoney(order.tax?.amount);
+  const hasPriceBreakdown =
+    deliveryFee > 0.005 ||
+    taxAmount > 0.005 ||
+    Math.abs(total - itemsSubtotal) > 0.005;
   const statusLabel = getOrderStatusLabel(status);
   const statusColor = getOrderStatusColor(status);
   const formatDateTime = (dateString) => {
@@ -92,6 +120,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
             try {
               setIsLoading(true);
               await updateOrderStatus(_id, newStatus);
+              setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev));
               Alert.alert(
                 i18n.t('alerts.success'),
                 i18n.t('alerts.statusUpdated')
@@ -114,6 +143,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       await acceptOrder(_id);
+      setOrder((prev) => (prev ? { ...prev, status: 'accepted' } : prev));
       Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderAccepted'));
     } catch (error) {
       console.error('Erreur acceptation:', error);
@@ -126,6 +156,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       await prepareOrder(_id);
+      setOrder((prev) => (prev ? { ...prev, status: 'preparing' } : prev));
       Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderPreparing'));
     } catch (error) {
       console.error('Erreur préparation:', error);
@@ -138,6 +169,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       await readyForPickup(_id);
+      setOrder((prev) => (prev ? { ...prev, status: 'ready' } : prev));
       Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderReady'));
     } catch (error) {
       console.error('Erreur prêt:', error);
@@ -277,7 +309,16 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     {}
     <Card containerStyle={styles.itemsCard}>
       <Text style={styles.cardTitle}>{i18n.t('orderDetails.orderedItems')}</Text>
-      {items.map((item, index) => (
+      {items.map((item, index) => {
+        const qtyRaw = Number(item.quantity);
+        const qty = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : 1;
+        const unitRaw =
+          typeof item.price === 'number' ? item.price : Number(item.price);
+        const unit = Number.isFinite(unitRaw) ? unitRaw : NaN;
+        const lineAmount = getOrderLineAmount(item);
+        const baseOnly = (Number.isFinite(unit) ? unit : 0) * qty;
+        const showAddOnsHint = lineAmount > baseOnly + 0.009;
+        return (
         <View key={index} style={styles.itemRow}>
           <View style={styles.itemInfo}>
             <Text style={styles.itemName}>{item.name}</Text>
@@ -285,14 +326,53 @@ const OrderDetailsScreen = ({ route, navigation }) => {
               <Text style={styles.itemDescription}>{item.description}</Text>
             )}
             <Text style={styles.itemQuantity}>{i18n.t('orderDetails.quantity')}: {item.quantity}</Text>
+            {Number.isFinite(unit) && (
+              <Text style={styles.itemUnitLine}>
+                {i18n.t('orderDetails.unitTimesQty', {
+                  price: formatCurrency(unit),
+                  quantity: String(qty),
+                })}
+              </Text>
+            )}
+            {showAddOnsHint && (
+              <Text style={styles.itemAddOnsHint}>
+                {i18n.t('orderDetails.includingAddOns')}
+              </Text>
+            )}
           </View>
-          <Text style={styles.itemPrice}>{formatCurrency(item.price * item.quantity)}</Text>
+          <Text style={styles.itemPrice}>{formatCurrency(lineAmount)}</Text>
         </View>
-      ))}
-      <View style={styles.totalRow}>
-        <Text style={styles.totalLabel}>{i18n.t('orderDetails.total')}</Text>
-        <Text style={styles.totalAmount}>{formatCurrency(total)}</Text>
-      </View>
+        );
+      })}
+      {hasPriceBreakdown ? (
+        <>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>{i18n.t('orderDetails.itemsSubtotal')}</Text>
+            <Text style={styles.summaryAmount}>{formatCurrency(itemsSubtotal)}</Text>
+          </View>
+          {deliveryFee > 0.005 && (
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>{i18n.t('orderDetails.deliveryFee')}</Text>
+              <Text style={styles.summaryAmount}>{formatCurrency(deliveryFee)}</Text>
+            </View>
+          )}
+          {taxAmount > 0.005 && (
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>{i18n.t('orderDetails.taxes')}</Text>
+              <Text style={styles.summaryAmount}>{formatCurrency(taxAmount)}</Text>
+            </View>
+          )}
+          <View style={styles.totalRow}>
+            <Text style={styles.totalLabel}>{i18n.t('orderDetails.total')}</Text>
+            <Text style={styles.totalAmount}>{formatCurrency(total)}</Text>
+          </View>
+        </>
+      ) : (
+        <View style={styles.totalRow}>
+          <Text style={styles.totalLabel}>{i18n.t('orderDetails.total')}</Text>
+          <Text style={styles.totalAmount}>{formatCurrency(total)}</Text>
+        </View>
+      )}
     </Card>
     {}
     {notes && (
@@ -499,8 +579,35 @@ const styles = StyleSheet.create({
     color: colors.grey[600],
     marginTop: constants.SPACING.xs,
   },
+  itemUnitLine: {
+    fontSize: 13,
+    color: colors.text.secondary,
+    marginTop: 2,
+  },
+  itemAddOnsHint: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    fontStyle: 'italic',
+    marginTop: 2,
+  },
   itemPrice: {
     fontSize: 16,
+    fontWeight: '600',
+    color: colors.text.primary,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: constants.SPACING.sm,
+    marginTop: constants.SPACING.sm,
+  },
+  summaryLabel: {
+    fontSize: 14,
+    color: colors.text.secondary,
+  },
+  summaryAmount: {
+    fontSize: 14,
     fontWeight: '600',
     color: colors.text.primary,
   },

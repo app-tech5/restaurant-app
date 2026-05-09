@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Text, Alert } from 'react-native';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { OrderCard, Loading, EmptyState, ScreenHeader } from '../components';
 import { colors, constants } from '../global';
+import { getOrderStatusLabel } from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const OrdersScreen = ({ navigation }) => {
@@ -41,6 +42,29 @@ const OrdersScreen = ({ navigation }) => {
       console.error(i18n.t('errors.acceptOrder'), error);
     }
   };
+  const handleRejectOrder = (orderId) => {
+    Alert.alert(
+      i18n.t('alerts.confirmStatusChangeTitle'),
+      i18n.t('alerts.confirmStatusChangeMessage', {
+        status: getOrderStatusLabel('cancelled')
+      }),
+      [
+        { text: i18n.t('alerts.cancel'), style: 'cancel' },
+        {
+          text: i18n.t('alerts.confirm'),
+          onPress: async () => {
+            try {
+              await updateOrderStatus(orderId, 'cancelled');
+              Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.statusUpdated'));
+            } catch (error) {
+              console.error('Erreur mise à jour statut:', error);
+              Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.statusUpdateFailed'));
+            }
+          }
+        }
+      ]
+    );
+  };
   const handlePrepareOrder = async (orderId) => {
     try {
       await prepareOrder(orderId);
@@ -77,6 +101,7 @@ const OrdersScreen = ({ navigation }) => {
       order={item}
       onPress={handleOrderPress}
       onAccept={handleAcceptOrder}
+      onReject={handleRejectOrder}
       onPrepare={handlePrepareOrder}
       onReady={handleReadyForPickup}
     />

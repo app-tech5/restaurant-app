@@ -42,6 +42,66 @@ export const getOrderStatusLabel = (status) => {
 export const getOrderStatusColor = (status) => {
   return ORDER_STATUS_COLORS[status] || '#666';
 };
+
+/** Maps API order shape (user, delivery, payment) to fields used by restaurant UI. */
+function toOrderMoney(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string' && value.trim() !== '') {
+    const n = Number(value);
+    if (Number.isFinite(n)) return n;
+  }
+  return NaN;
+}
+
+export function getOrderLineExtrasSum(item) {
+  if (!item || !Array.isArray(item.extras)) return 0;
+  return item.extras.reduce((sum, extra) => {
+    const ep = toOrderMoney(extra?.price);
+    const eq = toOrderMoney(extra?.quantity);
+    const price = Number.isFinite(ep) ? ep : 0;
+    const qty = Number.isFinite(eq) && eq > 0 ? eq : 1;
+    return sum + price * qty;
+  }, 0);
+}
+
+/** Montant ligne aligné sur le backend : `total` si présent, sinon prix×qté + extras. */
+export function getOrderLineAmount(item) {
+  if (!item) return 0;
+  const totalField = toOrderMoney(item.total);
+  if (Number.isFinite(totalField) && totalField >= 0) return totalField;
+  const qtyRaw = toOrderMoney(item.quantity);
+  const qty = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : 1;
+  const unit = toOrderMoney(item.price);
+  const unitPrice = Number.isFinite(unit) && unit >= 0 ? unit : 0;
+  return unitPrice * qty + getOrderLineExtrasSum(item);
+}
+
+export const getRestaurantOrderCustomerFields = (order) => {
+  if (!order) {
+    return {
+      customerName: '',
+      customerPhone: '',
+      customerAddress: '',
+      paymentMethod: null,
+      total: 0,
+    };
+  }
+  const user = order.user != null && typeof order.user === 'object' ? order.user : {};
+  const userAddress = typeof user.address === 'string' ? user.address : '';
+  const rawPayment = order.paymentMethod ?? order.payment?.method ?? null;
+  let paymentMethod = rawPayment;
+  if (rawPayment === 'credit_card') paymentMethod = 'card';
+  if (rawPayment === 'cash_on_delivery') paymentMethod = 'cash';
+
+  return {
+    customerName: order.customerName ?? user.name ?? '',
+    customerPhone: order.customerPhone ?? user.phone ?? '',
+    customerAddress:
+      order.customerAddress ?? order.delivery?.address ?? userAddress ?? '',
+    paymentMethod: paymentMethod ?? null,
+    total: order.total ?? order.totalPrice ?? 0,
+  };
+};
 export const calculateRestaurantStats = (orders = [], menu = []) => {
   const safeOrders = Array.isArray(orders) ? orders : [];
   const now = new Date();
