@@ -9,6 +9,7 @@ import {
   getOrderIdFromNotificationData,
 } from '../services/pushNotifications';
 import { useOrderIncomingToast } from '../contexts/OrderIncomingToastContext';
+import i18n from '../i18n';
 
 const DEDUPE_MS = 2000;
 
@@ -66,8 +67,25 @@ export const useNotificationNavigation = (navigationRef, isAuthenticated) => {
     const handleForegroundIncoming = async (data) => {
       const orderId = getOrderIdFromNotificationData(data);
       if (!orderId) return;
-      if (data?.type != null && String(data.type) !== 'order') return;
-      showIncomingOrder({ orderId });
+      const pt = data?.type != null ? String(data.type) : '';
+      if (pt && pt !== 'order' && pt !== 'order_cancelled') return;
+
+      const isCancelled = pt === 'order_cancelled';
+      const subtitleFromPush = typeof data.body === 'string' && data.body.trim() ? data.body.trim() : null;
+      const titleFromPush = typeof data.title === 'string' && data.title.trim() ? data.title.trim() : null;
+
+      showIncomingOrder({
+        orderId,
+        ...(isCancelled
+          ? {
+            sheetTitle: titleFromPush ?? i18n.t('orders.incomingCancelledSheetTitle'),
+            subtitle:
+              subtitleFromPush
+              ?? i18n.t('orders.incomingCancelledSheetSubtitle', { id: String(orderId) }),
+            headerIcon: 'close-circle-outline',
+          }
+          : {}),
+      });
     };
 
     registerNavigateToOrder((orderId) => {

@@ -27,9 +27,14 @@ export const OrderIncomingToastProvider = ({ children }) => {
     navigateToOrderRef.current = typeof fn === 'function' ? fn : null;
   }, []);
 
-  const showIncomingOrder = useCallback(({ orderId, subtitle }) => {
+  const showIncomingOrder = useCallback(({ orderId, subtitle, sheetTitle, headerIcon }) => {
     if (!orderId) return;
-    setPayload({ orderId, subtitle: subtitle || null });
+    setPayload({
+      orderId,
+      subtitle: subtitle || null,
+      sheetTitle: sheetTitle || null,
+      headerIcon: headerIcon || null,
+    });
   }, []);
 
   const hideIncomingOrder = useCallback(() => {
@@ -58,6 +63,8 @@ export const OrderIncomingToastProvider = ({ children }) => {
         visible={!!payload}
         orderId={payload?.orderId}
         subtitle={payload?.subtitle}
+        sheetTitle={payload?.sheetTitle}
+        headerIcon={payload?.headerIcon}
         onView={onViewPress}
         onDismiss={hideIncomingOrder}
       />
@@ -73,14 +80,15 @@ export const useOrderIncomingToast = () => {
   return ctx;
 };
 
-const OrderIncomingSheet = ({ visible, orderId, subtitle, onView, onDismiss }) => {
+const OrderIncomingSheet = ({ visible, orderId, subtitle, sheetTitle, headerIcon, onView, onDismiss }) => {
   const insets = useSafeAreaInsets();
   const open = visible && !!orderId;
 
   if (!orderId) return null;
 
-  const title = i18n.t('orders.incomingOrderTitle');
+  const title = sheetTitle || i18n.t('orders.incomingOrderTitle');
   const line = subtitle || i18n.t('orders.incomingOrderSubtitle', { id: String(orderId) });
+  const iconName = headerIcon || 'restaurant';
 
   return (
     <Modal
@@ -115,7 +123,7 @@ const OrderIncomingSheet = ({ visible, orderId, subtitle, onView, onDismiss }) =
             <View style={styles.handle} accessibilityElementsHidden />
             <View style={styles.headerRow}>
               <LinearGradient colors={iconGradient} style={styles.iconWrap}>
-                <Ionicons name="restaurant" size={26} color={colors.accent} />
+                <Ionicons name={iconName} size={26} color={colors.accent} />
               </LinearGradient>
               <View style={styles.headerText}>
                 <Text style={styles.title}>{title}</Text>

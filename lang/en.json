@@ -89,6 +89,8 @@
     "incomingOrderView": "View",
     "incomingOrderPrimaryCta": "View order",
     "incomingOrderLater": "Not now",
+    "incomingCancelledSheetTitle": "Order cancelled",
+    "incomingCancelledSheetSubtitle": "Order #{{id}} was cancelled.",
     "noOrders": "No orders",
     "orderPending": "Pending",
     "accept": "Accept",

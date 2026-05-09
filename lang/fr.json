@@ -81,7 +81,9 @@
     "incomingOrderSubtitle": "Commande #{{id}}",
     "incomingOrderView": "Voir",
     "incomingOrderPrimaryCta": "Voir la commande",
-    "incomingOrderLater": "Plus tard"
+    "incomingOrderLater": "Plus tard",
+    "incomingCancelledSheetTitle": "Commande annulée",
+    "incomingCancelledSheetSubtitle": "La commande #{{id}} a été annulée."
   },
 
   "menu": {

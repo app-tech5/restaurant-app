@@ -91,9 +91,11 @@ const ensureForegroundPresentation = (Notifications) => {
   foregroundPresentationConfigured = true;
 };
 
+const ORDER_PUSH_TYPES = new Set(['order', 'order_cancelled']);
+
 const skipLocalBannerOrderPush = (data) => data && typeof data === 'object'
   && pickOrderId(data)
-  && (!data.type || String(data.type) === 'order');
+  && (!data.type || ORDER_PUSH_TYPES.has(String(data.type)));
 
 export async function ensureAndroidPushChannelsConfigured() {
   if (Platform.OS !== 'android' || androidChannelsEnsured) return;
