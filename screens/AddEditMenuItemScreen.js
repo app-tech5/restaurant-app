@@ -17,6 +17,21 @@ import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const categoryLabelFromMenuItem = (menuItem) => {
+  if (!menuItem?.category) return '';
+  if (typeof menuItem.category === 'object' && menuItem.category !== null) {
+    return menuItem.category.name || '';
+  }
+  return String(menuItem.category);
+};
+
+const availabilityFromMenuItem = (menuItem) => {
+  if (typeof menuItem?.availability === 'boolean') return menuItem.availability;
+  if (typeof menuItem?.available === 'boolean') return menuItem.available;
+  return menuItem?.available !== false;
+};
+
 const AddEditMenuItemScreen = ({ route, navigation }) => {
   const { mode, item } = route.params || {};
   const { addMenuItem, updateMenuItem } = useRestaurant();
@@ -39,9 +54,9 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
       setFormData({
         name: item.name || '',
         description: item.description || '',
-        price: item.price ? item.price.toString() : '',
-        category: item.category || '',
-        available: item.available !== false,
+        price: item.price != null ? String(item.price) : '',
+        category: categoryLabelFromMenuItem(item),
+        available: availabilityFromMenuItem(item),
         image: item.image || '',
         preparation_time: item.preparation_time ? item.preparation_time.toString() : '15',
         ingredients: Array.isArray(item.ingredients) ? item.ingredients.join(', ') : '',
@@ -65,7 +80,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         newErrors.price = i18n.t('menu.validation.pricePositiveNumber');
       }
     }
-    if (!formData.category.trim()) {
+    if (!String(formData.category).trim()) {
       newErrors.category = i18n.t('menu.validation.categoryRequired');
     }
     if (!formData.image.trim()) {
@@ -74,16 +89,34 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     if (!formData.preparation_time.trim()) {
       newErrors.preparation_time = i18n.t('menu.validation.prepTimeRequired');
     } else {
-      const prepTime = parseInt(formData.preparation_time);
+      const prepTime = parseInt(formData.preparation_time, 10);
       if (isNaN(prepTime) || prepTime <= 0) {
         newErrors.preparation_time = i18n.t('menu.validation.prepTimePositiveNumber');
       }
     }
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const keys = Object.keys(newErrors);
+    if (keys.length === 0) return { ok: true };
+    return { ok: false, firstError: newErrors[keys[0]] };
+  };
+  const resolveCategoryForSave = () => {
+    const trimmed = formData.category.trim();
+    if (!isEditMode || !item) return trimmed;
+    const orig = item.category;
+    if (orig && typeof orig === 'object' && orig._id) {
+      const origName = (orig.name || '').trim();
+      if (trimmed === origName) return orig._id;
+    }
+    if (/^[a-f0-9]{24}$/i.test(trimmed)) return trimmed;
+    return trimmed;
   };
   const handleSave = async () => {
-    if (!validateForm()) {
+    const validation = validateForm();
+    if (!validation.ok) {
+      Alert.alert(
+        i18n.t('menu.alerts.error'),
+        validation.firstError || i18n.t('menu.validation.formInvalid')
+      );
       return;
     }
     try {
@@ -92,15 +125,20 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: parseFloat(formData.price.replace(',', '.')),
-        category: formData.category.trim(),
-        available: formData.available,
+        category: resolveCategoryForSave(),
+        availability: formData.available,
         image: formData.image.trim(),
-        preparation_time: parseInt(formData.preparation_time),
+        preparation_time: parseInt(formData.preparation_time, 10),
         ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()).filter(i => i) : [],
         tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t) : []
       };
+      const itemId = item?._id ?? item?.id;
+      if (isEditMode && !itemId) {
+        Alert.alert(i18n.t('menu.alerts.error'), i18n.t('menu.alerts.missingItemId', { defaultValue: 'Missing dish id.' }));
+        return;
+      }
       if (isEditMode) {
-        await updateMenuItem(item._id, menuItemData);
+        await updateMenuItem(itemId, menuItemData);
         Alert.alert(
           i18n.t('menu.alerts.success'),
           i18n.t('menu.alerts.itemUpdated'),

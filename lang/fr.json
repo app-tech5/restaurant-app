@@ -123,7 +123,14 @@
     "unavailable": "Indisponible",
     "categories": "Catégories",
     "addCategory": "Ajouter une catégorie",
-    "deleteCategory": "Supprimer la catégorie"
+    "deleteCategory": "Supprimer la catégorie",
+    "validation": {
+      "formInvalid": "Veuillez corriger les champs indiqués."
+    },
+    "alerts": {
+      "error": "Erreur",
+      "missingItemId": "Identifiant du plat manquant."
+    }
   },
 
   "analytics": {

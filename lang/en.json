@@ -218,7 +218,8 @@
       "categoryRequired": "Category is required",
       "imageRequired": "Image is required",
       "prepTimeRequired": "Preparation time is required",
-      "prepTimePositiveNumber": "Preparation time must be a positive number"
+      "prepTimePositiveNumber": "Preparation time must be a positive number",
+      "formInvalid": "Please fix the highlighted fields."
     },
     "alerts": {
       "success": "Success",
@@ -227,6 +228,7 @@
       "addAnother": "Add another",
       "done": "Done",
       "error": "Error",
+      "missingItemId": "Missing dish id.",
       "updateFailed": "Unable to update dish",
       "addFailed": "Unable to add dish"
     }
