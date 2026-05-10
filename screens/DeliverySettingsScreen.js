@@ -16,35 +16,74 @@ import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
-const DeliverySettingsScreen = ({ navigation }) => {
-  const { restaurant, isAuthenticated } = useRestaurant();
-  const { getCurrencySymbol } = useSettings();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    deliveryRadius: '5',
+
+/** Valeurs formulaire quand aucun document `DeliverySetting` n’existe encore (fallback `Restaurant.distance`). */
+function formDefaultsFromRestaurant(restaurant) {
+  let radius = 15;
+  if (restaurant) {
+    const d = Number(restaurant.distance);
+    if (Number.isFinite(d) && d > 0) {
+      radius = Math.min(50, Math.max(1, Math.round(d)));
+    }
+  }
+  return {
+    deliveryRadius: String(radius),
     fixedFee: '2.50',
     perKmFee: '0.50',
     freeDeliveryEnabled: false,
-    freeDeliveryThreshold: '20.00',
+    freeDeliveryThreshold: '25.00',
     estimatedTime: '30',
     deliveryEnabled: true,
-    pickupEnabled: true
-  });
+    pickupEnabled: true,
+  };
+}
+
+function formFromDeliveryDoc(doc, restaurant) {
+  if (!doc || !doc._id) return formDefaultsFromRestaurant(restaurant);
+  return {
+    deliveryRadius: String(doc.maxDeliveryDistance ?? 15),
+    fixedFee: String(doc.fixedDeliveryFee ?? 2.5),
+    perKmFee: String(doc.dynamicDeliveryFee?.perKmFee ?? 0.5),
+    freeDeliveryEnabled: !!doc.freeDeliveryEnabled,
+    freeDeliveryThreshold: String(doc.freeDeliveryThreshold ?? 25),
+    estimatedTime: String(doc.deliveryPreparationTime ?? 30),
+    deliveryEnabled: doc.isDeliveryEnabled !== false,
+    pickupEnabled: doc.isPickupEnabled !== false,
+  };
+}
+
+const DeliverySettingsScreen = ({ navigation }) => {
+  const { restaurant, isAuthenticated, setRestaurant } = useRestaurant();
+  const { getCurrencySymbol } = useSettings();
+  const [isLoading, setIsLoading] = useState(false);
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [baselineDoc, setBaselineDoc] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState(formDefaultsFromRestaurant(null));
   useEffect(() => {
-    if (restaurant) {
-      setFormData({
-        deliveryRadius: restaurant.deliveryRadius || '5',
-        fixedFee: restaurant.fixedFee || '2.50',
-        perKmFee: restaurant.perKmFee || '0.50',
-        freeDeliveryEnabled: restaurant.freeDeliveryEnabled || false,
-        freeDeliveryThreshold: restaurant.freeDeliveryThreshold || '20.00',
-        estimatedTime: restaurant.estimatedTime || '30',
-        deliveryEnabled: restaurant.deliveryEnabled !== undefined ? restaurant.deliveryEnabled : true,
-        pickupEnabled: restaurant.pickupEnabled !== undefined ? restaurant.pickupEnabled : true
-      });
-    }
-  }, [restaurant]);
+    if (!restaurant?._id) return undefined;
+    let cancelled = false;
+    (async () => {
+      setSettingsLoading(true);
+      try {
+        const doc = await apiClient.getDeliverySettingsDoc();
+        if (cancelled) return;
+        setBaselineDoc(doc || null);
+        setFormData(formFromDeliveryDoc(doc, restaurant));
+      } catch (e) {
+        console.warn('Delivery settings load failed:', e);
+        if (!cancelled) {
+          setBaselineDoc(null);
+          setFormData(formDefaultsFromRestaurant(restaurant));
+        }
+      } finally {
+        if (!cancelled) setSettingsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [restaurant?._id]);
   const validateNumber = (value, fieldName) => {
     const num = parseFloat(value);
     if (isNaN(num) || num < 0) {
@@ -53,7 +92,8 @@ const DeliverySettingsScreen = ({ navigation }) => {
     return true;
   };
   const handleSave = async () => {
-    if (!validateNumber(formData.deliveryRadius, 'deliveryRadius')) {
+    const radiusNum = parseFloat(formData.deliveryRadius);
+    if (!Number.isFinite(radiusNum) || radiusNum < 1 || radiusNum > 50) {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('delivery.invalidRadius'));
       return;
     }
@@ -75,25 +115,55 @@ const DeliverySettingsScreen = ({ navigation }) => {
     }
     try {
       setIsLoading(true);
-      const updateData = {
-        deliveryRadius: formData.deliveryRadius,
-        fixedFee: formData.fixedFee,
-        perKmFee: formData.perKmFee,
+      const rid = restaurant._id || restaurant.id;
+      if (!rid) {
+        throw new Error('Missing restaurant id');
+      }
+      const maxDeliveryDistance = Math.min(50, Math.max(1, radiusNum));
+      const perKm = parseFloat(formData.perKmFee);
+      const dynBase =
+        baselineDoc && typeof baselineDoc.dynamicDeliveryFee === 'object' && baselineDoc.dynamicDeliveryFee
+          ? { ...baselineDoc.dynamicDeliveryFee }
+          : { baseFee: 1.5, minFee: 1.5, maxFee: 10, perKmFee: 0.5 };
+      dynBase.perKmFee = Number.isFinite(perKm) ? perKm : dynBase.perKmFee;
+      const prep = parseInt(String(formData.estimatedTime).trim(), 10) || 30;
+      const payload = {
+        restaurant: rid,
+        isDeliveryEnabled: formData.deliveryEnabled,
+        isPickupEnabled: formData.pickupEnabled,
+        maxDeliveryDistance,
+        fixedDeliveryFee: parseFloat(formData.fixedFee),
+        dynamicDeliveryFee: dynBase,
         freeDeliveryEnabled: formData.freeDeliveryEnabled,
-        freeDeliveryThreshold: formData.freeDeliveryThreshold,
-        estimatedTime: formData.estimatedTime,
-        deliveryEnabled: formData.deliveryEnabled,
-        pickupEnabled: formData.pickupEnabled
+        freeDeliveryThreshold: formData.freeDeliveryEnabled
+          ? parseFloat(formData.freeDeliveryThreshold)
+          : 0,
+        deliveryPreparationTime: Math.min(180, Math.max(5, prep)),
       };
-      const response = await apiClient.updateRestaurantProfile(updateData);
-      if (response.success) {
+      const response = await apiClient.upsertRestaurantDeliverySettings(payload);
+      if (response && response.error) {
+        throw new Error(
+          typeof response.error === 'string' ? response.error : 'Update failed'
+        );
+      }
+      if (response && response._id) {
+        setBaselineDoc(response);
+        setFormData(formFromDeliveryDoc(response, restaurant));
+        try {
+          const rRes = await apiClient.updateRestaurantProfile({ distance: maxDeliveryDistance });
+          if (rRes && rRes._id) {
+            setRestaurant((prev) => (prev ? { ...prev, distance: maxDeliveryDistance } : prev));
+          }
+        } catch (e) {
+          console.warn('Restaurant distance sync skipped:', e);
+        }
         Alert.alert(
           i18n.t('success.saved'),
           i18n.t('delivery.saveSuccess'),
           [{ text: i18n.t('common.ok'), onPress: () => setIsEditing(false) }]
         );
       } else {
-        throw new Error(response.message || 'Update failed');
+        throw new Error('Update failed');
       }
     } catch (error) {
       console.error('Error updating delivery settings:', error);
@@ -109,19 +179,18 @@ const DeliverySettingsScreen = ({ navigation }) => {
     setIsEditing(true);
   };
   const handleCancel = () => {
-    if (restaurant) {
-      setFormData({
-        deliveryRadius: restaurant.deliveryRadius || '5',
-        fixedFee: restaurant.fixedFee || '2.50',
-        perKmFee: restaurant.perKmFee || '0.50',
-        freeDeliveryEnabled: restaurant.freeDeliveryEnabled || false,
-        freeDeliveryThreshold: restaurant.freeDeliveryThreshold || '20.00',
-        estimatedTime: restaurant.estimatedTime || '30',
-        deliveryEnabled: restaurant.deliveryEnabled !== undefined ? restaurant.deliveryEnabled : true,
-        pickupEnabled: restaurant.pickupEnabled !== undefined ? restaurant.pickupEnabled : true
-      });
-    }
     setIsEditing(false);
+    if (!restaurant?._id) return;
+    void (async () => {
+      try {
+        const doc = await apiClient.getDeliverySettingsDoc();
+        setBaselineDoc(doc || null);
+        setFormData(formFromDeliveryDoc(doc, restaurant));
+      } catch (_) {
+        setBaselineDoc(null);
+        setFormData(formDefaultsFromRestaurant(restaurant));
+      }
+    })();
   };
   const updateFormData = (field, value) => {
     setFormData(prev => ({
@@ -155,8 +224,10 @@ const DeliverySettingsScreen = ({ navigation }) => {
         navigation={navigation}
         rightComponent={
           !isEditing ? (
-            <TouchableOpacity onPress={handleEdit}>
-              <Text style={styles.editButton}>{i18n.t('common.edit')}</Text>
+            <TouchableOpacity onPress={handleEdit} disabled={settingsLoading}>
+              <Text style={[styles.editButton, settingsLoading && styles.editButtonDisabled]}>
+                {i18n.t('common.edit')}
+              </Text>
             </TouchableOpacity>
           ) : (
             <View style={styles.editButtons}>
@@ -166,7 +237,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={handleSave}
                 style={[styles.saveHeaderButton, isLoading && styles.saveHeaderButtonDisabled]}
-                disabled={isLoading}
+                disabled={isLoading || settingsLoading}
               >
                 {isLoading ? (
                   <Loading size="small" color={colors.white} />
@@ -179,7 +250,12 @@ const DeliverySettingsScreen = ({ navigation }) => {
         }
       />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {}
+        {settingsLoading ? (
+          <View style={styles.centerContent}>
+            <Loading text={i18n.t('delivery.loading')} />
+          </View>
+        ) : (
+        <>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('delivery.serviceOptions')}</Text>
           <View style={styles.infoField}>
@@ -226,7 +302,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
               style={[styles.textInput, !isEditing && styles.textInputDisabled]}
               value={formData.deliveryRadius}
               onChangeText={(value) => updateFormData('deliveryRadius', value)}
-              placeholder="5"
+              placeholder="15"
               keyboardType="numeric"
               maxLength={3}
               editable={isEditing}
@@ -315,6 +391,8 @@ const DeliverySettingsScreen = ({ navigation }) => {
             />
           </View>
         </View>
+        </>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -335,6 +413,9 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 16,
     fontWeight: '500',
+  },
+  editButtonDisabled: {
+    opacity: 0.4,
   },
   editButtons: {
     flexDirection: 'row',

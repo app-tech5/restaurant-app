@@ -61,6 +61,90 @@ export const withRestaurantAccountEmail = (profileDoc, accountUser) => {
   const email = fromProfile || fromAccount;
   return email ? { ...profileDoc, email } : { ...profileDoc };
 };
+
+/** Valeurs enum `serviceModes` du modèle Restaurant (backend). */
+export const RESTAURANT_SERVICE_MODES = Object.freeze(['delivery', 'pickup']);
+
+export function normalizeRestaurantServiceMode(raw) {
+  if (raw === 'delivery' || raw === 'pickup') return raw;
+  if (raw && typeof raw === 'object') {
+    const s = String(raw.alias || raw.title || raw.label || '').toLowerCase();
+    if (s.includes('pickup') || s.includes('emporter') || s.includes('à emporter')) return 'pickup';
+    if (s.includes('deliv') || s.includes('livraison')) return 'delivery';
+  }
+  const str = typeof raw === 'string' ? raw.toLowerCase().trim() : '';
+  if (str === 'pickup' || str === 'delivery') return str;
+  return 'delivery';
+}
+
+export const RESTAURANT_THEME_OPTIONS = Object.freeze(['default', 'dark', 'light']);
+
+export function normalizeRestaurantTheme(raw) {
+  const t = typeof raw === 'string' ? raw.trim() : '';
+  return RESTAURANT_THEME_OPTIONS.includes(t) ? t : 'default';
+}
+
+export function restaurantProfileFormFromRestaurant(restaurant) {
+  if (!restaurant) return null;
+  return {
+    name: restaurant.name || '',
+    email: getRestaurantEmailForDisplay(restaurant),
+    phone: restaurant.phone || restaurant.display_phone || '',
+    address: restaurant.address || '',
+    description: restaurant.description || '',
+    country: restaurant.country || '',
+    city: restaurant.city || '',
+    latitude: restaurant.latitude != null ? String(restaurant.latitude) : '',
+    longitude: restaurant.longitude != null ? String(restaurant.longitude) : '',
+    openingTime: restaurant.openingTime || '',
+    closingTime: restaurant.closingTime || '',
+    collectTime: restaurant.collectTime != null ? String(restaurant.collectTime) : '',
+    serviceModes: normalizeRestaurantServiceMode(restaurant.serviceModes),
+    image: restaurant.image || restaurant.image_url || '',
+    theme: normalizeRestaurantTheme(restaurant.theme),
+    commission_rate:
+      restaurant.commission_rate !== undefined && restaurant.commission_rate !== null
+        ? String(restaurant.commission_rate)
+        : '',
+    reward: restaurant.reward || '',
+    is_closed: !!restaurant.is_closed,
+    isActivated: restaurant.isActivated !== undefined ? !!restaurant.isActivated : true,
+    isAvailableForDelivery: !!restaurant.isAvailableForDelivery,
+  };
+}
+
+/** Corps PUT `/resource/restaurants/:id` aligné sur le schéma Mongoose (sans `email`). */
+export function buildRestaurantProfileUpdatePayload(formData) {
+  const ct = parseInt(String(formData.collectTime ?? '').replace(/\D/g, ''), 10);
+  const commissionRaw = String(formData.commission_rate ?? '').replace(',', '.').trim();
+  const crParsed = parseFloat(commissionRaw);
+  const commission_rate = Number.isFinite(crParsed) ? crParsed : 0;
+  const phone = String(formData.phone || '').trim();
+  return {
+    name: String(formData.name || '').trim(),
+    phone,
+    display_phone: phone,
+    address: String(formData.address || '').trim(),
+    description: String(formData.description || '').trim(),
+    country: String(formData.country || '').trim(),
+    city: String(formData.city || '').trim(),
+    latitude: String(formData.latitude ?? '').trim(),
+    longitude: String(formData.longitude ?? '').trim(),
+    openingTime: String(formData.openingTime || '').trim() || '09:00',
+    closingTime: String(formData.closingTime || '').trim() || '21:00',
+    collectTime: Number.isFinite(ct) && ct >= 0 ? ct : 0,
+    serviceModes: normalizeRestaurantServiceMode(formData.serviceModes),
+    image: String(formData.image || '').trim(),
+    image_url: String(formData.image || '').trim(),
+    theme: normalizeRestaurantTheme(formData.theme),
+    commission_rate,
+    reward: String(formData.reward || '').trim(),
+    is_closed: !!formData.is_closed,
+    isActivated: !!formData.isActivated,
+    isAvailableForDelivery: !!formData.isAvailableForDelivery,
+  };
+}
+
 export const getOrderStatusLabel = (status) => {
   return ORDER_STATUS_LABELS[status] || status;
 };

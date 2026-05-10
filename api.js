@@ -178,6 +178,38 @@ class ApiClient {
     });
   }
 
+  /** Liste réglages livraison pour le restaurant courant (`type` comme sur `products`). */
+  async fetchDeliverySettingsListForRestaurant() {
+    const rid = this.resolveRestaurantPlaceId();
+    if (!rid) {
+      throw new Error('Missing restaurant id for delivery settings');
+    }
+    const raw = await this.apiCall(
+      `/resource/deliverysettings?type=${encodeURIComponent(String(rid))}`
+    );
+    return Array.isArray(raw) ? raw : [];
+  }
+
+  async getDeliverySettingsDoc() {
+    const list = await this.fetchDeliverySettingsListForRestaurant();
+    return list[0] || null;
+  }
+
+  async upsertRestaurantDeliverySettings(payload) {
+    const list = await this.fetchDeliverySettingsListForRestaurant();
+    const existing = list[0];
+    if (existing && existing._id) {
+      return await this.apiCall(`/resource/deliverysettings/${existing._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+    }
+    return await this.apiCall('/resource/deliverysettings', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
   async getUserSettings() {
     return await this.apiCall('/user-settings');
   }

@@ -8,16 +8,30 @@ import {
   TouchableOpacity,
   Alert,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Switch
 } from 'react-native';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
-import { getRestaurantEmailForDisplay } from '../utils/restaurantUtils';
+import {
+  RESTAURANT_SERVICE_MODES,
+  RESTAURANT_THEME_OPTIONS,
+  restaurantProfileFormFromRestaurant,
+  buildRestaurantProfileUpdatePayload,
+  withRestaurantAccountEmail,
+} from '../utils/restaurantUtils';
+
+const THEME_LABEL_KEYS = {
+  default: 'restaurantProfile.themeDefault',
+  dark: 'restaurantProfile.themeDark',
+  light: 'restaurantProfile.themeLight',
+};
+
 const RestaurantProfileScreen = ({ navigation }) => {
-  const { restaurant } = useRestaurant();
+  const { restaurant, setRestaurant } = useRestaurant();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,37 +47,19 @@ const RestaurantProfileScreen = ({ navigation }) => {
     openingTime: '',
     closingTime: '',
     collectTime: '',
-    serviceModes: '',
+    serviceModes: 'delivery',
     image: '',
-    theme: '',
+    theme: 'default',
     commission_rate: '',
     reward: '',
     is_closed: false,
-    isActivated: true
+    isActivated: true,
+    isAvailableForDelivery: false
   });
   useEffect(() => {
     if (restaurant) {
-      setFormData({
-        name: restaurant.name || '',
-        email: getRestaurantEmailForDisplay(restaurant),
-        phone: restaurant.phone || restaurant.display_phone || '',
-        address: restaurant.address || '',
-        description: restaurant.description || '',
-        country: restaurant.country || '',
-        city: restaurant.city || '',
-        latitude: restaurant.latitude || '',
-        longitude: restaurant.longitude || '',
-        openingTime: restaurant.openingTime || '',
-        closingTime: restaurant.closingTime || '',
-        collectTime: restaurant.collectTime?.toString() || '',
-        serviceModes: restaurant.serviceModes || '',
-        image: restaurant.image || restaurant.image_url || '',
-        theme: restaurant.theme || '',
-        commission_rate: restaurant.commission_rate?.toString() || '',
-        reward: restaurant.reward || '',
-        is_closed: restaurant.is_closed || false,
-        isActivated: restaurant.isActivated !== undefined ? restaurant.isActivated : true
-      });
+      const next = restaurantProfileFormFromRestaurant(restaurant);
+      if (next) setFormData(next);
     }
   }, [restaurant]);
   const handleSave = async () => {
@@ -82,15 +78,24 @@ const RestaurantProfileScreen = ({ navigation }) => {
     }
     try {
       setIsLoading(true);
-      const response = await apiClient.updateRestaurantProfile(formData);
-      if (response.success) {
+      const payload = buildRestaurantProfileUpdatePayload(formData);
+      const response = await apiClient.updateRestaurantProfile(payload);
+      if (response && response.error) {
+        throw new Error(
+          typeof response.error === 'string' ? response.error : 'Update failed'
+        );
+      }
+      if (response && response._id) {
+        setRestaurant(
+          withRestaurantAccountEmail(response, { email: formData.email.trim() })
+        );
         Alert.alert(
           i18n.t('success.saved'),
           i18n.t('restaurantProfile.updateSuccess'),
           [{ text: i18n.t('common.ok'), onPress: () => setIsEditing(false) }]
         );
       } else {
-        throw new Error(response.message || 'Update failed');
+        throw new Error('Update failed');
       }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
@@ -101,27 +106,8 @@ const RestaurantProfileScreen = ({ navigation }) => {
   };
   const handleCancel = () => {
     if (restaurant) {
-      setFormData({
-        name: restaurant.name || '',
-        email: getRestaurantEmailForDisplay(restaurant),
-        phone: restaurant.phone || restaurant.display_phone || '',
-        address: restaurant.address || '',
-        description: restaurant.description || '',
-        country: restaurant.country || '',
-        city: restaurant.city || '',
-        latitude: restaurant.latitude || '',
-        longitude: restaurant.longitude || '',
-        openingTime: restaurant.openingTime || '',
-        closingTime: restaurant.closingTime || '',
-        collectTime: restaurant.collectTime?.toString() || '',
-        serviceModes: restaurant.serviceModes || '',
-        image: restaurant.image || restaurant.image_url || '',
-        theme: restaurant.theme || '',
-        commission_rate: restaurant.commission_rate?.toString() || '',
-        reward: restaurant.reward || '',
-        is_closed: restaurant.is_closed || false,
-        isActivated: restaurant.isActivated !== undefined ? restaurant.isActivated : true
-      });
+      const next = restaurantProfileFormFromRestaurant(restaurant);
+      if (next) setFormData(next);
     }
     setIsEditing(false);
   };
@@ -162,17 +148,18 @@ const RestaurantProfileScreen = ({ navigation }) => {
           )
         }
       />
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAvoidingView
+        style={styles.keyboardOuter}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardAvoidingView}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
         >
-          <View style={styles.content}>
-          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.generalInfo')}</Text>
             <View style={styles.field}>
@@ -221,7 +208,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.description')}</Text>
             <View style={styles.field}>
@@ -237,7 +223,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.locationInfo')}</Text>
             <View style={styles.field}>
@@ -268,7 +253,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
                   value={formData.latitude}
                   onChangeText={(text) => setFormData(prev => ({ ...prev, latitude: text }))}
                   placeholder="48.8566"
-                  keyboardType="numeric"
+                  keyboardType="decimal-pad"
                   editable={isEditing}
                 />
               </View>
@@ -279,13 +264,12 @@ const RestaurantProfileScreen = ({ navigation }) => {
                   value={formData.longitude}
                   onChangeText={(text) => setFormData(prev => ({ ...prev, longitude: text }))}
                   placeholder="2.3522"
-                  keyboardType="numeric"
+                  keyboardType="decimal-pad"
                   editable={isEditing}
                 />
               </View>
             </View>
           </View>
-          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
             <View style={styles.rowField}>
@@ -317,26 +301,45 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 value={formData.collectTime}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, collectTime: text }))}
                 placeholder="15"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 editable={isEditing}
               />
             </View>
           </View>
-          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.serviceOptions')}</Text>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.serviceModes')}</Text>
-              <TextInput
-                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                value={formData.serviceModes}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, serviceModes: text }))}
-                placeholder={`${i18n.t('restaurantProfile.deliveryMode')} / ${i18n.t('restaurantProfile.pickupMode')}`}
-                editable={isEditing}
-              />
+              <View style={styles.chipRow}>
+                {RESTAURANT_SERVICE_MODES.map((mode) => (
+                  <TouchableOpacity
+                    key={mode}
+                    style={[
+                      styles.chip,
+                      formData.serviceModes === mode && styles.chipSelected,
+                      !isEditing && styles.chipDisabled,
+                    ]}
+                    onPress={() => {
+                      if (!isEditing) return;
+                      setFormData((prev) => ({ ...prev, serviceModes: mode }));
+                    }}
+                    disabled={!isEditing}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        formData.serviceModes === mode && styles.chipTextSelected,
+                      ]}
+                    >
+                      {mode === 'delivery'
+                        ? i18n.t('restaurantProfile.deliveryMode')
+                        : i18n.t('restaurantProfile.pickupMode')}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
           </View>
-          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.restaurantImage')}</Text>
             <View style={styles.field}>
@@ -350,18 +353,36 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.businessInfo')}</Text>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.theme')}</Text>
-              <TextInput
-                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                value={formData.theme}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, theme: text }))}
-                placeholder={i18n.t('restaurantProfile.themePlaceholder')}
-                editable={isEditing}
-              />
+              <View style={styles.chipRow}>
+                {RESTAURANT_THEME_OPTIONS.map((t) => (
+                  <TouchableOpacity
+                    key={t}
+                    style={[
+                      styles.chip,
+                      formData.theme === t && styles.chipSelected,
+                      !isEditing && styles.chipDisabled,
+                    ]}
+                    onPress={() => {
+                      if (!isEditing) return;
+                      setFormData((prev) => ({ ...prev, theme: t }));
+                    }}
+                    disabled={!isEditing}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        formData.theme === t && styles.chipTextSelected,
+                      ]}
+                    >
+                      {i18n.t(THEME_LABEL_KEYS[t])}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.commissionRate')}</Text>
@@ -370,7 +391,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 value={formData.commission_rate}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, commission_rate: text }))}
                 placeholder="10"
-                keyboardType="numeric"
+                keyboardType="decimal-pad"
                 editable={isEditing}
               />
             </View>
@@ -387,7 +408,59 @@ const RestaurantProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-          {}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.availabilitySection')}</Text>
+            <View style={styles.field}>
+              <View style={styles.switchRow}>
+                <View style={styles.switchLabelCol}>
+                  <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.isClosed')}</Text>
+                  <Text style={styles.switchHint}>
+                    {formData.is_closed
+                      ? i18n.t('restaurantProfile.closedNow')
+                      : i18n.t('restaurantProfile.openNow')}
+                  </Text>
+                </View>
+                <Switch
+                  value={formData.is_closed}
+                  onValueChange={(value) => setFormData((prev) => ({ ...prev, is_closed: value }))}
+                  disabled={!isEditing}
+                  trackColor={{ false: colors.grey[300], true: colors.primary }}
+                  thumbColor={formData.is_closed ? colors.white : colors.grey[400]}
+                />
+              </View>
+            </View>
+            <View style={styles.field}>
+              <View style={styles.switchRow}>
+                <View style={styles.switchLabelCol}>
+                  <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
+                </View>
+                <Switch
+                  value={formData.isActivated}
+                  onValueChange={(value) => setFormData((prev) => ({ ...prev, isActivated: value }))}
+                  disabled={!isEditing}
+                  trackColor={{ false: colors.grey[300], true: colors.primary }}
+                  thumbColor={formData.isActivated ? colors.white : colors.grey[400]}
+                />
+              </View>
+            </View>
+            <View style={styles.field}>
+              <View style={styles.switchRow}>
+                <View style={styles.switchLabelCol}>
+                  <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.availableForDelivery')}</Text>
+                  <Text style={styles.switchHint}>{i18n.t('restaurantProfile.availableForDeliveryHint')}</Text>
+                </View>
+                <Switch
+                  value={formData.isAvailableForDelivery}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, isAvailableForDelivery: value }))
+                  }
+                  disabled={!isEditing}
+                  trackColor={{ false: colors.grey[300], true: colors.primary }}
+                  thumbColor={formData.isAvailableForDelivery ? colors.white : colors.grey[400]}
+                />
+              </View>
+            </View>
+          </View>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
             <View style={styles.infoField}>
@@ -407,38 +480,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
               </View>
             </View>
             <View style={styles.infoField}>
-              <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.isClosed')}</Text>
-              <View style={[
-                styles.statusBadge,
-                !restaurant.is_closed && styles.statusActive,
-                restaurant.is_closed && styles.statusInactive
-              ]}>
-                <Text style={[
-                  styles.statusText,
-                  !restaurant.is_closed && styles.statusTextActive,
-                  restaurant.is_closed && styles.statusTextInactive
-                ]}>
-                  {restaurant.is_closed ? 'Fermé' : 'Ouvert'}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.infoField}>
-              <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
-              <View style={[
-                styles.statusBadge,
-                restaurant.isActivated && styles.statusActive,
-                !restaurant.isActivated && styles.statusInactive
-              ]}>
-                <Text style={[
-                  styles.statusText,
-                  restaurant.isActivated && styles.statusTextActive,
-                  !restaurant.isActivated && styles.statusTextInactive
-                ]}>
-                  {restaurant.isActivated ? i18n.t('restaurantProfile.active') : i18n.t('restaurantProfile.inactive')}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.infoField}>
               <Text style={styles.infoLabel}>{i18n.t('restaurantProfile.restaurantId')}</Text>
               <Text style={styles.infoValue}>{restaurant._id}</Text>
             </View>
@@ -448,10 +489,9 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 {restaurant.type === 'restaurant' ? i18n.t('restaurantProfile.restaurant') : restaurant.type}
               </Text>
             </View>
-            </View>
           </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -460,7 +500,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.grey[50],
   },
-  keyboardAvoidingView: {
+  keyboardOuter: {
     flex: 1,
   },
   scrollView: {
@@ -556,6 +596,47 @@ const styles = StyleSheet.create({
   textArea: {
     textAlignVertical: 'top',
     minHeight: 80,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: constants.SPACING.sm,
+  },
+  chip: {
+    paddingHorizontal: constants.SPACING.md,
+    paddingVertical: constants.SPACING.xs,
+    borderRadius: constants.BORDER_RADIUS,
+    backgroundColor: colors.grey[100],
+    borderWidth: 1,
+    borderColor: colors.grey[200],
+  },
+  chipSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipDisabled: {
+    opacity: 0.85,
+  },
+  chipText: {
+    fontSize: 14,
+    color: colors.text.secondary,
+  },
+  chipTextSelected: {
+    color: colors.white,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  switchLabelCol: {
+    flex: 1,
+    marginRight: constants.SPACING.md,
+  },
+  switchHint: {
+    fontSize: 13,
+    color: colors.text.secondary,
+    marginTop: constants.SPACING.xs,
   },
   infoField: {
     flexDirection: 'row',

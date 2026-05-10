@@ -541,7 +541,15 @@
     "taxRate": "Tax Rate (%)",
     "taxLocation": "Tax Location",
     "rewards": "Rewards",
-    "rewardsPlaceholder": "Special offers or loyalty program"
+    "rewardsPlaceholder": "Special offers or loyalty program",
+    "availabilitySection": "Opening & availability",
+    "availableForDelivery": "Available for delivery",
+    "availableForDeliveryHint": "Customers can order delivery from your restaurant",
+    "closedNow": "Closed",
+    "openNow": "Open",
+    "themeDefault": "Default",
+    "themeDark": "Dark",
+    "themeLight": "Light"
   },
 
   "settings": {
@@ -672,7 +680,7 @@
     "saveSuccess": "Delivery settings updated successfully",
     "saveError": "Failed to update delivery settings",
     "validationError": "Please check your delivery settings",
-    "invalidRadius": "Delivery radius must be a positive number",
+    "invalidRadius": "Delivery radius must be between 1 and 50 km",
     "invalidFee": "Delivery fee must be a valid amount",
     "invalidThreshold": "Free delivery threshold must be a valid amount",
     "invalidTime": "Estimated time must be a positive number",
@@ -683,7 +691,8 @@
     "enablePickup": "Enable pickup service",
     "serviceOptions": "Service options",
     "pricing": "Pricing",
-    "availability": "Availability"
+    "availability": "Availability",
+    "loading": "Loading delivery settings…"
   },
   "openingHours": {
     "title": "Opening Hours",

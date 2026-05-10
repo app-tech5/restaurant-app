@@ -16,8 +16,9 @@ import { ScreenHeader, Loading } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
+import { getRestaurantEmailForDisplay, withRestaurantAccountEmail } from '../utils/restaurantUtils';
 const PaymentSettingsScreen = ({ navigation }) => {
-  const { restaurant, isAuthenticated } = useRestaurant();
+  const { restaurant, isAuthenticated, setRestaurant } = useRestaurant();
   const { getCurrencySymbol } = useSettings();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -82,14 +83,24 @@ const PaymentSettingsScreen = ({ navigation }) => {
         percentageFee: formData.percentageFee
       };
       const response = await apiClient.updateRestaurantProfile(updateData);
-      if (response.success) {
+      if (response && response.error) {
+        throw new Error(
+          typeof response.error === 'string' ? response.error : 'Update failed'
+        );
+      }
+      if (response && response._id) {
+        setRestaurant(
+          withRestaurantAccountEmail(response, {
+            email: getRestaurantEmailForDisplay(restaurant),
+          })
+        );
         Alert.alert(
           i18n.t('success.saved'),
           i18n.t('payment.saveSuccess'),
           [{ text: i18n.t('common.ok'), onPress: () => setIsEditing(false) }]
         );
       } else {
-        throw new Error(response.message || 'Update failed');
+        throw new Error('Update failed');
       }
     } catch (error) {
       console.error('Error updating payment settings:', error);
