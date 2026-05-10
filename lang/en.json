@@ -653,7 +653,8 @@
     "methods": "Payment methods",
     "fees": "Fees & commissions",
     "limits": "Order limits",
-    "processing": "Payment processing"
+    "processing": "Payment processing",
+    "loading": "Loading payment settings..."
   },
   "delivery": {
     "title": "Delivery Settings",

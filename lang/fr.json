@@ -513,7 +513,8 @@
     "methods": "Méthodes de paiement",
     "fees": "Frais et commissions",
     "limits": "Limites de commande",
-    "processing": "Traitement des paiements"
+    "processing": "Traitement des paiements",
+    "loading": "Chargement des paramètres de paiement..."
   },
   "delivery": {
     "title": "Paramètres de livraison",

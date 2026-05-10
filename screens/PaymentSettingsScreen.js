@@ -17,12 +17,25 @@ import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
 import { getRestaurantEmailForDisplay, withRestaurantAccountEmail } from '../utils/restaurantUtils';
-const PaymentSettingsScreen = ({ navigation }) => {
-  const { restaurant, isAuthenticated, setRestaurant } = useRestaurant();
-  const { getCurrencySymbol } = useSettings();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
+
+function getCommissionRateValue(restaurant) {
+  if (!restaurant) return '0';
+  if (restaurant.commission_rate !== undefined && restaurant.commission_rate !== null) {
+    return String(restaurant.commission_rate);
+  }
+  if (restaurant.commissionRate !== undefined && restaurant.commissionRate !== null) {
+    return String(restaurant.commissionRate);
+  }
+  return '0';
+}
+
+function toTextNumber(value, fallback) {
+  if (value === undefined || value === null || Number.isNaN(Number(value))) return fallback;
+  return String(value);
+}
+
+function paymentSettingsDefaults() {
+  return {
     cashPayment: true,
     cardPayment: true,
     onlinePayment: false,
@@ -30,20 +43,54 @@ const PaymentSettingsScreen = ({ navigation }) => {
     minimumOrder: '10.00',
     fixedFee: '0.30',
     percentageFee: '2.9'
-  });
+  };
+}
+
+function paymentSettingsFormFromDoc(doc, restaurant) {
+  const base = paymentSettingsDefaults();
+  return {
+    ...base,
+    cashPayment: doc?.cashPayment !== undefined ? !!doc.cashPayment : base.cashPayment,
+    cardPayment: doc?.cardPayment !== undefined ? !!doc.cardPayment : base.cardPayment,
+    onlinePayment: doc?.onlinePayment !== undefined ? !!doc.onlinePayment : base.onlinePayment,
+    commissionRate: getCommissionRateValue(restaurant),
+    minimumOrder: toTextNumber(doc?.minimumOrder, base.minimumOrder),
+    fixedFee: toTextNumber(doc?.fixedFee, base.fixedFee),
+    percentageFee: toTextNumber(doc?.percentageFee, base.percentageFee),
+  };
+}
+
+const PaymentSettingsScreen = ({ navigation }) => {
+  const { restaurant, isAuthenticated, setRestaurant } = useRestaurant();
+  const { getCurrencySymbol } = useSettings();
+  const [isLoading, setIsLoading] = useState(false);
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [paymentSettingsDoc, setPaymentSettingsDoc] = useState(null);
+  const [formData, setFormData] = useState(paymentSettingsDefaults());
   useEffect(() => {
-    if (restaurant) {
-      setFormData({
-        cashPayment: restaurant.cashPayment !== undefined ? restaurant.cashPayment : true,
-        cardPayment: restaurant.cardPayment !== undefined ? restaurant.cardPayment : true,
-        onlinePayment: restaurant.onlinePayment || false,
-        commissionRate: restaurant.commissionRate?.toString() || '5.0',
-        minimumOrder: restaurant.minimumOrder || '10.00',
-        fixedFee: restaurant.fixedFee || '0.30',
-        percentageFee: restaurant.percentageFee || '2.9'
-      });
-    }
-  }, [restaurant]);
+    if (!restaurant?._id) return undefined;
+    let cancelled = false;
+    (async () => {
+      setSettingsLoading(true);
+      try {
+        const doc = await apiClient.getRestaurantPaymentSettingsDoc();
+        if (cancelled) return;
+        setPaymentSettingsDoc(doc || null);
+        setFormData(paymentSettingsFormFromDoc(doc, restaurant));
+      } catch (e) {
+        if (!cancelled) {
+          setPaymentSettingsDoc(null);
+          setFormData(paymentSettingsFormFromDoc(null, restaurant));
+        }
+      } finally {
+        if (!cancelled) setSettingsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [restaurant?._id, restaurant?.commission_rate, restaurant?.commissionRate]);
   const validateNumber = (value, fieldName, min = 0, max = null) => {
     const num = parseFloat(value);
     if (isNaN(num) || num < min) {
@@ -73,24 +120,35 @@ const PaymentSettingsScreen = ({ navigation }) => {
     }
     try {
       setIsLoading(true);
-      const updateData = {
-        cashPayment: formData.cashPayment,
-        cardPayment: formData.cardPayment,
-        onlinePayment: formData.onlinePayment,
-        commissionRate: parseFloat(formData.commissionRate),
-        minimumOrder: formData.minimumOrder,
-        fixedFee: formData.fixedFee,
-        percentageFee: formData.percentageFee
+      const rid = restaurant?._id || restaurant?.id;
+      if (!rid) throw new Error('Missing restaurant id');
+      const payload = {
+        restaurant: rid,
+        cashPayment: !!formData.cashPayment,
+        cardPayment: !!formData.cardPayment,
+        onlinePayment: !!formData.onlinePayment,
+        minimumOrder: parseFloat(formData.minimumOrder),
+        fixedFee: parseFloat(formData.fixedFee),
+        percentageFee: parseFloat(formData.percentageFee),
       };
-      const response = await apiClient.updateRestaurantProfile(updateData);
-      if (response && response.error) {
+      const settingsResponse = await apiClient.upsertRestaurantPaymentSettings(payload);
+      if (settingsResponse && settingsResponse.error) {
         throw new Error(
-          typeof response.error === 'string' ? response.error : 'Update failed'
+          typeof settingsResponse.error === 'string' ? settingsResponse.error : 'Update failed'
         );
       }
-      if (response && response._id) {
+      const profileResponse = await apiClient.updateRestaurantProfile({
+        commission_rate: parseFloat(formData.commissionRate),
+      });
+      if (profileResponse && profileResponse.error) {
+        throw new Error(
+          typeof profileResponse.error === 'string' ? profileResponse.error : 'Update failed'
+        );
+      }
+      if (settingsResponse && settingsResponse._id && profileResponse && profileResponse._id) {
+        setPaymentSettingsDoc(settingsResponse);
         setRestaurant(
-          withRestaurantAccountEmail(response, {
+          withRestaurantAccountEmail(profileResponse, {
             email: getRestaurantEmailForDisplay(restaurant),
           })
         );
@@ -116,17 +174,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
     setIsEditing(true);
   };
   const handleCancel = () => {
-    if (restaurant) {
-      setFormData({
-        cashPayment: restaurant.cashPayment !== undefined ? restaurant.cashPayment : true,
-        cardPayment: restaurant.cardPayment !== undefined ? restaurant.cardPayment : true,
-        onlinePayment: restaurant.onlinePayment || false,
-        commissionRate: restaurant.commissionRate?.toString() || '5.0',
-        minimumOrder: restaurant.minimumOrder || '10.00',
-        fixedFee: restaurant.fixedFee || '0.30',
-        percentageFee: restaurant.percentageFee || '2.9'
-      });
-    }
+    setFormData(paymentSettingsFormFromDoc(paymentSettingsDoc, restaurant));
     setIsEditing(false);
   };
   const updateFormData = (field, value) => {
@@ -172,7 +220,7 @@ const PaymentSettingsScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={handleSave}
                 style={[styles.saveHeaderButton, isLoading && styles.saveHeaderButtonDisabled]}
-                disabled={isLoading}
+                disabled={isLoading || settingsLoading}
               >
                 {isLoading ? (
                   <Loading size="small" color={colors.white} />
@@ -185,6 +233,13 @@ const PaymentSettingsScreen = ({ navigation }) => {
         }
       />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        {settingsLoading ? (
+          <View style={styles.centerContent}>
+            <Loading text={i18n.t('payment.loading')} />
+          </View>
+        ) : null}
+        {!settingsLoading ? (
+        <>
         {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('payment.methods')}</Text>
@@ -306,6 +361,8 @@ const PaymentSettingsScreen = ({ navigation }) => {
             />
           </View>
         </View>
+        </>
+        ) : null}
       </ScrollView>
     </KeyboardAvoidingView>
   );

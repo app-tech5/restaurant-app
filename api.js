@@ -210,6 +210,37 @@ class ApiClient {
     });
   }
 
+  async fetchPaymentSettingsListForRestaurant() {
+    const rid = this.resolveRestaurantPlaceId();
+    if (!rid) {
+      throw new Error('Missing restaurant id for payment settings');
+    }
+    const raw = await this.apiCall(
+      `/resource/restaurantpaymentsettings?type=${encodeURIComponent(String(rid))}`
+    );
+    return Array.isArray(raw) ? raw : [];
+  }
+
+  async getRestaurantPaymentSettingsDoc() {
+    const list = await this.fetchPaymentSettingsListForRestaurant();
+    return list[0] || null;
+  }
+
+  async upsertRestaurantPaymentSettings(payload) {
+    const list = await this.fetchPaymentSettingsListForRestaurant();
+    const existing = list[0];
+    if (existing && existing._id) {
+      return await this.apiCall(`/resource/restaurantpaymentsettings/${existing._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+    }
+    return await this.apiCall('/resource/restaurantpaymentsettings', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
   async getUserSettings() {
     return await this.apiCall('/user-settings');
   }
