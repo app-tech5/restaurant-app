@@ -1,12 +1,31 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, Alert, Switch, Text } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Switch,
+  Text,
+  Modal,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import { useSettings } from '../contexts/SettingContext';
 import { useUserSettings } from '../hooks/useUserSettings';
 import { ScreenHeader, SettingRow } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 const SettingsScreen = ({ navigation }) => {
-  const { settings, currency, language, refreshSettings, changeLanguage, getAvailableLanguages } = useSettings();
+  const {
+    currency,
+    language,
+    changeLanguage,
+    getAvailableLanguages,
+    getAvailableCurrencies,
+    changeCurrency,
+  } = useSettings();
+  const [currencyModalVisible, setCurrencyModalVisible] = useState(false);
+  const [currencyChoices, setCurrencyChoices] = useState([]);
   const {
     userSettings,
     loading: userSettingsLoading,
@@ -72,12 +91,31 @@ const SettingsScreen = ({ navigation }) => {
       Alert.alert(i18n.t('errors.error'), 'Unable to change language');
     }
   };
-  const handleCurrencyChange = () => {
-    Alert.alert(
-      i18n.t('settings.changeCurrency'),
-      i18n.t('settings.currencyComingSoon'),
-      [{ text: i18n.t('common.ok') }]
-    );
+  const handleCurrencyChange = async () => {
+    try {
+      const list = await getAvailableCurrencies();
+      if (!list.length) {
+        Alert.alert(i18n.t('errors.error'), i18n.t('settings.noCurrenciesFromServer'));
+        return;
+      }
+      setCurrencyChoices(list);
+      setCurrencyModalVisible(true);
+    } catch (error) {
+      console.error('Currency list:', error);
+      Alert.alert(i18n.t('errors.error'), i18n.t('settings.currencyLoadError'));
+    }
+  };
+  const handlePickCurrency = async (item) => {
+    const id = item?._id || item?.id;
+    setCurrencyModalVisible(false);
+    if (!id) return;
+    try {
+      await changeCurrency(String(id));
+      Alert.alert(i18n.t('success.saved'), i18n.t('settings.currencySaved'));
+    } catch (error) {
+      console.error('Currency save:', error);
+      Alert.alert(i18n.t('errors.error'), i18n.t('settings.currencySaveError'));
+    }
   };
   const handleRestaurantProfile = () => {
     navigation.navigate('RestaurantProfile');
@@ -251,10 +289,14 @@ const SettingsScreen = ({ navigation }) => {
           />
           <SettingRow
             title={i18n.t('settings.changeCurrency')}
-            subtitle={`Currently: ${currency?.symbol || '$'} ${currency?.name || 'US Dollar'}`}
+            subtitle={i18n.t('settings.currencyRowSubtitle', {
+              symbol: currency?.symbol ?? '',
+              name: currency?.name ?? '',
+              code: currency?.code ?? '',
+            })}
             icon="euro"
             onPress={handleCurrencyChange}
-            value={currency?.code || 'USD'}
+            value={currency?.code || 'EUR'}
           />
         </View>
         {}
@@ -302,6 +344,38 @@ const SettingsScreen = ({ navigation }) => {
           </Text>
         </View>
       </ScrollView>
+      <Modal
+        visible={currencyModalVisible}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setCurrencyModalVisible(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>{i18n.t('settings.selectCurrency')}</Text>
+            <FlatList
+              data={currencyChoices}
+              keyExtractor={(item) => String(item._id || item.id || item.code)}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.modalRow}
+                  onPress={() => handlePickCurrency(item)}
+                >
+                  <Text style={styles.modalRowText}>
+                    {item.symbol} {item.name} ({item.code})
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity
+              style={styles.modalCancel}
+              onPress={() => setCurrencyModalVisible(false)}
+            >
+              <Text style={styles.modalCancelText}>{i18n.t('common.cancel')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -334,6 +408,45 @@ const styles = StyleSheet.create({
   versionText: {
     fontSize: 12,
     color: colors.grey[500],
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    padding: constants.SPACING.md,
+  },
+  modalCard: {
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    maxHeight: '70%',
+    paddingVertical: constants.SPACING.md,
+  },
+  modalTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    paddingHorizontal: constants.SPACING.md,
+    marginBottom: constants.SPACING.sm,
+    color: colors.grey[900],
+  },
+  modalRow: {
+    paddingVertical: constants.SPACING.md,
+    paddingHorizontal: constants.SPACING.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.grey[200],
+  },
+  modalRowText: {
+    fontSize: 16,
+    color: colors.grey[800],
+  },
+  modalCancel: {
+    marginTop: constants.SPACING.sm,
+    paddingVertical: constants.SPACING.md,
+    alignItems: 'center',
+  },
+  modalCancelText: {
+    fontSize: 16,
+    color: colors.primary,
+    fontWeight: '600',
   },
 });
 export default SettingsScreen;

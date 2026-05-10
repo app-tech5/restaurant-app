@@ -93,18 +93,35 @@ export const useSettingsManager = (isAuthenticated) => {
       ];
     }
   };
+  const getAvailableCurrencies = async () => {
+    try {
+      return await apiClient.listCurrencies();
+    } catch (error) {
+      console.error('Erreur récupération devises:', error);
+      return [];
+    }
+  };
+  const changeCurrency = async (currencyId) => {
+    const settingsId = settings?._id;
+    if (!settingsId) {
+      throw new Error('missing_settings_id');
+    }
+    if (!currencyId) {
+      throw new Error('missing_currency_id');
+    }
+    await apiClient.updateSettingsDocument(settingsId, { currency: currencyId });
+    await refreshSettings();
+    return { success: true };
+  };
   const currency = getCurrency(settings);
   const language = getLanguage(settings);
   const appName = getAppName(settings);
   const formatCurrency = (amount, options = {}) => {
-    if (!settings?.currency) {
-      return `${amount?.toFixed(2) || '0.00'}€`;
-    }
-    const { symbol = settings.currency.symbol, code = settings.currency.code } = options;
-    return `${amount?.toFixed(2) || '0.00'}${symbol || code}`;
+    const sym = options.symbol ?? currency?.symbol ?? '€';
+    return `${Number(amount ?? 0).toFixed(2)}${sym}`;
   };
-  const getCurrencySymbol = () => settings?.currency?.symbol || '€';
-  const getCurrencyCode = () => settings?.currency?.code || 'EUR';
+  const getCurrencySymbol = () => currency?.symbol ?? '€';
+  const getCurrencyCode = () => currency?.code ?? 'EUR';
   return {
     settings,
     loading,
@@ -113,6 +130,8 @@ export const useSettingsManager = (isAuthenticated) => {
     invalidateCache,
     changeLanguage,
     getAvailableLanguages,
+    getAvailableCurrencies,
+    changeCurrency,
     currency,
     language,
     appName,

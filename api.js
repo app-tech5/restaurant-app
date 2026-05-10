@@ -309,6 +309,20 @@ class ApiClient {
     return { data: doc };
   }
 
+  /** Devises disponibles (réf. Mongo pour le champ `currency` du Setting global). */
+  async listCurrencies() {
+    const raw = await this.apiCall('/resource/currencies');
+    return Array.isArray(raw) ? raw : [];
+  }
+
+  /** Met à jour le Setting global (ex. `currency`: ObjectId). */
+  async updateSettingsDocument(settingsId, patch) {
+    return await this.apiCall(`/resource/settings/${settingsId}`, {
+      method: 'PUT',
+      body: JSON.stringify(patch),
+    });
+  }
+
   async getRestaurantReviews() {
     const rid = this.resolveRestaurantPlaceId();
     const raw = await this.apiCall('/resource/reviews');

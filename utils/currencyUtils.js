@@ -10,11 +10,15 @@ export const getCurrency = (settings) => {
   if (!settings?.currency) {
     return DEFAULT_CURRENCY;
   }
-  if (settings.currency.code && settings.currency.symbol) {
-    return settings.currency;
+  const c = settings.currency;
+  if (c && typeof c === 'object' && c.code && c.symbol) {
+    const known = CURRENCIES[String(c.code).toUpperCase()];
+    return { ...c, locale: known?.locale || DEFAULT_CURRENCY.locale };
   }
-  const currencyCode = settings.currency.code || settings.currency;
-  return CURRENCIES[currencyCode] || DEFAULT_CURRENCY;
+  const currencyCode =
+    typeof c === 'string' ? c : c?.code || c;
+  const upper = String(currencyCode || '').toUpperCase();
+  return CURRENCIES[upper] || DEFAULT_CURRENCY;
 };
 export const formatCurrency = (amount, currency = null, locale = null) => {
   if (typeof amount !== 'number' || isNaN(amount)) {
