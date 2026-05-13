@@ -86,6 +86,43 @@ class ApiClient {
     return response;
   }
 
+  async restaurantSignup({ email, password, name, phone, address } = {}) {
+    const response = await this.apiCall('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+        name,
+        phone: phone || '',
+        address: address || '',
+        role: 'restaurant',
+      }),
+    });
+    if (response.user && response.token) {
+      this.restaurant = response.user;
+      this.token = response.token;
+      this.userId = response.user._id || response.user.id || null;
+    }
+    return response;
+  }
+
+  async createRestaurantDoc(body) {
+    return await this.apiCall('/resource/restaurants', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async linkUserToRestaurant(userId, restaurantId) {
+    if (!userId || !restaurantId) {
+      throw new Error('Missing userId or restaurantId for link');
+    }
+    return await this.apiCall(`/resource/users/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ restaurant: restaurantId }),
+    });
+  }
+
   async getRestaurantProfile() {
     const id = this.resolveRestaurantPlaceId();
     if (!id) {
@@ -312,6 +349,12 @@ class ApiClient {
   /** Devises disponibles (réf. Mongo pour le champ `currency` du Setting global). */
   async listCurrencies() {
     const raw = await this.apiCall('/resource/currencies');
+    return Array.isArray(raw) ? raw : [];
+  }
+
+  /** Taxes disponibles (réf. Mongo pour le champ `tax` du Restaurant). */
+  async listTaxes() {
+    const raw = await this.apiCall('/resource/taxes');
     return Array.isArray(raw) ? raw : [];
   }
 

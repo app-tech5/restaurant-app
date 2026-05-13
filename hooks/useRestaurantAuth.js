@@ -7,11 +7,12 @@ import {
   getDeviceTokenFromCache,
   saveDeviceTokenToCache,
 } from '../utils/storageUtils';
-import { withRestaurantAccountEmail } from '../utils/restaurantUtils';
+import { withRestaurantAccountEmail, buildRestaurantTaxField } from '../utils/restaurantUtils';
 export const useRestaurantAuth = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const syncPushToken = async () => {
     try {
       const token = await getNativePushToken();
@@ -35,11 +36,16 @@ export const useRestaurantAuth = () => {
           setIsAuthenticated(true);
           try {
             const freshRestaurantData = await apiClient.getRestaurantProfile();
-            if (freshRestaurantData) {
+            if (freshRestaurantData && (freshRestaurantData._id || freshRestaurantData.id)) {
               setRestaurant(withRestaurantAccountEmail(freshRestaurantData, authenticatedUser));
+              setNeedsOnboarding(false);
+            } else {
+              setRestaurant(authenticatedUser);
+              setNeedsOnboarding(true);
             }
           } catch (refreshError) {
-            setRestaurant(null);
+            setRestaurant(authenticatedUser);
+            setNeedsOnboarding(true);
           }
           await syncPushToken();
         }
@@ -64,12 +70,13 @@ export const useRestaurantAuth = () => {
         if (!config.DEMO_MODE) {
           try {
             const freshRestaurantData = await apiClient.getRestaurantProfile();
-            if (freshRestaurantData) {
+            if (freshRestaurantData && (freshRestaurantData._id || freshRestaurantData.id)) {
               restaurantProfile = freshRestaurantData;
             }
           } catch (refreshError) {
           }
         }
+        setNeedsOnboarding(!restaurantProfile);
         const merged =
           withRestaurantAccountEmail(restaurantProfile, authenticatedUser) ||
           apiClient.restaurant ||
@@ -87,22 +94,101 @@ export const useRestaurantAuth = () => {
       setIsLoading(false);
     }
   };
+
+  const signup = async ({ email, password, name, phone, address } = {}) => {
+    try {
+      setIsLoading(true);
+      const response = await apiClient.restaurantSignup({
+        email,
+        password,
+        name,
+        phone,
+        address,
+      });
+      if (!response?.user || !response?.token) {
+        throw new Error(response?.message || 'Réponse de signup invalide');
+      }
+      const authenticatedUser = {
+        ...response.user,
+        _id: response.user._id || response.user.id,
+        role: 'restaurant',
+      };
+      apiClient.restaurant = authenticatedUser;
+      await updateRestaurantCache(authenticatedUser, response.token);
+      setIsAuthenticated(true);
+      setRestaurant(authenticatedUser);
+      setNeedsOnboarding(true);
+      await syncPushToken();
+      return { success: true, user: authenticatedUser };
+    } catch (error) {
+      console.error('Signup error:', error);
+      return { success: false, message: error.message || 'Erreur de création de compte' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const logout = async () => {
     try {
       await apiClient.logout();
       setRestaurant(null);
       setIsAuthenticated(false);
+      setNeedsOnboarding(false);
     } catch (error) {
       console.error('Logout error:', error);
       throw error;
     }
   };
+
+  const completeOnboarding = async (restaurantBody) => {
+    try {
+      const userId = apiClient.userId || apiClient.restaurant?._id || apiClient.restaurant?.id;
+      if (!userId) {
+        throw new Error('Missing user id for onboarding');
+      }
+      let taxField = null;
+      try {
+        const taxes = await apiClient.listTaxes();
+        taxField = buildRestaurantTaxField(taxes, restaurantBody?.country);
+      } catch (taxError) {
+        console.warn('Could not load taxes for onboarding, leaving tax empty:', taxError?.message);
+      }
+      const newRestaurant = await apiClient.createRestaurantDoc({
+        ...restaurantBody,
+        users: { value: userId, label: apiClient.restaurant?.email || '' },
+        tax: taxField,
+      });
+      const restaurantId = newRestaurant?._id || newRestaurant?.id;
+      if (!restaurantId) {
+        throw new Error('Restaurant document creation failed');
+      }
+      const linkedUser = await apiClient.linkUserToRestaurant(userId, restaurantId);
+      const finalUser =
+        linkedUser && (linkedUser._id || linkedUser.id)
+          ? linkedUser
+          : { ...(apiClient.restaurant || {}), restaurant: restaurantId };
+      apiClient.restaurant = finalUser;
+      await updateRestaurantCache(finalUser, apiClient.token);
+
+      const merged =
+        withRestaurantAccountEmail(newRestaurant, finalUser) || finalUser || null;
+      setRestaurant(merged);
+      setNeedsOnboarding(false);
+      return { success: true, restaurant: merged };
+    } catch (error) {
+      console.error('Onboarding error:', error);
+      return { success: false, message: error.message || 'Erreur de création du restaurant' };
+    }
+  };
+
   return {
     restaurant,
     isLoading,
     isAuthenticated,
+    needsOnboarding,
     login,
+    signup,
     logout,
+    completeOnboarding,
     setRestaurant,
     setIsAuthenticated
   };

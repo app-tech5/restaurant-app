@@ -16,8 +16,11 @@ export const RestaurantProvider = ({ children }) => {
     restaurant,
     isLoading,
     isAuthenticated,
+    needsOnboarding,
     login,
+    signup,
     logout: authLogout,
+    completeOnboarding,
     setRestaurant,
     setIsAuthenticated
   } = useRestaurantAuth();
@@ -56,8 +59,11 @@ export const RestaurantProvider = ({ children }) => {
     restaurant,
     isLoading,
     isAuthenticated,
+    needsOnboarding,
     login,
+    signup,
     logout,
+    completeOnboarding,
     setRestaurant,
     setIsAuthenticated,
     stats,

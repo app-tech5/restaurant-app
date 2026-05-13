@@ -67,8 +67,16 @@ export const loadWithSmartCache = async (
   try {
     onLoadingStateChange?.(true);
     const cachedData = await getFromCache(fullCacheKey, ttl);
-    if (cachedData) {
-      onDataLoaded?.(cachedData.data.data, true);
+    if (cachedData?.data != null) {
+      const box = cachedData.data;
+      const payload =
+        typeof box === 'object' &&
+        box !== null &&
+        Object.prototype.hasOwnProperty.call(box, 'data') &&
+        box.data !== undefined
+          ? box.data
+          : box;
+      onDataLoaded?.(payload, true);
     }
     try {
       const freshData = await apiFetcher();
@@ -181,7 +189,14 @@ export const clearSettingsCache = async () => {
 };
 export const saveSettingsToCache = async (settings) => {
   const cacheKey = getCacheKey('global', CACHE_KEYS.SETTINGS);
-  await saveToCache(cacheKey, settings);
+  const payload =
+    settings &&
+    typeof settings === 'object' &&
+    Object.prototype.hasOwnProperty.call(settings, 'data') &&
+    settings.data !== undefined
+      ? settings
+      : { data: settings };
+  await saveToCache(cacheKey, payload);
 };
 export const getSettingsFromCache = async () => {
   const cacheKey = getCacheKey('global', CACHE_KEYS.SETTINGS);

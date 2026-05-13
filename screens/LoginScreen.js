@@ -7,7 +7,8 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  Alert
+  Alert,
+  TouchableOpacity
 } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -142,6 +143,15 @@ export default function LoginScreen({ navigation }) {
                 onPress={handleLogin}
                 raised
               />
+              <TouchableOpacity
+                onPress={() => navigation.replace('Signup')}
+                style={styles.signupLink}
+              >
+                <Text style={styles.signupLinkText}>
+                  {i18n.t('auth.noAccount')}{' '}
+                  <Text style={styles.signupLinkStrong}>{i18n.t('auth.createAccount')}</Text>
+                </Text>
+              </TouchableOpacity>
               {config.DEMO_MODE && (
                 <Text style={styles.demoText}>
                   {i18n.t('auth.demoMode')}
@@ -234,5 +244,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     fontStyle: 'italic',
+  },
+  signupLink: {
+    marginTop: 18,
+    alignItems: 'center',
+  },
+  signupLinkText: {
+    fontSize: 14,
+    color: colors.text.secondary,
+  },
+  signupLinkStrong: {
+    color: colors.primary,
+    fontWeight: '600',
   },
 });

@@ -34,7 +34,63 @@
     "createAccount": "Créer un compte",
     "invalidCredentials": "Email ou mot de passe incorrect",
     "networkError": "Erreur de connexion réseau",
-    "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter ?"
+    "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "fillAllFields": "Veuillez remplir tous les champs",
+    "connectionError": "Erreur de connexion. Vérifiez votre accès internet.",
+    "signupTitle": "Créer votre compte",
+    "signupSubtitle": "Configurez votre espace restaurant",
+    "signupButton": "Créer le compte",
+    "signingUp": "Création du compte...",
+    "ownerName": "Nom du propriétaire",
+    "restaurantName": "Nom du restaurant",
+    "phone": "Téléphone (optionnel)",
+    "address": "Adresse (optionnel)",
+    "confirmPassword": "Confirmer le mot de passe",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+    "passwordTooShort": "Le mot de passe doit contenir au moins {{min}} caractères",
+    "invalidEmail": "Veuillez saisir un email valide",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "signIn": "Se connecter",
+    "signupError": "Impossible de créer le compte. Veuillez réessayer.",
+    "signupSuccess": "Compte créé avec succès"
+  },
+  "onboarding": {
+    "title": "Configurez votre restaurant",
+    "subtitle": "Bienvenue {{name}} ! Parlez-nous de votre restaurant.",
+    "submit": "Créer mon restaurant",
+    "submitting": "Création...",
+    "logout": "Se déconnecter",
+    "sections": {
+      "identity": "Identité",
+      "contact": "Contact",
+      "location": "Localisation",
+      "operations": "Exploitation",
+      "image": "Image"
+    },
+    "fields": {
+      "name": "Nom du restaurant *",
+      "description": "Description",
+      "phone": "Téléphone *",
+      "url": "Site web (optionnel)",
+      "address": "Adresse *",
+      "city": "Ville",
+      "country": "Pays",
+      "openingTime": "Ouverture (HH:mm)",
+      "closingTime": "Fermeture (HH:mm)",
+      "serviceModes": "Mode de service",
+      "price": "Gamme de prix",
+      "imageUrl": "URL de l'image"
+    },
+    "serviceModes": {
+      "delivery": "Livraison",
+      "pickup": "À emporter"
+    },
+    "errors": {
+      "nameRequired": "Le nom du restaurant est obligatoire",
+      "addressRequired": "L'adresse est obligatoire",
+      "phoneRequired": "Le téléphone est obligatoire",
+      "submit": "Impossible de créer votre restaurant. Veuillez réessayer."
+    }
   },
 
   "orderDetails": {

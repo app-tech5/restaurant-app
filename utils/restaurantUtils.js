@@ -113,6 +113,64 @@ export function restaurantProfileFormFromRestaurant(restaurant) {
   };
 }
 
+/** Slug ASCII compact pour `alias` / `id` à partir du nom du restaurant. */
+export function slugifyRestaurantName(value) {
+  const base = String(value || '')
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return base || 'restaurant';
+}
+
+export const RESTAURANT_PRICE_OPTIONS = Object.freeze(['$', '$$', '$$$', '$$$$']);
+
+export function normalizeRestaurantPrice(raw) {
+  const p = typeof raw === 'string' ? raw.trim() : '';
+  return RESTAURANT_PRICE_OPTIONS.includes(p) ? p : '$';
+}
+
+/**
+ * Choisit la Tax à associer au nouveau restaurant.
+ * - Match sur `location` (insensible à la casse) si `country` est fourni.
+ * - Fallback : première taxe de la liste.
+ * - Retourne `null` si la liste est vide.
+ */
+export function pickDefaultTax(taxes, country) {
+  const list = Array.isArray(taxes) ? taxes : [];
+  if (list.length === 0) return null;
+  const target = String(country || '').trim().toLowerCase();
+  if (target) {
+    const matched = list.find(
+      (t) => String(t?.location || '').trim().toLowerCase() === target
+    );
+    if (matched?._id) return matched;
+  }
+  return list[0] || null;
+}
+
+/**
+ * Construit le sous-objet `tax` du Restaurant compatible avec :
+ *  - le `pre('find')` du backend (populate `tax.value` → ObjectId ref `Tax`),
+ *  - le rendu admin-app (`detectSelectField` exige `value` + `label`).
+ * Retourne `null` si aucune Tax disponible.
+ */
+export function buildRestaurantTaxField(taxes, country) {
+  const tax = pickDefaultTax(taxes, country);
+  if (!tax || !tax._id) return null;
+  const id = tax._id;
+  return {
+    id,
+    value: id,
+    label: `${tax.name || ''}${tax.location ? ` - ${tax.location}` : ''}`.trim() || tax.name || id,
+    name: tax.name || '',
+    rate: tax.rate != null ? String(tax.rate) : '0',
+    location: tax.location || '',
+  };
+}
+
 /** Corps PUT `/resource/restaurants/:id` aligné sur le schéma Mongoose (sans `email`). */
 export function buildRestaurantProfileUpdatePayload(formData) {
   const ct = parseInt(String(formData.collectTime ?? '').replace(/\D/g, ''), 10);
@@ -142,6 +200,28 @@ export function buildRestaurantProfileUpdatePayload(formData) {
     is_closed: !!formData.is_closed,
     isActivated: !!formData.isActivated,
     isAvailableForDelivery: !!formData.isAvailableForDelivery,
+  };
+}
+
+/**
+ * Corps POST `/resource/restaurants` côté création.
+ * - `alias` / `id` : dérivés du `name` (slug). Pas de collision avec les ids Yelp existants
+ *    car ceux-ci ne sont pas des slugs purs (toujours suffixés par une ville).
+ * - `url` : facultatif côté UI, fallback non-vide pour satisfaire le `required` du modèle.
+ * - `price` : sélectionné par l'utilisateur dans le formulaire (`$`..`$$$$`).
+ * - `users.value` : ajouté par l'orchestrateur d'onboarding.
+ */
+export function buildRestaurantOnboardingPayload(formData) {
+  const base = buildRestaurantProfileUpdatePayload(formData);
+  const slug = slugifyRestaurantName(formData?.name);
+  const websiteRaw = String(formData?.url || '').trim();
+  const url = websiteRaw || `https://goodfood.local/r/${slug}`;
+  return {
+    ...base,
+    alias: slug,
+    id: slug,
+    url,
+    price: normalizeRestaurantPrice(formData?.price),
   };
 }
 
