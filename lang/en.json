@@ -75,17 +75,16 @@
     },
     "fields": {
       "name": "Restaurant name *",
-      "description": "Description",
+      "description": "Description *",
       "phone": "Phone *",
-      "url": "Website (optional)",
       "address": "Address *",
-      "city": "City",
-      "country": "Country",
-      "openingTime": "Opening time (HH:mm)",
-      "closingTime": "Closing time (HH:mm)",
-      "serviceModes": "Service mode",
-      "price": "Price range",
-      "imageUrl": "Image URL"
+      "city": "City *",
+      "country": "Country *",
+      "openingTime": "Opening time (HH:mm) *",
+      "closingTime": "Closing time (HH:mm) *",
+      "serviceModes": "Service mode *",
+      "price": "Price range *",
+      "imageUrl": "Image URL *"
     },
     "serviceModes": {
       "delivery": "Delivery",
@@ -93,8 +92,14 @@
     },
     "errors": {
       "nameRequired": "Restaurant name is required",
+      "descriptionRequired": "Description is required",
       "addressRequired": "Address is required",
       "phoneRequired": "Phone is required",
+      "cityRequired": "City is required",
+      "countryRequired": "Country is required",
+      "openingTimeInvalid": "Opening time is required (HH:mm)",
+      "closingTimeInvalid": "Closing time is required (HH:mm)",
+      "imageRequired": "Image URL is required",
       "submit": "Unable to create your restaurant. Please try again."
     }
   },

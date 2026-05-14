@@ -21,6 +21,8 @@ import {
   buildRestaurantOnboardingPayload,
 } from '../utils/restaurantUtils';
 
+const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
 const initialForm = {
   name: '',
   description: '',
@@ -33,7 +35,6 @@ const initialForm = {
   serviceModes: 'delivery',
   price: '$',
   image: '',
-  url: '',
 };
 
 export default function RestaurantOnboardingScreen() {
@@ -45,8 +46,16 @@ export default function RestaurantOnboardingScreen() {
 
   const validate = () => {
     if (!form.name.trim()) return i18n.t('onboarding.errors.nameRequired');
-    if (!form.address.trim()) return i18n.t('onboarding.errors.addressRequired');
+    if (!form.description.trim()) return i18n.t('onboarding.errors.descriptionRequired');
     if (!form.phone.trim()) return i18n.t('onboarding.errors.phoneRequired');
+    if (!form.address.trim()) return i18n.t('onboarding.errors.addressRequired');
+    if (!form.city.trim()) return i18n.t('onboarding.errors.cityRequired');
+    if (!form.country.trim()) return i18n.t('onboarding.errors.countryRequired');
+    if (!form.openingTime.trim() || !TIME_RE.test(form.openingTime.trim()))
+      return i18n.t('onboarding.errors.openingTimeInvalid');
+    if (!form.closingTime.trim() || !TIME_RE.test(form.closingTime.trim()))
+      return i18n.t('onboarding.errors.closingTimeInvalid');
+    if (!form.image.trim()) return i18n.t('onboarding.errors.imageRequired');
     return null;
   };
 
@@ -150,18 +159,6 @@ export default function RestaurantOnboardingScreen() {
               containerStyle={styles.input}
               inputStyle={styles.inputText}
             />
-            <Input
-              placeholder={i18n.t('onboarding.fields.url')}
-              value={form.url}
-              onChangeText={set('url')}
-              keyboardType="url"
-              autoCapitalize="none"
-              autoCorrect={false}
-              leftIcon={<Icon name="public" type="material" size={20} color={colors.grey[500]} />}
-              containerStyle={styles.input}
-              inputStyle={styles.inputText}
-            />
-
             <Text style={styles.sectionTitle}>{i18n.t('onboarding.sections.location')}</Text>
             <Input
               placeholder={i18n.t('onboarding.fields.address')}

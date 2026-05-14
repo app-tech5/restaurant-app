@@ -69,17 +69,16 @@
     },
     "fields": {
       "name": "Nom du restaurant *",
-      "description": "Description",
+      "description": "Description *",
       "phone": "Téléphone *",
-      "url": "Site web (optionnel)",
       "address": "Adresse *",
-      "city": "Ville",
-      "country": "Pays",
-      "openingTime": "Ouverture (HH:mm)",
-      "closingTime": "Fermeture (HH:mm)",
-      "serviceModes": "Mode de service",
-      "price": "Gamme de prix",
-      "imageUrl": "URL de l'image"
+      "city": "Ville *",
+      "country": "Pays *",
+      "openingTime": "Ouverture (HH:mm) *",
+      "closingTime": "Fermeture (HH:mm) *",
+      "serviceModes": "Mode de service *",
+      "price": "Gamme de prix *",
+      "imageUrl": "URL de l'image *"
     },
     "serviceModes": {
       "delivery": "Livraison",
@@ -87,8 +86,14 @@
     },
     "errors": {
       "nameRequired": "Le nom du restaurant est obligatoire",
+      "descriptionRequired": "La description est obligatoire",
       "addressRequired": "L'adresse est obligatoire",
       "phoneRequired": "Le téléphone est obligatoire",
+      "cityRequired": "La ville est obligatoire",
+      "countryRequired": "Le pays est obligatoire",
+      "openingTimeInvalid": "L'heure d'ouverture est obligatoire (HH:mm)",
+      "closingTimeInvalid": "L'heure de fermeture est obligatoire (HH:mm)",
+      "imageRequired": "L'URL de l'image est obligatoire",
       "submit": "Impossible de créer votre restaurant. Veuillez réessayer."
     }
   },

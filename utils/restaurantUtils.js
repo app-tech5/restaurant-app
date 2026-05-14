@@ -205,22 +205,17 @@ export function buildRestaurantProfileUpdatePayload(formData) {
 
 /**
  * Corps POST `/resource/restaurants` côté création.
- * - `alias` / `id` : dérivés du `name` (slug). Pas de collision avec les ids Yelp existants
- *    car ceux-ci ne sont pas des slugs purs (toujours suffixés par une ville).
- * - `url` : facultatif côté UI, fallback non-vide pour satisfaire le `required` du modèle.
+ * - `alias` / `id` : dérivés du `name` (slug).
  * - `price` : sélectionné par l'utilisateur dans le formulaire (`$`..`$$$$`).
  * - `users.value` : ajouté par l'orchestrateur d'onboarding.
  */
 export function buildRestaurantOnboardingPayload(formData) {
   const base = buildRestaurantProfileUpdatePayload(formData);
   const slug = slugifyRestaurantName(formData?.name);
-  const websiteRaw = String(formData?.url || '').trim();
-  const url = websiteRaw || `https://goodfood.local/r/${slug}`;
   return {
     ...base,
     alias: slug,
     id: slug,
-    url,
     price: normalizeRestaurantPrice(formData?.price),
   };
 }
