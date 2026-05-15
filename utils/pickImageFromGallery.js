@@ -10,11 +10,7 @@ export const PICK_FROM_GALLERY_REASON = {
 };
 
 /**
- * Requests media-library permission, then opens the image picker.
- * Does not show UI; callers should handle `reason` (e.g. Alert on permission denied).
- *
- * @param {ImagePicker.ImagePickerOptions} [launchOptions] merged with defaults (images only, quality 1).
- * @returns {Promise<{ ok: true, link: string } | { ok: false, reason: PickFromGalleryFailureReason }>}
+ * Pick image from gallery + upload to Cloudinary
  */
 export async function pickImageUriFromGallery(launchOptions = {}) {
   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -48,9 +44,11 @@ export async function pickImageUriFromGallery(launchOptions = {}) {
     };
   }
 
-  // Upload ou génération du lien distant
-  const data = await apiClient.createImageLink(uri);
-  const link = typeof data === 'string' ? data : data?.url;
+  // ✅ CLOUDINARY UPLOAD
+  const data = await apiClient.uploadImageToCloudinary(uri);
+
+  const link = data?.url;
+
   if (!link || typeof link !== 'string') {
     return {
       ok: false,
@@ -64,6 +62,9 @@ export async function pickImageUriFromGallery(launchOptions = {}) {
   };
 }
 
+/**
+ * Pick image from camera + upload to Cloudinary
+ */
 export async function pickImageUriFromCamera(launchOptions = {}) {
   const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -96,8 +97,11 @@ export async function pickImageUriFromCamera(launchOptions = {}) {
     };
   }
 
-  const data = await apiClient.createImageLink(uri);
-  const link = typeof data === 'string' ? data : data?.url;
+  // ✅ CLOUDINARY UPLOAD
+  const data = await apiClient.uploadImageToCloudinary(uri);
+
+  const link = data?.url;
+
   if (!link || typeof link !== 'string') {
     return {
       ok: false,

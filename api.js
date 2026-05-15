@@ -444,7 +444,58 @@ class ApiClient {
       method: 'POST',
       body: formData,
     });
-  } 
+  }
+  
+  async uploadImageToCloudinary(imageUri) {
+    try {
+      // 1. demander signature au backend
+      const sig = await this.apiCall('/upload/cloudinary-signature', {
+        method: 'GET',
+      });
+  
+      // 2. construire form data
+      const formData = new FormData();
+  
+      formData.append('file', {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: 'upload.jpg',
+      });
+  
+      formData.append('api_key', sig.apiKey);
+      formData.append('timestamp', sig.timestamp);
+      formData.append('signature', sig.signature);
+  
+      // optionnel (si tu utilises un upload preset)
+      // formData.append('upload_preset', 'YOUR_PRESET');
+  
+      // 3. upload direct vers Cloudinary
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data?.error?.message || 'Cloudinary upload failed');
+      }
+  
+      // 4. retourner URL optimisée
+      return {
+        url: data.secure_url,
+        publicId: data.public_id,
+        width: data.width,
+        height: data.height,
+      };
+    } catch (error) {
+      console.error('❌ Cloudinary upload error:', error);
+      throw error;
+    }
+  }
 }
 
 const apiClient = new ApiClient();
