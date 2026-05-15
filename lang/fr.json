@@ -60,6 +60,9 @@
     "submit": "Créer mon restaurant",
     "submitting": "Création...",
     "logout": "Se déconnecter",
+    "pickFromGallery": "Choisir dans la galerie",
+    "takePhoto": "Prendre une photo",
+    "uploadingImage": "Envoi de l'image…",
     "sections": {
       "identity": "Identité",
       "contact": "Contact",
@@ -668,6 +671,8 @@
     "open": "Ouvrir",
     "loading": "Chargement...",
     "error": "Erreur",
+    "galleryPermission": "L'accès à la photothèque est nécessaire pour choisir une image.",
+    "cameraPermission": "L'accès à la caméra est nécessaire pour prendre une photo.",
     "success": "Succès",
     "warning": "Avertissement",
     "info": "Information",

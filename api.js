@@ -51,11 +51,24 @@ class ApiClient {
   }
 
   async apiCall(endpoint, options = {}) {
+    return this._apiFetch(endpoint, options, this.getHeaders());
+  }
+
+  /** POST multipart (ex. upload fichier) : pas de `Content-Type: application/json` (RN fixe le boundary). */
+  async apiCallMultipart(endpoint, options = {}) {
+    const headers = {};
+    if (this.token) {
+      headers.Authorization = `Bearer ${this.token}`;
+    }
+    return this._apiFetch(endpoint, options, headers);
+  }
+
+  async _apiFetch(endpoint, options, baseHeaders) {
     const url = `${API_BASE_URL}${endpoint}`;
     const fetchOptions = {
       ...options,
       headers: {
-        ...this.getHeaders(),
+        ...baseHeaders,
         ...options.headers,
       },
       timeout: API_TIMEOUT,
@@ -419,6 +432,19 @@ class ApiClient {
   async getOrderById(orderId) {
     return await this.apiCall(`/resource/orders/${orderId}`);
   }
+
+  async createImageLink(imageUri) {
+    const formData = new FormData();
+    formData.append('image', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'upload.jpg',
+    });
+    return await this.apiCallMultipart('/upload/get-imgbb-link', {
+      method: 'POST',
+      body: formData,
+    });
+  } 
 }
 
 const apiClient = new ApiClient();

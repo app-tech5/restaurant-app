@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -20,6 +21,11 @@ import {
   RESTAURANT_PRICE_OPTIONS,
   buildRestaurantOnboardingPayload,
 } from '../utils/restaurantUtils';
+import {
+  pickImageUriFromGallery,
+  pickImageUriFromCamera,
+  PICK_FROM_GALLERY_REASON,
+} from '../utils/pickImageFromGallery';
 
 const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -40,6 +46,8 @@ const initialForm = {
 export default function RestaurantOnboardingScreen() {
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
+  /** null | 'gallery' | 'camera' — pendant sélection + upload image */
+  const [imageLoading, setImageLoading] = useState(null);
   const { completeOnboarding, logout, restaurant } = useRestaurant();
 
   const set = (key) => (value) => setForm((prev) => ({ ...prev, [key]: value }));
@@ -84,6 +92,38 @@ export default function RestaurantOnboardingScreen() {
     try {
       await logout();
     } catch (e) {}
+  };
+
+  const pickImageFromGallery = async () => {
+    setImageLoading('gallery');
+    try {
+      const result = await pickImageUriFromGallery();
+      if (!result.ok && result.reason === PICK_FROM_GALLERY_REASON.PERMISSION_DENIED) {
+        Alert.alert(i18n.t('common.error'), i18n.t('common.galleryPermission'));
+        return;
+      }
+      if (result.ok) {
+        setForm((prev) => ({ ...prev, image: result.link }));
+      }
+    } finally {
+      setImageLoading(null);
+    }
+  };
+
+  const takePhotoFromCamera = async () => {
+    setImageLoading('camera');
+    try {
+      const result = await pickImageUriFromCamera();
+      if (!result.ok && result.reason === PICK_FROM_GALLERY_REASON.PERMISSION_DENIED) {
+        Alert.alert(i18n.t('common.error'), i18n.t('common.cameraPermission'));
+        return;
+      }
+      if (result.ok) {
+        setForm((prev) => ({ ...prev, image: result.link }));
+      }
+    } finally {
+      setImageLoading(null);
+    }
   };
 
   const Segment = ({ value, options, onChange, getLabel }) => (
@@ -222,15 +262,51 @@ export default function RestaurantOnboardingScreen() {
 
             <Text style={styles.sectionTitle}>{i18n.t('onboarding.sections.image')}</Text>
             <Input
-              placeholder={i18n.t('onboarding.fields.imageUrl')}
+              placeholder={
+                imageLoading
+                  ? i18n.t('onboarding.uploadingImage')
+                  : i18n.t('onboarding.fields.imageUrl')
+              }
               value={form.image}
               onChangeText={set('image')}
               keyboardType="url"
               autoCapitalize="none"
               autoCorrect={false}
+              editable={!imageLoading}
               leftIcon={<Icon name="image" type="material" size={20} color={colors.grey[500]} />}
+              rightIcon={
+                imageLoading ? (
+                  <ActivityIndicator size="small" color={colors.primary} />
+                ) : undefined
+              }
               containerStyle={styles.input}
               inputStyle={styles.inputText}
+            />
+            <Button
+              type="outline"
+              title={i18n.t('onboarding.pickFromGallery')}
+              onPress={pickImageFromGallery}
+              loading={imageLoading === 'gallery'}
+              disabled={submitting || !!imageLoading}
+              buttonStyle={styles.galleryButton}
+              titleStyle={styles.galleryButtonTitle}
+              containerStyle={styles.galleryButtonContainer}
+              icon={
+                <Icon name="photo-library" type="material" size={20} color={colors.primary} style={{ marginRight: 8 }} />
+              }
+            />
+            <Button
+              type="outline"
+              title={i18n.t('onboarding.takePhoto')}
+              onPress={takePhotoFromCamera}
+              loading={imageLoading === 'camera'}
+              disabled={submitting || !!imageLoading}
+              buttonStyle={styles.galleryButton}
+              titleStyle={styles.galleryButtonTitle}
+              containerStyle={styles.galleryButtonContainer}
+              icon={
+                <Icon name="photo-camera" type="material" size={20} color={colors.primary} style={{ marginRight: 8 }} />
+              }
             />
 
             <Button
@@ -241,7 +317,7 @@ export default function RestaurantOnboardingScreen() {
               }
               onPress={handleSubmit}
               loading={submitting}
-              disabled={submitting}
+              disabled={submitting || !!imageLoading}
               buttonStyle={[styles.primaryButton, { backgroundColor: colors.primary }]}
               containerStyle={styles.primaryButtonContainer}
               titleStyle={styles.primaryButtonText}
@@ -373,5 +449,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.text.secondary,
     textDecorationLine: 'underline',
+  },
+  galleryButtonContainer: {
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  galleryButton: {
+    borderColor: colors.primary,
+    borderRadius: 10,
+    paddingVertical: 10,
+  },
+  galleryButtonTitle: {
+    color: colors.primary,
+    fontSize: 15,
   },
 });

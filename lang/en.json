@@ -66,6 +66,9 @@
     "submit": "Create my restaurant",
     "submitting": "Creating...",
     "logout": "Sign out",
+    "pickFromGallery": "Choose from gallery",
+    "takePhoto": "Take a photo",
+    "uploadingImage": "Uploading image…",
     "sections": {
       "identity": "Identity",
       "contact": "Contact",
@@ -806,6 +809,8 @@
     "open": "Open",
     "loading": "Loading...",
     "error": "Error",
+    "galleryPermission": "Photo library access is required to choose an image.",
+    "cameraPermission": "Camera access is required to take a photo.",
     "success": "Success",
     "warning": "Warning",
     "info": "Information",
