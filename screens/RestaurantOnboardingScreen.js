@@ -26,6 +26,7 @@ import {
   pickImageUriFromCamera,
   PICK_FROM_GALLERY_REASON,
 } from '../utils/pickImageFromGallery';
+import { geocodeAddress } from '../utils/geocoding';
 
 const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -73,16 +74,47 @@ export default function RestaurantOnboardingScreen() {
       Alert.alert(i18n.t('common.error'), errorMessage);
       return;
     }
+  
     setSubmitting(true);
+  
     try {
-      const body = buildRestaurantOnboardingPayload(form);
+      // 🔥 1. Géocodage de l'adresse
+      const geo = await geocodeAddress({
+        address: form.address,
+        city: form.city,
+        country: form.country,
+      });
+  
+      if (!geo) {
+        Alert.alert(
+          i18n.t('common.error'),
+          "Impossible de récupérer la position de cette adresse"
+        );
+        return;
+      }
+  
+      // 🔥 2. Ajout lat/lon au payload
+      const body = buildRestaurantOnboardingPayload({
+        ...form,
+        latitude: geo.lat,
+        longitude: geo.lon,
+      });
+  
+      // 🔥 3. Envoi backend
       const result = await completeOnboarding(body);
+  
       if (!result.success) {
-        Alert.alert(i18n.t('common.error'), result.message || i18n.t('onboarding.errors.submit'));
+        Alert.alert(
+          i18n.t('common.error'),
+          result.message || i18n.t('onboarding.errors.submit')
+        );
       }
     } catch (error) {
       console.error('Onboarding submit error:', error);
-      Alert.alert(i18n.t('common.error'), i18n.t('onboarding.errors.submit'));
+      Alert.alert(
+        i18n.t('common.error'),
+        i18n.t('onboarding.errors.submit')
+      );
     } finally {
       setSubmitting(false);
     }
