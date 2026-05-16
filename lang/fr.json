@@ -623,7 +623,16 @@
     "serviceOptions": "Options de service",
     "pricing": "Tarification",
     "availability": "Disponibilité",
-    "loading": "Chargement des paramètres de livraison…"
+    "loading": "Chargement des paramètres de livraison…",
+    "feeType": "Type de frais",
+    "feeTypeFixed": "Forfait fixe",
+    "feeTypeDynamic": "Selon la distance",
+    "baseFee": "Frais de base",
+    "minFee": "Frais minimum",
+    "maxFee": "Frais maximum",
+    "prepTime": "Temps de préparation",
+    "serviceModeRequired": "Activez au moins la livraison ou le retrait",
+    "invalidMinMax": "Le minimum ne peut pas dépasser le maximum"
   },
   "openingHours": {
     "title": "Horaires d'ouverture",

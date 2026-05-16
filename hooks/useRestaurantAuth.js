@@ -8,6 +8,10 @@ import {
   saveDeviceTokenToCache,
 } from '../utils/storageUtils';
 import { withRestaurantAccountEmail, buildRestaurantTaxField } from '../utils/restaurantUtils';
+import {
+  buildDeliverySettingsOnboardingPayload,
+  isRestaurantAvailableForDelivery,
+} from '../utils/deliverySettingsUtils';
 export const useRestaurantAuth = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -161,12 +165,33 @@ export const useRestaurantAuth = () => {
       if (!restaurantId) {
         throw new Error('Restaurant document creation failed');
       }
+
+      try {
+        await apiClient.createDeliverySettingsForRestaurant(
+          restaurantId,
+          buildDeliverySettingsOnboardingPayload(restaurantId, restaurantBody)
+        );
+      } catch (deliveryError) {
+        console.warn(
+          'Delivery settings creation failed (restaurant still created):',
+          deliveryError?.message
+        );
+      }
+
       const linkedUser = await apiClient.linkUserToRestaurant(userId, restaurantId);
       const finalUser =
         linkedUser && (linkedUser._id || linkedUser.id)
           ? linkedUser
           : { ...(apiClient.restaurant || {}), restaurant: restaurantId };
       apiClient.restaurant = finalUser;
+
+      if (isRestaurantAvailableForDelivery(restaurantBody?.serviceModes)) {
+        try {
+          await apiClient.updateRestaurantProfile({ isAvailableForDelivery: true });
+        } catch (profileError) {
+          console.warn('Post-onboarding delivery profile sync skipped:', profileError?.message);
+        }
+      }
       await updateRestaurantCache(finalUser, apiClient.token);
 
       const merged =

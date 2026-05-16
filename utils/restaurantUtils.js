@@ -199,7 +199,10 @@ export function buildRestaurantProfileUpdatePayload(formData) {
     reward: String(formData.reward || '').trim(),
     is_closed: !!formData.is_closed,
     isActivated: !!formData.isActivated,
-    isAvailableForDelivery: !!formData.isAvailableForDelivery,
+    isAvailableForDelivery:
+      formData.isAvailableForDelivery != null
+        ? !!formData.isAvailableForDelivery
+        : normalizeRestaurantServiceMode(formData.serviceModes) === 'delivery',
   };
 }
 

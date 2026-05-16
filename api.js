@@ -245,6 +245,16 @@ class ApiClient {
     return list[0] || null;
   }
 
+  async createDeliverySettingsForRestaurant(restaurantId, payload = {}) {
+    if (!restaurantId) {
+      throw new Error('Missing restaurant id for delivery settings');
+    }
+    return await this.apiCall('/resource/deliverysettings', {
+      method: 'POST',
+      body: JSON.stringify({ restaurant: restaurantId, ...payload }),
+    });
+  }
+
   async upsertRestaurantDeliverySettings(payload) {
     const list = await this.fetchDeliverySettingsListForRestaurant();
     const existing = list[0];
