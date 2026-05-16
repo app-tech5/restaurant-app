@@ -190,7 +190,7 @@ export function buildRestaurantProfileUpdatePayload(formData) {
     longitude: String(formData.longitude ?? '').trim(),
     openingTime: String(formData.openingTime || '').trim() || '09:00',
     closingTime: String(formData.closingTime || '').trim() || '21:00',
-    collectTime: Number.isFinite(ct) && ct >= 0 ? ct : 0,
+    collectTime: Number.isFinite(ct) && ct >= 0 ? ct : undefined,
     serviceModes: normalizeRestaurantServiceMode(formData.serviceModes),
     image: String(formData.image || '').trim(),
     image_url: String(formData.image || '').trim(),
