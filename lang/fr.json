@@ -632,7 +632,13 @@
     "maxFee": "Frais maximum",
     "prepTime": "Temps de préparation",
     "serviceModeRequired": "Activez au moins la livraison ou le retrait",
-    "invalidMinMax": "Le minimum ne peut pas dépasser le maximum"
+    "invalidMinMax": "Le minimum ne peut pas dépasser le maximum",
+    "pricingManagedByAdmin": "Modifiable uniquement par l'administration.",
+    "pricingNotConfigured": "Frais de livraison non configurés — contactez l'administration.",
+    "pricingFreeDelivery": "Livraison gratuite",
+    "pricingSummaryFixed": "Frais de livraison : {{amount}}",
+    "pricingSummaryFixedWithFree": "Frais de livraison : {{amount}} · gratuite à partir de {{threshold}}",
+    "pricingSummaryDynamic": "Frais de livraison selon la distance"
   },
   "openingHours": {
     "title": "Horaires d'ouverture",

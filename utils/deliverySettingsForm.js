@@ -1,16 +1,4 @@
-/** Champs formulaire restaurant-app ↔ document API `DeliverySetting`. */
-
-export const RESTAURANT_DELIVERY_FEE_TYPES = Object.freeze(['FIXED', 'DYNAMIC']);
-
-export function normalizeDeliveryFeeType(raw) {
-  if (raw === 'DYNAMIC' || raw === 'RESTAURANT_DEFINED') return 'DYNAMIC';
-  return 'FIXED';
-}
-
-function dynFromDoc(doc) {
-  const d = doc?.dynamicDeliveryFee;
-  return d && typeof d === 'object' ? d : {};
-}
+/** Champs formulaire restaurant-app ↔ document API `DeliverySetting` (hors tarification admin). */
 
 export function deliverySettingsFormDefaults(restaurant) {
   let radius = 15;
@@ -23,15 +11,7 @@ export function deliverySettingsFormDefaults(restaurant) {
   return {
     deliveryEnabled: true,
     pickupEnabled: true,
-    freeDeliveryEnabled: false,
     deliveryRadius: String(radius),
-    deliveryFeeType: 'FIXED',
-    fixedFee: '2.50',
-    baseFee: '1.50',
-    perKmFee: '0.50',
-    minFee: '1.50',
-    maxFee: '10.00',
-    freeDeliveryThreshold: '25.00',
     estimatedTime: '30',
   };
 }
@@ -40,64 +20,27 @@ export function deliverySettingsFormFromDoc(doc, restaurant) {
   if (!doc || !doc._id) {
     return deliverySettingsFormDefaults(restaurant);
   }
-  const dyn = dynFromDoc(doc);
   return {
     deliveryEnabled: doc.isDeliveryEnabled !== false,
     pickupEnabled: doc.isPickupEnabled !== false,
-    freeDeliveryEnabled: !!doc.freeDeliveryEnabled,
     deliveryRadius: String(doc.maxDeliveryDistance ?? 15),
-    deliveryFeeType: normalizeDeliveryFeeType(doc.deliveryFeeType),
-    fixedFee: String(doc.fixedDeliveryFee ?? 2.5),
-    baseFee: String(dyn.baseFee ?? 1.5),
-    perKmFee: String(dyn.perKmFee ?? 0.5),
-    minFee: String(dyn.minFee ?? 1.5),
-    maxFee: String(dyn.maxFee ?? 10),
-    freeDeliveryThreshold: String(doc.freeDeliveryThreshold ?? 25),
     estimatedTime: String(doc.deliveryPreparationTime ?? 30),
   };
 }
 
-export function buildDeliverySettingsPayload(formData, restaurantId, baselineDoc) {
+/** PATCH restaurant : pas de tarification (admin via Delivery Settings). */
+export function buildRestaurantDeliverySettingsPayload(formData, restaurantId) {
   const maxDeliveryDistance = Math.min(
     50,
     Math.max(1, parseFloat(formData.deliveryRadius))
   );
   const prep = parseInt(String(formData.estimatedTime).trim(), 10) || 30;
-  const feeType = normalizeDeliveryFeeType(formData.deliveryFeeType);
-
-  const existingDyn = dynFromDoc(baselineDoc);
-  const dynamicDeliveryFee = {
-    baseFee: parseFloat(formData.baseFee),
-    perKmFee: parseFloat(formData.perKmFee),
-    minFee: parseFloat(formData.minFee),
-    maxFee: parseFloat(formData.maxFee),
-  };
-
-  if (!Number.isFinite(dynamicDeliveryFee.baseFee)) {
-    dynamicDeliveryFee.baseFee = Number(existingDyn.baseFee) || 1.5;
-  }
-  if (!Number.isFinite(dynamicDeliveryFee.perKmFee)) {
-    dynamicDeliveryFee.perKmFee = Number(existingDyn.perKmFee) || 0.5;
-  }
-  if (!Number.isFinite(dynamicDeliveryFee.minFee)) {
-    dynamicDeliveryFee.minFee = Number(existingDyn.minFee) || 1.5;
-  }
-  if (!Number.isFinite(dynamicDeliveryFee.maxFee)) {
-    dynamicDeliveryFee.maxFee = Number(existingDyn.maxFee) || 10;
-  }
 
   return {
     restaurant: restaurantId,
     isDeliveryEnabled: !!formData.deliveryEnabled,
     isPickupEnabled: !!formData.pickupEnabled,
     maxDeliveryDistance,
-    deliveryFeeType: feeType,
-    fixedDeliveryFee: parseFloat(formData.fixedFee),
-    dynamicDeliveryFee,
-    freeDeliveryEnabled: !!formData.freeDeliveryEnabled,
-    freeDeliveryThreshold: formData.freeDeliveryEnabled
-      ? parseFloat(formData.freeDeliveryThreshold)
-      : 0,
     deliveryPreparationTime: Math.min(180, Math.max(5, prep)),
   };
 }
@@ -117,34 +60,51 @@ export function validateDeliverySettingsForm(formData, t) {
     return t('delivery.invalidTime');
   }
 
-  if (formData.freeDeliveryEnabled) {
-    const th = parseFloat(formData.freeDeliveryThreshold);
-    if (!Number.isFinite(th) || th < 0) {
-      return t('delivery.invalidThreshold');
-    }
-  }
-
-  const isDynamic = normalizeDeliveryFeeType(formData.deliveryFeeType) === 'DYNAMIC';
-
-  if (isDynamic) {
-    const baseFee = parseFloat(formData.baseFee);
-    const perKm = parseFloat(formData.perKmFee);
-    const minFee = parseFloat(formData.minFee);
-    const maxFee = parseFloat(formData.maxFee);
-    if (
-      ![baseFee, perKm, minFee, maxFee].every((n) => Number.isFinite(n) && n >= 0)
-    ) {
-      return t('delivery.invalidFee');
-    }
-    if (minFee > maxFee) {
-      return t('delivery.invalidMinMax');
-    }
-  } else {
-    const fixed = parseFloat(formData.fixedFee);
-    if (!Number.isFinite(fixed) || fixed < 0) {
-      return t('delivery.invalidFee');
-    }
-  }
-
   return null;
+}
+
+export function resolveDeliveryFeeType(doc) {
+  const raw = doc?.deliveryFeeType;
+  if (raw === 'RESTAURANT_DEFINED') return 'DYNAMIC';
+  if (raw === 'FREE' || raw === 'FIXED' || raw === 'DYNAMIC') return raw;
+  return 'FIXED';
+}
+
+function formatAmount(value, currencySymbol) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '—';
+  return `${n.toFixed(2)} ${currencySymbol}`;
+}
+
+/**
+ * Une seule phrase pour le resto (comme les apps livraison côté partenaire) :
+ * pas de détail base/km/min/max.
+ */
+export function getAdminDeliveryPricingSummary(doc, t, currencySymbol = '€') {
+  if (!doc?._id) {
+    return t('delivery.pricingNotConfigured');
+  }
+
+  const feeType = resolveDeliveryFeeType(doc);
+
+  if (feeType === 'FREE') {
+    return t('delivery.pricingFreeDelivery');
+  }
+
+  if (feeType === 'FIXED') {
+    const amount = formatAmount(doc.fixedDeliveryFee, currencySymbol);
+    if (doc.freeDeliveryEnabled) {
+      const th = Number(doc.freeDeliveryThreshold);
+      if (Number.isFinite(th) && th > 0) {
+        return t('delivery.pricingSummaryFixedWithFree', {
+          amount,
+          threshold: formatAmount(th, currencySymbol),
+        });
+      }
+      return t('delivery.pricingFreeDelivery');
+    }
+    return t('delivery.pricingSummaryFixed', { amount });
+  }
+
+  return t('delivery.pricingSummaryDynamic');
 }

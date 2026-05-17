@@ -770,7 +770,13 @@
     "maxFee": "Maximum fee",
     "prepTime": "Preparation time",
     "serviceModeRequired": "Enable delivery or pickup",
-    "invalidMinMax": "Minimum fee cannot exceed maximum fee"
+    "invalidMinMax": "Minimum fee cannot exceed maximum fee",
+    "pricingManagedByAdmin": "Only platform administration can change this.",
+    "pricingNotConfigured": "Delivery fee not configured — contact platform admin.",
+    "pricingFreeDelivery": "Free delivery",
+    "pricingSummaryFixed": "Delivery fee: {{amount}}",
+    "pricingSummaryFixedWithFree": "Delivery fee: {{amount}} · free on orders over {{threshold}}",
+    "pricingSummaryDynamic": "Delivery fee based on distance"
   },
   "openingHours": {
     "title": "Opening Hours",

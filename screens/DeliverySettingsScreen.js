@@ -20,8 +20,9 @@ import apiClient from '../api';
 import {
   deliverySettingsFormDefaults,
   deliverySettingsFormFromDoc,
-  buildDeliverySettingsPayload,
+  buildRestaurantDeliverySettingsPayload,
   validateDeliverySettingsForm,
+  getAdminDeliveryPricingSummary,
 } from '../utils/deliverySettingsForm';
 
 function SwitchField({ label, hint, value, onValueChange, disabled }) {
@@ -41,21 +42,6 @@ function SwitchField({ label, hint, value, onValueChange, disabled }) {
         />
       </View>
     </View>
-  );
-}
-
-function FeeTypeOption({ label, selected, onPress, disabled }) {
-  return (
-    <TouchableOpacity
-      style={[styles.feeTypeChip, selected && styles.feeTypeChipSelected, disabled && styles.feeTypeChipDisabled]}
-      onPress={onPress}
-      disabled={disabled}
-      activeOpacity={0.7}
-    >
-      <Text style={[styles.feeTypeChipText, selected && styles.feeTypeChipTextSelected]}>
-        {label}
-      </Text>
-    </TouchableOpacity>
   );
 }
 
@@ -115,7 +101,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
         throw new Error('Missing restaurant id');
       }
 
-      const payload = buildDeliverySettingsPayload(formData, rid, baselineDoc);
+      const payload = buildRestaurantDeliverySettingsPayload(formData, rid);
       const response = await apiClient.upsertRestaurantDeliverySettings(payload);
 
       if (response?.error) {
@@ -173,8 +159,12 @@ const DeliverySettingsScreen = ({ navigation }) => {
   };
 
   const currencySymbol = getCurrencySymbol();
-  const isDynamic = formData.deliveryFeeType === 'DYNAMIC';
   const switchDisabled = !isEditing;
+  const adminPricingSummary = getAdminDeliveryPricingSummary(
+    baselineDoc,
+    (key, opts) => i18n.t(key, opts),
+    currencySymbol
+  );
 
   if (!isAuthenticated) {
     return (
@@ -230,6 +220,13 @@ const DeliverySettingsScreen = ({ navigation }) => {
           </View>
         ) : (
           <>
+            <View style={styles.pricingBanner}>
+              <Text style={styles.pricingBannerText}>{adminPricingSummary}</Text>
+              <Text style={styles.pricingBannerHint}>
+                {i18n.t('delivery.pricingManagedByAdmin')}
+              </Text>
+            </View>
+
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{i18n.t('delivery.serviceOptions')}</Text>
               <SwitchField
@@ -278,122 +275,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
                   editable={isEditing}
                 />
               </View>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>{i18n.t('delivery.pricing')}</Text>
-
-              <Text style={styles.fieldLabel}>{i18n.t('delivery.feeType')}</Text>
-              <View style={styles.feeTypeRow}>
-                <FeeTypeOption
-                  label={i18n.t('delivery.feeTypeFixed')}
-                  selected={!isDynamic}
-                  disabled={switchDisabled}
-                  onPress={() => updateFormData('deliveryFeeType', 'FIXED')}
-                />
-                <FeeTypeOption
-                  label={i18n.t('delivery.feeTypeDynamic')}
-                  selected={isDynamic}
-                  disabled={switchDisabled}
-                  onPress={() => updateFormData('deliveryFeeType', 'DYNAMIC')}
-                />
-              </View>
-
-              {!isDynamic ? (
-                <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>
-                    {i18n.t('delivery.fixedFee')} ({currencySymbol})
-                  </Text>
-                  <TextInput
-                    style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                    value={formData.fixedFee}
-                    onChangeText={(v) => updateFormData('fixedFee', v)}
-                    placeholder="2.50"
-                    keyboardType="decimal-pad"
-                    maxLength={8}
-                    editable={isEditing}
-                  />
-                </View>
-              ) : (
-                <>
-                  <View style={styles.field}>
-                    <Text style={styles.fieldLabel}>
-                      {i18n.t('delivery.baseFee')} ({currencySymbol})
-                    </Text>
-                    <TextInput
-                      style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                      value={formData.baseFee}
-                      onChangeText={(v) => updateFormData('baseFee', v)}
-                      keyboardType="decimal-pad"
-                      maxLength={8}
-                      editable={isEditing}
-                    />
-                  </View>
-                  <View style={styles.field}>
-                    <Text style={styles.fieldLabel}>
-                      {i18n.t('delivery.perKmFee')} ({currencySymbol})
-                    </Text>
-                    <TextInput
-                      style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                      value={formData.perKmFee}
-                      onChangeText={(v) => updateFormData('perKmFee', v)}
-                      keyboardType="decimal-pad"
-                      maxLength={8}
-                      editable={isEditing}
-                    />
-                  </View>
-                  <View style={styles.field}>
-                    <Text style={styles.fieldLabel}>
-                      {i18n.t('delivery.minFee')} ({currencySymbol})
-                    </Text>
-                    <TextInput
-                      style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                      value={formData.minFee}
-                      onChangeText={(v) => updateFormData('minFee', v)}
-                      keyboardType="decimal-pad"
-                      maxLength={8}
-                      editable={isEditing}
-                    />
-                  </View>
-                  <View style={styles.field}>
-                    <Text style={styles.fieldLabel}>
-                      {i18n.t('delivery.maxFee')} ({currencySymbol})
-                    </Text>
-                    <TextInput
-                      style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                      value={formData.maxFee}
-                      onChangeText={(v) => updateFormData('maxFee', v)}
-                      keyboardType="decimal-pad"
-                      maxLength={8}
-                      editable={isEditing}
-                    />
-                  </View>
-                </>
-              )}
-
-              <SwitchField
-                label={i18n.t('delivery.freeDeliveryEnabled')}
-                hint={i18n.t('delivery.freeDeliveryThresholdSubtitle')}
-                value={formData.freeDeliveryEnabled}
-                onValueChange={(v) => updateFormData('freeDeliveryEnabled', v)}
-                disabled={switchDisabled}
-              />
-              {formData.freeDeliveryEnabled ? (
-                <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>
-                    {i18n.t('delivery.freeDeliveryThreshold')} ({currencySymbol})
-                  </Text>
-                  <TextInput
-                    style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                    value={formData.freeDeliveryThreshold}
-                    onChangeText={(v) => updateFormData('freeDeliveryThreshold', v)}
-                    placeholder="25.00"
-                    keyboardType="decimal-pad"
-                    maxLength={8}
-                    editable={isEditing}
-                  />
-                </View>
-              ) : null}
             </View>
           </>
         )}
@@ -482,31 +363,24 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginTop: 2,
   },
-  feeTypeRow: {
-    flexDirection: 'row',
-    gap: constants.SPACING.sm,
-    marginBottom: constants.SPACING.md,
-  },
-  feeTypeChip: {
-    flex: 1,
-    paddingVertical: constants.SPACING.sm,
-    paddingHorizontal: constants.SPACING.sm,
+  pricingBanner: {
+    backgroundColor: colors.grey[100],
     borderRadius: constants.BORDER_RADIUS,
-    borderWidth: 1,
-    borderColor: colors.grey[300],
-    alignItems: 'center',
+    padding: constants.SPACING.md,
+    marginBottom: constants.SPACING.md,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.primary,
   },
-  feeTypeChipSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary + '15',
-  },
-  feeTypeChipDisabled: { opacity: 0.6 },
-  feeTypeChipText: {
+  pricingBannerText: {
     fontSize: 14,
+    color: colors.text.primary,
     fontWeight: '500',
-    color: colors.text.secondary,
   },
-  feeTypeChipTextSelected: { color: colors.primary },
+  pricingBannerHint: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    marginTop: 4,
+  },
   centerContent: {
     flex: 1,
     justifyContent: 'center',
