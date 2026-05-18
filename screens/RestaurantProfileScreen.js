@@ -43,8 +43,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
     description: '',
     country: '',
     city: '',
-    latitude: '',
-    longitude: '',
     openingTime: '',
     closingTime: '',
     collectTime: '',
@@ -90,6 +88,8 @@ const RestaurantProfileScreen = ({ navigation }) => {
       setIsLoading(true);
       const payload = buildRestaurantProfileUpdatePayload({
         ...formData,
+        latitude: restaurant?.latitude,
+        longitude: restaurant?.longitude,
         categories: buildRestaurantCategoriesPayload(
           formData.selectedCategoryIds,
           categoryOptions
@@ -273,30 +273,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
                 editable={isEditing}
               />
             </View>
-            <View style={styles.rowField}>
-              <View style={[styles.field, styles.halfField]}>
-                <Text style={styles.fieldLabel}>{i18n.t('common.latitude')}</Text>
-                <TextInput
-                  style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                  value={formData.latitude}
-                  onChangeText={(text) => setFormData(prev => ({ ...prev, latitude: text }))}
-                  placeholder="48.8566"
-                  keyboardType="decimal-pad"
-                  editable={isEditing}
-                />
-              </View>
-              <View style={[styles.field, styles.halfField]}>
-                <Text style={styles.fieldLabel}>{i18n.t('common.longitude')}</Text>
-                <TextInput
-                  style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                  value={formData.longitude}
-                  onChangeText={(text) => setFormData(prev => ({ ...prev, longitude: text }))}
-                  placeholder="2.3522"
-                  keyboardType="decimal-pad"
-                  editable={isEditing}
-                />
-              </View>
-            </View>
           </View>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
@@ -308,6 +284,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
                   value={formData.openingTime}
                   onChangeText={(text) => setFormData(prev => ({ ...prev, openingTime: text }))}
                   placeholder="09:00"
+                  keyboardType="number-pad"
                   editable={isEditing}
                 />
               </View>
@@ -318,6 +295,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
                   value={formData.closingTime}
                   onChangeText={(text) => setFormData(prev => ({ ...prev, closingTime: text }))}
                   placeholder="21:00"
+                  keyboardType="number-pad"
                   editable={isEditing}
                 />
               </View>
@@ -412,14 +390,11 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.commissionRate')}</Text>
-              <TextInput
-                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                value={formData.commission_rate}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, commission_rate: text }))}
-                placeholder="10"
-                keyboardType="decimal-pad"
-                editable={isEditing}
-              />
+              <Text style={styles.infoValue}>
+                {formData.commission_rate !== ''
+                  ? `${formData.commission_rate}%`
+                  : '—'}
+              </Text>
             </View>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.rewards')}</Text>
@@ -456,12 +431,17 @@ const RestaurantProfileScreen = ({ navigation }) => {
               </View>
             </View>
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
-              <Text style={styles.infoValue}>
-                {formData.isActivated
-                  ? i18n.t('activation.statusActive')
-                  : i18n.t('activation.statusPending')}
-              </Text>
+              <View style={styles.switchRow}>
+                <View style={styles.switchLabelCol}>
+                  <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
+                </View>
+                <Switch
+                  value={formData.isActivated}
+                  disabled
+                  trackColor={{ false: colors.grey[300], true: colors.primary }}
+                  thumbColor={formData.isActivated ? colors.white : colors.grey[400]}
+                />
+              </View>
             </View>
             <View style={styles.field}>
               <View style={styles.switchRow}>

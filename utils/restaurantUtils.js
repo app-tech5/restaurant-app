@@ -98,8 +98,6 @@ export function restaurantProfileFormFromRestaurant(restaurant) {
     description: restaurant.description || '',
     country: restaurant.country || '',
     city: restaurant.city || '',
-    latitude: restaurant.latitude != null ? String(restaurant.latitude) : '',
-    longitude: restaurant.longitude != null ? String(restaurant.longitude) : '',
     openingTime: restaurant.openingTime || '',
     closingTime: restaurant.closingTime || '',
     collectTime: restaurant.collectTime != null ? String(restaurant.collectTime) : '',
@@ -107,7 +105,7 @@ export function restaurantProfileFormFromRestaurant(restaurant) {
     image: restaurant.image || restaurant.image_url || '',
     theme: normalizeRestaurantTheme(restaurant.theme),
     commission_rate:
-      restaurant.commission_rate !== undefined && restaurant.commission_rate !== null
+      restaurant.commission_rate != null && restaurant.commission_rate !== undefined
         ? String(restaurant.commission_rate)
         : '',
     reward: restaurant.reward || '',
@@ -203,9 +201,6 @@ export function buildRestaurantTaxField(taxes, country) {
 /** Corps PUT `/resource/restaurants/:id` aligné sur le schéma Mongoose (sans `email`). */
 export function buildRestaurantProfileUpdatePayload(formData) {
   const ct = parseInt(String(formData.collectTime ?? '').replace(/\D/g, ''), 10);
-  const commissionRaw = String(formData.commission_rate ?? '').replace(',', '.').trim();
-  const crParsed = parseFloat(commissionRaw);
-  const commission_rate = Number.isFinite(crParsed) ? crParsed : 0;
   const phone = String(formData.phone || '').trim();
   return {
     name: String(formData.name || '').trim(),
@@ -224,10 +219,8 @@ export function buildRestaurantProfileUpdatePayload(formData) {
     image: String(formData.image || '').trim(),
     image_url: String(formData.image || '').trim(),
     theme: normalizeRestaurantTheme(formData.theme),
-    commission_rate,
     reward: String(formData.reward || '').trim(),
     is_closed: !!formData.is_closed,
-    isActivated: !!formData.isActivated,
     isAvailableForDelivery:
       formData.isAvailableForDelivery != null
         ? !!formData.isAvailableForDelivery

@@ -243,6 +243,7 @@ export default function RestaurantOnboardingScreen() {
                 placeholder={i18n.t('onboarding.fields.openingTime')}
                 value={form.openingTime}
                 onChangeText={set('openingTime')}
+                keyboardType="number-pad"
                 leftIcon={<Icon name="schedule" type="material" size={20} color={colors.grey[500]} />}
                 containerStyle={[styles.input, styles.flex1]}
                 inputStyle={styles.inputText}
@@ -251,6 +252,7 @@ export default function RestaurantOnboardingScreen() {
                 placeholder={i18n.t('onboarding.fields.closingTime')}
                 value={form.closingTime}
                 onChangeText={set('closingTime')}
+                keyboardType="number-pad"
                 leftIcon={<Icon name="schedule" type="material" size={20} color={colors.grey[500]} />}
                 containerStyle={[styles.input, styles.flex1]}
                 inputStyle={styles.inputText}
