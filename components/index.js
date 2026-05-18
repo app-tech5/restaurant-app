@@ -1,5 +1,8 @@
 export { default as Loading } from './Loading';
 export { default as EmptyState } from './EmptyState';
+export { default as Categories } from './Categories';
+export { default as RestaurantNotActivatedMessage } from './RestaurantNotActivatedMessage';
+export { default as RestaurantImagePicker } from './RestaurantImagePicker';
 export { default as ScreenHeader } from './ScreenHeader';
 export { default as StatCard } from './StatCard';
 export { default as ActionCard } from './ActionCard';

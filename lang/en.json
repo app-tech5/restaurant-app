@@ -71,6 +71,7 @@
     "uploadingImage": "Uploading image…",
     "sections": {
       "identity": "Identity",
+      "categories": "Cuisine categories",
       "contact": "Contact",
       "location": "Location",
       "operations": "Operations",
@@ -87,8 +88,10 @@
       "closingTime": "Closing time (HH:mm) *",
       "serviceModes": "Service mode *",
       "price": "Price range *",
-      "imageUrl": "Image URL *"
+      "imageUrl": "Image URL *",
+      "categoriesHint": "Select at least one category (tap to toggle) *"
     },
+    "categoriesEmpty": "No categories available. Ask an administrator to add categories.",
     "serviceModes": {
       "delivery": "Delivery",
       "pickup": "Pickup"
@@ -103,8 +106,15 @@
       "openingTimeInvalid": "Opening time is required (HH:mm)",
       "closingTimeInvalid": "Closing time is required (HH:mm)",
       "imageRequired": "Image URL is required",
+      "categoriesRequired": "Select at least one cuisine category",
       "submit": "Unable to create your restaurant. Please try again."
     }
+  },
+  "activation": {
+    "pendingTitle": "Pending validation",
+    "pendingMessage": "Your restaurant is being reviewed. You can update your profile and menu. Orders and statistics will be available once an administrator activates your account.",
+    "statusActive": "Activated",
+    "statusPending": "Pending administrator validation"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -564,6 +574,8 @@
     "addressPlaceholder": "123 Main St, City, Country",
     "descriptionLabel": "Restaurant Description",
     "descriptionPlaceholder": "Describe your restaurant, its cuisine, ambiance...",
+    "categories": "Cuisine categories",
+    "categoriesHint": "Select at least one category (tap to toggle)",
     "status": "Status",
     "restaurantId": "Restaurant ID",
     "type": "Type",

@@ -381,6 +381,12 @@ class ApiClient {
     return Array.isArray(raw) ? raw : [];
   }
 
+  /** Catégories cuisine (collection Category → `Restaurant.categories`). */
+  async listCategories() {
+    const raw = await this.apiCall('/resource/categories');
+    return Array.isArray(raw) ? raw : [];
+  }
+
   /** Met à jour le Setting global (ex. `currency`: ObjectId). */
   async updateSettingsDocument(settingsId, patch) {
     return await this.apiCall(`/resource/settings/${settingsId}`, {

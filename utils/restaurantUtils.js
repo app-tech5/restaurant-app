@@ -84,6 +84,10 @@ export function normalizeRestaurantTheme(raw) {
   return RESTAURANT_THEME_OPTIONS.includes(t) ? t : 'default';
 }
 
+export function isRestaurantActivated(restaurant) {
+  return restaurant?.isActivated === true;
+}
+
 export function restaurantProfileFormFromRestaurant(restaurant) {
   if (!restaurant) return null;
   return {
@@ -108,9 +112,34 @@ export function restaurantProfileFormFromRestaurant(restaurant) {
         : '',
     reward: restaurant.reward || '',
     is_closed: !!restaurant.is_closed,
-    isActivated: restaurant.isActivated !== undefined ? !!restaurant.isActivated : true,
+    isActivated: !!restaurant.isActivated,
     isAvailableForDelivery: !!restaurant.isAvailableForDelivery,
+    selectedCategoryIds: getRestaurantCategoryIds(restaurant),
   };
+}
+
+export function getRestaurantCategoryIds(restaurant) {
+  if (!restaurant?.categories?.length) return [];
+  return restaurant.categories
+    .map((c) => {
+      const v = c.value;
+      if (v && typeof v === 'object') return String(v._id || v.id || '');
+      return String(v || c._id || c.id || '');
+    })
+    .filter(Boolean);
+}
+
+export function buildRestaurantCategoriesPayload(selectedIds, categoryList) {
+  const selected = new Set((selectedIds || []).map(String));
+  return (categoryList || [])
+    .filter((c) => selected.has(String(c._id || c.id)))
+    .map((c) => ({
+      alias: slugifyRestaurantName(c.name),
+      title: c.name,
+      image: c.image || '',
+      value: c._id || c.id,
+      label: c.name,
+    }));
 }
 
 /** Slug ASCII compact pour `alias` / `id` à partir du nom du restaurant. */
@@ -203,6 +232,7 @@ export function buildRestaurantProfileUpdatePayload(formData) {
       formData.isAvailableForDelivery != null
         ? !!formData.isAvailableForDelivery
         : normalizeRestaurantServiceMode(formData.serviceModes) === 'delivery',
+    ...(Array.isArray(formData.categories) ? { categories: formData.categories } : {}),
   };
 }
 
@@ -220,6 +250,7 @@ export function buildRestaurantOnboardingPayload(formData) {
     alias: slug,
     id: slug,
     price: normalizeRestaurantPrice(formData?.price),
+    categories: formData.categories || [],
   };
 }
 

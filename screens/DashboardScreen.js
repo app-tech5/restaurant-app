@@ -3,13 +3,22 @@ import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } 
 import { Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { useSettings } from '../contexts/SettingContext';
-import { StatCard, ActionCard, StatusCard, Loading, EmptyState, ScreenHeader } from '../components';
+import {
+  StatCard,
+  ActionCard,
+  StatusCard,
+  Loading,
+  EmptyState,
+  ScreenHeader,
+  RestaurantNotActivatedMessage,
+} from '../components';
 import { colors, constants } from '../global';
-import { calculateRestaurantStats } from '../utils/restaurantUtils';
+import { calculateRestaurantStats, isRestaurantActivated } from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const DashboardScreen = ({ navigation }) => {
-  const { stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated } = useRestaurant();
+  const { restaurant, stats, loadRestaurantStats, orders, loadRestaurantOrders, isAuthenticated } =
+    useRestaurant();
   const { formatCurrency } = useSettings();
   const [refreshing, setRefreshing] = useState(false);
   const [calculatedStats, setCalculatedStats] = useState(null);
@@ -65,6 +74,14 @@ const DashboardScreen = ({ navigation }) => {
       gradient: [colors.info, colors.info],
     },
   ];
+  if (restaurant && !isRestaurantActivated(restaurant)) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScreenHeader title={i18n.t('navigation.dashboard')} showDrawerMenu />
+        <RestaurantNotActivatedMessage />
+      </SafeAreaView>
+    );
+  }
   if (!calculatedStats) {
     return (
       <View style={styles.container}>

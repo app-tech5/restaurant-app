@@ -12,7 +12,7 @@ import {
   Switch
 } from 'react-native';
 import { useRestaurant } from '../contexts/RestaurantContext';
-import { ScreenHeader, Loading } from '../components';
+import { ScreenHeader, Loading, Categories, RestaurantImagePicker } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import apiClient from '../api';
@@ -21,6 +21,7 @@ import {
   RESTAURANT_THEME_OPTIONS,
   restaurantProfileFormFromRestaurant,
   buildRestaurantProfileUpdatePayload,
+  buildRestaurantCategoriesPayload,
   withRestaurantAccountEmail,
 } from '../utils/restaurantUtils';
 
@@ -54,8 +55,10 @@ const RestaurantProfileScreen = ({ navigation }) => {
     reward: '',
     is_closed: false,
     isActivated: true,
-    isAvailableForDelivery: false
+    isAvailableForDelivery: false,
+    selectedCategoryIds: [],
   });
+  const [categoryOptions, setCategoryOptions] = useState([]);
   useEffect(() => {
     if (restaurant) {
       const next = restaurantProfileFormFromRestaurant(restaurant);
@@ -76,9 +79,22 @@ const RestaurantProfileScreen = ({ navigation }) => {
       Alert.alert(i18n.t('errors.validationError'), i18n.t('restaurantProfile.invalidEmail'));
       return;
     }
+    if (!formData.selectedCategoryIds?.length) {
+      Alert.alert(
+        i18n.t('errors.validationError'),
+        i18n.t('onboarding.errors.categoriesRequired')
+      );
+      return;
+    }
     try {
       setIsLoading(true);
-      const payload = buildRestaurantProfileUpdatePayload(formData);
+      const payload = buildRestaurantProfileUpdatePayload({
+        ...formData,
+        categories: buildRestaurantCategoriesPayload(
+          formData.selectedCategoryIds,
+          categoryOptions
+        ),
+      });
       const response = await apiClient.updateRestaurantProfile(payload);
       if (response && response.error) {
         throw new Error(
@@ -224,6 +240,18 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={styles.section}>
+            <Categories
+              sectionTitle={i18n.t('restaurantProfile.categories')}
+              hint={i18n.t('restaurantProfile.categoriesHint')}
+              selectedIds={formData.selectedCategoryIds}
+              onChangeSelectedIds={(ids) =>
+                setFormData((prev) => ({ ...prev, selectedCategoryIds: ids }))
+              }
+              disabled={!isEditing}
+              onCategoriesLoaded={setCategoryOptions}
+            />
+          </View>
+          <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.locationInfo')}</Text>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.country')}</Text>
@@ -341,17 +369,15 @@ const RestaurantProfileScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.restaurantImage')}</Text>
-            <View style={styles.field}>
-              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.imageUrl')}</Text>
-              <TextInput
-                style={[styles.textInput, !isEditing && styles.textInputDisabled]}
-                value={formData.image}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, image: text }))}
-                placeholder={i18n.t('restaurantProfile.imageUrlPlaceholder')}
-                editable={isEditing}
-              />
-            </View>
+            <RestaurantImagePicker
+              variant="profile"
+              sectionTitle={i18n.t('restaurantProfile.restaurantImage')}
+              fieldLabel={i18n.t('restaurantProfile.imageUrl')}
+              value={formData.image}
+              onChange={(url) => setFormData((prev) => ({ ...prev, image: url }))}
+              disabled={!isEditing}
+              urlPlaceholder={i18n.t('restaurantProfile.imageUrlPlaceholder')}
+            />
           </View>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.businessInfo')}</Text>
@@ -430,18 +456,12 @@ const RestaurantProfileScreen = ({ navigation }) => {
               </View>
             </View>
             <View style={styles.field}>
-              <View style={styles.switchRow}>
-                <View style={styles.switchLabelCol}>
-                  <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
-                </View>
-                <Switch
-                  value={formData.isActivated}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, isActivated: value }))}
-                  disabled={!isEditing}
-                  trackColor={{ false: colors.grey[300], true: colors.primary }}
-                  thumbColor={formData.isActivated ? colors.white : colors.grey[400]}
-                />
-              </View>
+              <Text style={styles.fieldLabel}>{i18n.t('restaurantProfile.isActivated')}</Text>
+              <Text style={styles.infoValue}>
+                {formData.isActivated
+                  ? i18n.t('activation.statusActive')
+                  : i18n.t('activation.statusPending')}
+              </Text>
             </View>
             <View style={styles.field}>
               <View style={styles.switchRow}>

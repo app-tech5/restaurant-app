@@ -9,7 +9,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
-  ActivityIndicator,
 } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -20,12 +19,9 @@ import {
   RESTAURANT_SERVICE_MODES,
   RESTAURANT_PRICE_OPTIONS,
   buildRestaurantOnboardingPayload,
+  buildRestaurantCategoriesPayload,
 } from '../utils/restaurantUtils';
-import {
-  pickImageUriFromGallery,
-  pickImageUriFromCamera,
-  PICK_FROM_GALLERY_REASON,
-} from '../utils/pickImageFromGallery';
+import { Categories, RestaurantImagePicker } from '../components';
 import { geocodeAddress } from '../utils/geocoding';
 
 const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
@@ -42,14 +38,14 @@ const initialForm = {
   serviceModes: 'delivery',
   price: '$',
   image: '',
+  selectedCategoryIds: [],
 };
 
 export default function RestaurantOnboardingScreen() {
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
-  /** null | 'gallery' | 'camera' — pendant sélection + upload image */
-  const [imageLoading, setImageLoading] = useState(null);
   const { completeOnboarding, logout, restaurant } = useRestaurant();
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
   const set = (key) => (value) => setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -65,6 +61,9 @@ export default function RestaurantOnboardingScreen() {
     if (!form.closingTime.trim() || !TIME_RE.test(form.closingTime.trim()))
       return i18n.t('onboarding.errors.closingTimeInvalid');
     if (!form.image.trim()) return i18n.t('onboarding.errors.imageRequired');
+    if (!form.selectedCategoryIds?.length) {
+      return i18n.t('onboarding.errors.categoriesRequired');
+    }
     return null;
   };
 
@@ -93,11 +92,14 @@ export default function RestaurantOnboardingScreen() {
         return;
       }
   
-      // 🔥 2. Ajout lat/lon au payload
       const body = buildRestaurantOnboardingPayload({
         ...form,
         latitude: geo.lat,
         longitude: geo.lon,
+        categories: buildRestaurantCategoriesPayload(
+          form.selectedCategoryIds,
+          categoryOptions
+        ),
       });
   
       // 🔥 3. Envoi backend
@@ -124,38 +126,6 @@ export default function RestaurantOnboardingScreen() {
     try {
       await logout();
     } catch (e) {}
-  };
-
-  const pickImageFromGallery = async () => {
-    setImageLoading('gallery');
-    try {
-      const result = await pickImageUriFromGallery();
-      if (!result.ok && result.reason === PICK_FROM_GALLERY_REASON.PERMISSION_DENIED) {
-        Alert.alert(i18n.t('common.error'), i18n.t('common.galleryPermission'));
-        return;
-      }
-      if (result.ok) {
-        setForm((prev) => ({ ...prev, image: result.link }));
-      }
-    } finally {
-      setImageLoading(null);
-    }
-  };
-
-  const takePhotoFromCamera = async () => {
-    setImageLoading('camera');
-    try {
-      const result = await pickImageUriFromCamera();
-      if (!result.ok && result.reason === PICK_FROM_GALLERY_REASON.PERMISSION_DENIED) {
-        Alert.alert(i18n.t('common.error'), i18n.t('common.cameraPermission'));
-        return;
-      }
-      if (result.ok) {
-        setForm((prev) => ({ ...prev, image: result.link }));
-      }
-    } finally {
-      setImageLoading(null);
-    }
   };
 
   const Segment = ({ value, options, onChange, getLabel }) => (
@@ -219,6 +189,16 @@ export default function RestaurantOnboardingScreen() {
               leftIcon={<Icon name="notes" type="material" size={20} color={colors.grey[500]} />}
               containerStyle={styles.input}
               inputStyle={[styles.inputText, styles.textArea]}
+            />
+
+            <Categories
+              sectionTitle={i18n.t('onboarding.sections.categories')}
+              hint={i18n.t('onboarding.fields.categoriesHint')}
+              selectedIds={form.selectedCategoryIds}
+              onChangeSelectedIds={(ids) =>
+                setForm((prev) => ({ ...prev, selectedCategoryIds: ids }))
+              }
+              onCategoriesLoaded={setCategoryOptions}
             />
 
             <Text style={styles.sectionTitle}>{i18n.t('onboarding.sections.contact')}</Text>
@@ -292,53 +272,13 @@ export default function RestaurantOnboardingScreen() {
               onChange={set('price')}
             />
 
-            <Text style={styles.sectionTitle}>{i18n.t('onboarding.sections.image')}</Text>
-            <Input
-              placeholder={
-                imageLoading
-                  ? i18n.t('onboarding.uploadingImage')
-                  : i18n.t('onboarding.fields.imageUrl')
-              }
+            <RestaurantImagePicker
+              variant="elements"
+              sectionTitle={i18n.t('onboarding.sections.image')}
               value={form.image}
-              onChangeText={set('image')}
-              keyboardType="url"
-              autoCapitalize="none"
-              autoCorrect={false}
-              editable={!imageLoading}
-              leftIcon={<Icon name="image" type="material" size={20} color={colors.grey[500]} />}
-              rightIcon={
-                imageLoading ? (
-                  <ActivityIndicator size="small" color={colors.primary} />
-                ) : undefined
-              }
-              containerStyle={styles.input}
-              inputStyle={styles.inputText}
-            />
-            <Button
-              type="outline"
-              title={i18n.t('onboarding.pickFromGallery')}
-              onPress={pickImageFromGallery}
-              loading={imageLoading === 'gallery'}
-              disabled={submitting || !!imageLoading}
-              buttonStyle={styles.galleryButton}
-              titleStyle={styles.galleryButtonTitle}
-              containerStyle={styles.galleryButtonContainer}
-              icon={
-                <Icon name="photo-library" type="material" size={20} color={colors.primary} style={{ marginRight: 8 }} />
-              }
-            />
-            <Button
-              type="outline"
-              title={i18n.t('onboarding.takePhoto')}
-              onPress={takePhotoFromCamera}
-              loading={imageLoading === 'camera'}
-              disabled={submitting || !!imageLoading}
-              buttonStyle={styles.galleryButton}
-              titleStyle={styles.galleryButtonTitle}
-              containerStyle={styles.galleryButtonContainer}
-              icon={
-                <Icon name="photo-camera" type="material" size={20} color={colors.primary} style={{ marginRight: 8 }} />
-              }
+              onChange={set('image')}
+              disabled={submitting}
+              urlPlaceholder={i18n.t('onboarding.fields.imageUrl')}
             />
 
             <Button
@@ -349,7 +289,7 @@ export default function RestaurantOnboardingScreen() {
               }
               onPress={handleSubmit}
               loading={submitting}
-              disabled={submitting || !!imageLoading}
+              disabled={submitting}
               buttonStyle={[styles.primaryButton, { backgroundColor: colors.primary }]}
               containerStyle={styles.primaryButtonContainer}
               titleStyle={styles.primaryButtonText}
@@ -481,18 +421,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.text.secondary,
     textDecorationLine: 'underline',
-  },
-  galleryButtonContainer: {
-    marginTop: 4,
-    marginBottom: 4,
-  },
-  galleryButton: {
-    borderColor: colors.primary,
-    borderRadius: 10,
-    paddingVertical: 10,
-  },
-  galleryButtonTitle: {
-    color: colors.primary,
-    fontSize: 15,
   },
 });

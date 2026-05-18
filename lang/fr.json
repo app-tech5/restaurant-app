@@ -65,6 +65,7 @@
     "uploadingImage": "Envoi de l'image…",
     "sections": {
       "identity": "Identité",
+      "categories": "Catégories de cuisine",
       "contact": "Contact",
       "location": "Localisation",
       "operations": "Exploitation",
@@ -81,8 +82,10 @@
       "closingTime": "Fermeture (HH:mm) *",
       "serviceModes": "Mode de service *",
       "price": "Gamme de prix *",
-      "imageUrl": "URL de l'image *"
+      "imageUrl": "URL de l'image *",
+      "categoriesHint": "Choisissez au moins une catégorie (appuyez pour sélectionner) *"
     },
+    "categoriesEmpty": "Aucune catégorie disponible. Demandez à un administrateur d'en ajouter.",
     "serviceModes": {
       "delivery": "Livraison",
       "pickup": "À emporter"
@@ -97,8 +100,15 @@
       "openingTimeInvalid": "L'heure d'ouverture est obligatoire (HH:mm)",
       "closingTimeInvalid": "L'heure de fermeture est obligatoire (HH:mm)",
       "imageRequired": "L'URL de l'image est obligatoire",
+      "categoriesRequired": "Sélectionnez au moins une catégorie de cuisine",
       "submit": "Impossible de créer votre restaurant. Veuillez réessayer."
     }
+  },
+  "activation": {
+    "pendingTitle": "En attente de validation",
+    "pendingMessage": "Votre restaurant est en cours de vérification. Vous pouvez compléter votre profil et votre menu. Les commandes et les statistiques seront disponibles après activation par un administrateur.",
+    "statusActive": "Activé",
+    "statusPending": "En attente de validation par l'administrateur"
   },
 
   "orderDetails": {
@@ -432,6 +442,8 @@
     "phonePlaceholder": "+33123456789",
     "address": "Adresse",
     "addressPlaceholder": "123 rue, ville, pays",
+    "categories": "Catégories de cuisine",
+    "categoriesHint": "Choisissez au moins une catégorie (appuyez pour sélectionner)",
     "descriptionLabel": "Description du restaurant",
     "descriptionPlaceholder": "Décrivez votre restaurant, la cuisine, l'ambiance...",
     "status": "Statut",
