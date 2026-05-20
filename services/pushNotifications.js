@@ -135,8 +135,8 @@ const scheduleForegroundLocalNotification = async (Notifications, source) => {
   const content = source?.request?.content
     ? source.request.content
     : {
-      title: source?.notification?.title || null,
-      body: source?.notification?.body || '',
+      title: source?.data?.title || source?.notification?.title || null,
+      body: source?.data?.body || source?.notification?.body || '',
       data: source?.data || {},
     };
   if (!content) return;
