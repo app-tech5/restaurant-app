@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
+import { io } from 'socket.io-client';
+import { config } from '../config';
 import { useRestaurantAuth } from '../hooks/useRestaurantAuth';
 import { getRestaurantFromCache } from '../utils/storageUtils';
 import { clearRestaurantProfileCache } from '../utils/cacheUtils';
@@ -57,6 +59,27 @@ export const RestaurantProvider = ({ children }) => {
     toggleMenuItemAvailability,
     invalidateMenuCache
   } = useRestaurantMenu(restaurant, isAuthenticated);
+
+  const [socket, setSocket] = useState(null);
+  useEffect(() => {
+    if (!restaurant?._id) {
+      return;
+    }
+    const url = String(config.API_BASE_URL).replace(/\/api\/?$/, '');
+    const socketInstance = io(url);
+    setSocket(socketInstance);
+    socketInstance.on('connect', () => {
+      socketInstance.emit('joinRestaurantRoom', restaurant._id);
+    });
+    socketInstance.on('restaurant-updated', (data) => {
+      setRestaurant((prev) =>
+        prev?._id === data.restaurant._id ? data.restaurant : prev
+      );
+    });
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, [restaurant?._id]);
 
   const appStateRef = useRef(AppState.currentState);
 
@@ -133,6 +156,7 @@ export const RestaurantProvider = ({ children }) => {
     deleteMenuItem,
     toggleMenuItemAvailability,
     invalidateMenuCache,
+    socket,
   };
   return (
     <RestaurantContext.Provider value={value}>
