@@ -1,8 +1,13 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 import { useRestaurantAuth } from '../hooks/useRestaurantAuth';
+import { getRestaurantFromCache } from '../utils/storageUtils';
+import { clearRestaurantProfileCache } from '../utils/cacheUtils';
+import { resolveRestaurantPlaceId } from '../utils/restaurantIdUtils';
 import { useRestaurantStats } from '../hooks/useRestaurantStats';
 import { useRestaurantOrders } from '../hooks/useRestaurantOrders';
 import { useRestaurantMenu } from '../hooks/useRestaurantMenu';
+import { useRestaurantProfile } from '../hooks/useRestaurantProfile';
 const RestaurantContext = createContext();
 export const useRestaurant = () => {
   const context = useContext(RestaurantContext);
@@ -21,9 +26,14 @@ export const RestaurantProvider = ({ children }) => {
     signup,
     logout: authLogout,
     completeOnboarding,
+    refreshRestaurantProfile,
     setRestaurant,
     setIsAuthenticated
   } = useRestaurantAuth();
+  const {
+    loadRestaurantProfile,
+    invalidateRestaurantProfileCache
+  } = useRestaurantProfile(restaurant, isAuthenticated);
   const {
     stats,
     loadRestaurantStats,
@@ -47,10 +57,47 @@ export const RestaurantProvider = ({ children }) => {
     toggleMenuItemAvailability,
     invalidateMenuCache
   } = useRestaurantMenu(restaurant, isAuthenticated);
+
+  const appStateRef = useRef(AppState.currentState);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      const wasBackground = /inactive|background/.test(appStateRef.current);
+      appStateRef.current = nextState;
+      if (nextState !== 'active' || !wasBackground) {
+        return;
+      }
+
+      void (async () => {
+        try {
+          const cached = await getRestaurantFromCache();
+          const accountUser = cached?.restaurant ?? restaurant;
+          if (!accountUser) {
+            return;
+          }
+          const restaurantId = resolveRestaurantPlaceId(accountUser);
+          if (restaurantId) {
+            await clearRestaurantProfileCache(String(restaurantId));
+          }
+          await refreshRestaurantProfile(accountUser, cached?.token);
+        } catch (error) {
+          console.error('Foreground profile refresh error:', error);
+        }
+      })();
+    });
+
+    return () => subscription.remove();
+  }, [isAuthenticated, restaurant, refreshRestaurantProfile]);
+
   const logout = async () => {
     invalidateRestaurantStatsCache();
     invalidateOrdersCache();
     invalidateMenuCache();
+    invalidateRestaurantProfileCache();
     await authLogout();
     setRestaurant(null);
     setIsAuthenticated(false);
@@ -64,6 +111,9 @@ export const RestaurantProvider = ({ children }) => {
     signup,
     logout,
     completeOnboarding,
+    refreshRestaurantProfile,
+    loadRestaurantProfile,
+    invalidateRestaurantProfileCache,
     setRestaurant,
     setIsAuthenticated,
     stats,

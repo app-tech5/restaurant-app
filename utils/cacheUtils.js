@@ -4,6 +4,7 @@ const CACHE_KEYS = {
   RESTAURANT_ORDERS: 'restaurant_orders',
   RESTAURANT_STATS: 'restaurant_stats',
   RESTAURANT_MENU: 'restaurant_menu',
+  RESTAURANT_PROFILE: 'restaurant_profile',
   CACHE_TIMESTAMP: '_timestamp',
   CACHE_VERSION: 'cache_version'
 };
@@ -17,6 +18,7 @@ const CACHE_TTL = {
   [CACHE_KEYS.RESTAURANT_ORDERS]: CACHE_CONFIG.DEFAULT_TTL,
   [CACHE_KEYS.RESTAURANT_STATS]: CACHE_CONFIG.DEFAULT_TTL,
   [CACHE_KEYS.RESTAURANT_MENU]: CACHE_CONFIG.LONG_TTL,
+  [CACHE_KEYS.RESTAURANT_PROFILE]: CACHE_CONFIG.DEFAULT_TTL,
 };
 const getCacheKey = (restaurantId, cacheType) => {
   return `${restaurantId}_${cacheType}`;
@@ -154,6 +156,31 @@ export const loadMenuWithSmartCache = (
     onError
   );
 };
+export const loadRestaurantProfileWithSmartCache = (
+  restaurantId,
+  apiFetcher,
+  onDataLoaded,
+  onDataUpdated,
+  onLoadingStateChange,
+  onError
+) => {
+  const wrappedFetcher = async () => {
+    const result = await apiFetcher();
+    if (result && typeof result === 'object' && Object.prototype.hasOwnProperty.call(result, 'data')) {
+      return result;
+    }
+    return { data: result };
+  };
+  return loadWithSmartCache(
+    restaurantId,
+    CACHE_KEYS.RESTAURANT_PROFILE,
+    wrappedFetcher,
+    onDataLoaded,
+    onDataUpdated,
+    onLoadingStateChange,
+    onError
+  );
+};
 export const loadSettingsWithSmartCache = (
   apiFetcher,
   onDataLoaded,
@@ -181,6 +208,10 @@ export const clearRestaurantStatsCache = async (restaurantId) => {
 };
 export const clearMenuCache = async (restaurantId) => {
   const cacheKey = getCacheKey(restaurantId, CACHE_KEYS.RESTAURANT_MENU);
+  await AsyncStorage.removeItem(cacheKey);
+};
+export const clearRestaurantProfileCache = async (restaurantId) => {
+  const cacheKey = getCacheKey(restaurantId, CACHE_KEYS.RESTAURANT_PROFILE);
   await AsyncStorage.removeItem(cacheKey);
 };
 export const clearSettingsCache = async () => {

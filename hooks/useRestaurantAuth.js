@@ -8,15 +8,19 @@ import {
   saveDeviceTokenToCache,
 } from '../utils/storageUtils';
 import { withRestaurantAccountEmail, buildRestaurantTaxField } from '../utils/restaurantUtils';
+import { resolveRestaurantPlaceId } from '../utils/restaurantIdUtils';
+import { loadRestaurantProfileWithSmartCache } from '../utils/cacheUtils';
 import {
   buildDeliverySettingsOnboardingPayload,
   isRestaurantAvailableForDelivery,
 } from '../utils/deliverySettingsUtils';
+
 export const useRestaurantAuth = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+
   const syncPushToken = async () => {
     try {
       const token = await getNativePushToken();
@@ -28,6 +32,51 @@ export const useRestaurantAuth = () => {
     } catch (error) {
     }
   };
+
+  const applyRestaurantProfile = async (profileData, accountUser, authToken) => {
+    if (profileData && (profileData._id || profileData.id)) {
+      const merged = withRestaurantAccountEmail(profileData, accountUser);
+      setRestaurant(merged);
+      setNeedsOnboarding(false);
+      if (authToken) {
+        await updateRestaurantCache(merged, authToken);
+      }
+      return merged;
+    }
+    setRestaurant(accountUser);
+    setNeedsOnboarding(true);
+    return null;
+  };
+
+  const refreshRestaurantProfile = async (accountUser, token) => {
+    const restaurantId =
+      resolveRestaurantPlaceId(accountUser) ?? apiClient.resolveRestaurantPlaceId();
+    if (!restaurantId || !accountUser) {
+      return null;
+    }
+
+    let profileData = null;
+    try {
+      await loadRestaurantProfileWithSmartCache(
+        String(restaurantId),
+        () => apiClient.getRestaurantProfile(),
+        (data) => {
+          profileData = data;
+        },
+        (data) => {
+          profileData = data;
+        },
+        null,
+        (errorMsg) => {
+          console.error('Erreur chargement profil restaurant:', errorMsg);
+        }
+      );
+    } catch (error) {
+      console.error('Error loading restaurant profile with smart cache:', error);
+    }
+    return applyRestaurantProfile(profileData, accountUser, token);
+  };
+
   useEffect(() => {
     const initializeRestaurant = async () => {
       try {
@@ -39,14 +88,7 @@ export const useRestaurantAuth = () => {
           apiClient.restaurant = authenticatedUser;
           setIsAuthenticated(true);
           try {
-            const freshRestaurantData = await apiClient.getRestaurantProfile();
-            if (freshRestaurantData && (freshRestaurantData._id || freshRestaurantData.id)) {
-              setRestaurant(withRestaurantAccountEmail(freshRestaurantData, authenticatedUser));
-              setNeedsOnboarding(false);
-            } else {
-              setRestaurant(authenticatedUser);
-              setNeedsOnboarding(true);
-            }
+            await refreshRestaurantProfile(authenticatedUser, cached.token);
           } catch (refreshError) {
             setRestaurant(authenticatedUser);
             setNeedsOnboarding(true);
@@ -61,6 +103,7 @@ export const useRestaurantAuth = () => {
     };
     initializeRestaurant();
   }, []);
+
   const login = async (email, password) => {
     try {
       setIsLoading(true);
@@ -70,22 +113,18 @@ export const useRestaurantAuth = () => {
         const authenticatedUser = response.user;
         await updateRestaurantCache(authenticatedUser, response.token);
         setIsAuthenticated(true);
-        let restaurantProfile = null;
+        let merged = null;
         if (!config.DEMO_MODE) {
           try {
-            const freshRestaurantData = await apiClient.getRestaurantProfile();
-            if (freshRestaurantData && (freshRestaurantData._id || freshRestaurantData.id)) {
-              restaurantProfile = freshRestaurantData;
-            }
+            merged = await refreshRestaurantProfile(authenticatedUser, response.token);
           } catch (refreshError) {
           }
         }
-        setNeedsOnboarding(!restaurantProfile);
-        const merged =
-          withRestaurantAccountEmail(restaurantProfile, authenticatedUser) ||
-          apiClient.restaurant ||
-          null;
-        setRestaurant(merged);
+        if (!merged) {
+          merged = apiClient.restaurant || authenticatedUser;
+          setRestaurant(merged);
+          setNeedsOnboarding(true);
+        }
         await syncPushToken();
         return { success: true, restaurant: merged };
       } else {
@@ -131,6 +170,7 @@ export const useRestaurantAuth = () => {
       setIsLoading(false);
     }
   };
+
   const logout = async () => {
     try {
       await apiClient.logout();
@@ -214,7 +254,8 @@ export const useRestaurantAuth = () => {
     signup,
     logout,
     completeOnboarding,
+    refreshRestaurantProfile,
     setRestaurant,
-    setIsAuthenticated
+    setIsAuthenticated,
   };
 };
