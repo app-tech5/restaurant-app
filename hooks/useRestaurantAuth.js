@@ -8,7 +8,7 @@ import {
   saveDeviceTokenToCache,
 } from '../utils/storageUtils';
 import { withRestaurantAccountEmail, buildRestaurantTaxField } from '../utils/restaurantUtils';
-import { resolveRestaurantPlaceId } from '../utils/restaurantIdUtils';
+import { resolveRestaurantPlaceId, userHasLinkedRestaurant } from '../utils/restaurantIdUtils';
 import { loadRestaurantProfileWithSmartCache } from '../utils/cacheUtils';
 import {
   buildDeliverySettingsOnboardingPayload,
@@ -44,7 +44,7 @@ export const useRestaurantAuth = () => {
       return merged;
     }
     setRestaurant(accountUser);
-    setNeedsOnboarding(true);
+    setNeedsOnboarding(!userHasLinkedRestaurant(accountUser));
     return null;
   };
 
@@ -123,7 +123,7 @@ export const useRestaurantAuth = () => {
         if (!merged) {
           merged = apiClient.restaurant || authenticatedUser;
           setRestaurant(merged);
-          setNeedsOnboarding(true);
+          setNeedsOnboarding(!userHasLinkedRestaurant(merged));
         }
         await syncPushToken();
         return { success: true, restaurant: merged };
@@ -232,10 +232,9 @@ export const useRestaurantAuth = () => {
           console.warn('Post-onboarding delivery profile sync skipped:', profileError?.message);
         }
       }
-      await updateRestaurantCache(finalUser, apiClient.token);
-
       const merged =
         withRestaurantAccountEmail(newRestaurant, finalUser) || finalUser || null;
+      await updateRestaurantCache(merged, apiClient.token);
       setRestaurant(merged);
       setNeedsOnboarding(false);
       return { success: true, restaurant: merged };

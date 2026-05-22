@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
-import { ScreenHeader } from '../components';
+import { ScreenHeader, RestaurantImagePicker } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -227,15 +227,20 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
             </View>
-            {}
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>{i18n.t('menu.imageUrl')} *</Text>
-              <TextInput
-                style={[styles.textInput, errors.image && styles.textInputError]}
+              <RestaurantImagePicker
+                variant="profile"
+                sectionTitle={`${i18n.t('menu.imageUrl')} *`}
+                fieldLabel={i18n.t('menu.imageUrl')}
                 value={formData.image}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, image: text }))}
-                placeholder="https://exemple.com/image.jpg"
-                maxLength={500}
+                onChange={(url) => {
+                  setFormData((prev) => ({ ...prev, image: url }));
+                  if (errors.image) {
+                    setErrors((prev) => ({ ...prev, image: undefined }));
+                  }
+                }}
+                disabled={isLoading}
+                urlPlaceholder={i18n.t('restaurantProfile.imageUrlPlaceholder')}
               />
               {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
             </View>

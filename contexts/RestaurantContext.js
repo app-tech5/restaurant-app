@@ -4,7 +4,12 @@ import { io } from 'socket.io-client';
 import { config } from '../config';
 import { useRestaurantAuth } from '../hooks/useRestaurantAuth';
 import { getRestaurantFromCache } from '../utils/storageUtils';
-import { clearRestaurantProfileCache } from '../utils/cacheUtils';
+import {
+  clearRestaurantProfileCache,
+  clearRestaurantStatsCache,
+  clearMenuCache,
+  clearOrdersCache,
+} from '../utils/cacheUtils';
 import { resolveRestaurantPlaceId } from '../utils/restaurantIdUtils';
 import { useRestaurantStats } from '../hooks/useRestaurantStats';
 import { useRestaurantOrders } from '../hooks/useRestaurantOrders';
@@ -117,10 +122,16 @@ export const RestaurantProvider = ({ children }) => {
   }, [isAuthenticated, restaurant, refreshRestaurantProfile]);
 
   const logout = async () => {
-    invalidateRestaurantStatsCache();
-    invalidateOrdersCache();
-    invalidateMenuCache();
-    invalidateRestaurantProfileCache();
+    const restaurantId = resolveRestaurantPlaceId(restaurant);
+    if (restaurantId) {
+      const id = String(restaurantId);
+      await Promise.all([
+        clearRestaurantProfileCache(id),
+        clearRestaurantStatsCache(id),
+        clearMenuCache(id),
+        clearOrdersCache(id),
+      ]);
+    }
     await authLogout();
     setRestaurant(null);
     setIsAuthenticated(false);

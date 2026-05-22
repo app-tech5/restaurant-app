@@ -826,6 +826,7 @@
     "add": "Add",
     "remove": "Remove",
     "confirm": "Confirm",
+    "confirmLogout": "Are you sure you want to logout?",
     "yes": "Yes",
     "no": "No",
     "ok": "OK",

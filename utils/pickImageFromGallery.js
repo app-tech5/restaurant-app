@@ -1,5 +1,9 @@
 import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 import apiClient from '../api';
+
+const MAX_UPLOAD_WIDTH = 1200;
+const UPLOAD_JPEG_QUALITY = 0.8;
 
 /** @typedef {'permission_denied' | 'cancelled' | 'no_asset'} PickFromGalleryFailureReason */
 
@@ -8,6 +12,30 @@ export const PICK_FROM_GALLERY_REASON = {
   CANCELLED: 'cancelled',
   NO_ASSET: 'no_asset',
 };
+
+const pickerDefaults = {
+  mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  quality: UPLOAD_JPEG_QUALITY,
+};
+
+async function prepareImageForUpload(uri) {
+  const { uri: preparedUri } = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: MAX_UPLOAD_WIDTH } }],
+    { compress: UPLOAD_JPEG_QUALITY, format: ImageManipulator.SaveFormat.JPEG }
+  );
+  return preparedUri;
+}
+
+async function uploadPreparedImage(uri) {
+  const preparedUri = await prepareImageForUpload(uri);
+  const data = await apiClient.uploadImageToCloudinary(preparedUri);
+  const link = data?.url;
+  if (!link || typeof link !== 'string') {
+    return { ok: false, reason: PICK_FROM_GALLERY_REASON.NO_ASSET };
+  }
+  return { ok: true, link };
+}
 
 /**
  * Pick image from gallery + upload to Cloudinary
@@ -23,8 +51,7 @@ export async function pickImageUriFromGallery(launchOptions = {}) {
   }
 
   const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    quality: 1,
+    ...pickerDefaults,
     ...launchOptions,
   });
 
@@ -44,22 +71,7 @@ export async function pickImageUriFromGallery(launchOptions = {}) {
     };
   }
 
-  // ✅ CLOUDINARY UPLOAD
-  const data = await apiClient.uploadImageToCloudinary(uri);
-
-  const link = data?.url;
-
-  if (!link || typeof link !== 'string') {
-    return {
-      ok: false,
-      reason: PICK_FROM_GALLERY_REASON.NO_ASSET,
-    };
-  }
-
-  return {
-    ok: true,
-    link,
-  };
+  return uploadPreparedImage(uri);
 }
 
 /**
@@ -76,8 +88,7 @@ export async function pickImageUriFromCamera(launchOptions = {}) {
   }
 
   const result = await ImagePicker.launchCameraAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    quality: 1,
+    ...pickerDefaults,
     ...launchOptions,
   });
 
@@ -97,20 +108,5 @@ export async function pickImageUriFromCamera(launchOptions = {}) {
     };
   }
 
-  // ✅ CLOUDINARY UPLOAD
-  const data = await apiClient.uploadImageToCloudinary(uri);
-
-  const link = data?.url;
-
-  if (!link || typeof link !== 'string') {
-    return {
-      ok: false,
-      reason: PICK_FROM_GALLERY_REASON.NO_ASSET,
-    };
-  }
-
-  return {
-    ok: true,
-    link,
-  };
+  return uploadPreparedImage(uri);
 }
