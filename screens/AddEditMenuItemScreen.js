@@ -13,15 +13,16 @@ import {
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import apiClient from '../api';
 import { ScreenHeader, RestaurantImagePicker } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const categoryLabelFromMenuItem = (menuItem) => {
+const categoryIdFromMenuItem = (menuItem) => {
   if (!menuItem?.category) return '';
   if (typeof menuItem.category === 'object' && menuItem.category !== null) {
-    return menuItem.category.name || '';
+    return String(menuItem.category._id || menuItem.category.id || '');
   }
   return String(menuItem.category);
 };
@@ -48,14 +49,31 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     tags: ''
   });
   const [errors, setErrors] = useState({});
+  const [menuCategories, setMenuCategories] = useState([]);
   const isEditMode = mode === 'edit';
+
+  useEffect(() => {
+    let cancelled = false;
+    apiClient
+      .listCategories()
+      .then((items) => {
+        if (!cancelled) setMenuCategories(Array.isArray(items) ? items : []);
+      })
+      .catch(() => {
+        if (!cancelled) setMenuCategories([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   useEffect(() => {
     if (isEditMode && item) {
       setFormData({
         name: item.name || '',
         description: item.description || '',
         price: item.price != null ? String(item.price) : '',
-        category: categoryLabelFromMenuItem(item),
+        category: categoryIdFromMenuItem(item),
         available: availabilityFromMenuItem(item),
         image: item.image || '',
         preparation_time: item.preparation_time ? item.preparation_time.toString() : '15',
@@ -80,7 +98,8 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         newErrors.price = i18n.t('menu.validation.pricePositiveNumber');
       }
     }
-    if (!String(formData.category).trim()) {
+    const categoryId = resolveCategoryForSave();
+    if (!categoryId || !/^[a-f0-9]{24}$/i.test(categoryId)) {
       newErrors.category = i18n.t('menu.validation.categoryRequired');
     }
     if (!formData.image.trim()) {
@@ -100,15 +119,13 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     return { ok: false, firstError: newErrors[keys[0]] };
   };
   const resolveCategoryForSave = () => {
-    const trimmed = formData.category.trim();
-    if (!isEditMode || !item) return trimmed;
-    const orig = item.category;
-    if (orig && typeof orig === 'object' && orig._id) {
-      const origName = (orig.name || '').trim();
-      if (trimmed === origName) return orig._id;
-    }
+    const trimmed = String(formData.category || '').trim();
     if (/^[a-f0-9]{24}$/i.test(trimmed)) return trimmed;
-    return trimmed;
+    const byName = menuCategories.find(
+      (c) => (c.name || '').trim().toLowerCase() === trimmed.toLowerCase()
+    );
+    if (byName) return String(byName._id || byName.id || '');
+    return '';
   };
   const handleSave = async () => {
     const validation = validateForm();
@@ -121,11 +138,12 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     }
     try {
       setIsLoading(true);
+      const categoryId = resolveCategoryForSave();
       const menuItemData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: parseFloat(formData.price.replace(',', '.')),
-        category: resolveCategoryForSave(),
+        category: categoryId,
         availability: formData.available,
         image: formData.image.trim(),
         preparation_time: parseInt(formData.preparation_time, 10),
@@ -169,14 +187,9 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     const cleanedText = text.replace(/[^0-9.,]/g, '');
     setFormData(prev => ({ ...prev, price: cleanedText }));
   };
-  const commonCategories = [
-    i18n.t('menu.categoryTypes.appetizers'),
-    i18n.t('menu.categoryTypes.mainCourses'),
-    i18n.t('menu.categoryTypes.desserts'),
-    i18n.t('menu.categoryTypes.beverages'),
-    i18n.t('menu.categoryTypes.sides'),
-    i18n.t('menu.categoryTypes.specialties')
-  ];
+  const selectedCategoryName =
+    menuCategories.find((c) => String(c._id || c.id) === String(formData.category))?.name || '';
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -273,37 +286,40 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.category')} *</Text>
-              <TextInput
-                style={[styles.textInput, errors.category && styles.textInputError]}
-                value={formData.category}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, category: text }))}
-                placeholder={i18n.t('menu.categoryPlaceholder')}
-                maxLength={50}
-              />
+              {selectedCategoryName ? (
+                <Text style={styles.selectedCategoryText}>{selectedCategoryName}</Text>
+              ) : null}
               {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
-              {}
-              <View style={styles.categorySuggestions}>
-                <Text style={styles.suggestionsLabel}>{i18n.t('menu.suggestions')} :</Text>
-                <View style={styles.suggestionsContainer}>
-                  {commonCategories.map((cat) => (
-                    <TouchableOpacity
-                      key={cat}
-                      style={[
-                        styles.categoryChip,
-                        formData.category === cat && styles.categoryChipSelected
-                      ]}
-                      onPress={() => setFormData(prev => ({ ...prev, category: cat }))}
-                    >
-                      <Text style={[
-                        styles.categoryChipText,
-                        formData.category === cat && styles.categoryChipTextSelected
-                      ]}>
-                        {cat}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+              {menuCategories.length === 0 ? (
+                <Text style={styles.fieldHint}>{i18n.t('onboarding.categoriesEmpty')}</Text>
+              ) : (
+                <View style={styles.categorySuggestions}>
+                  <View style={styles.suggestionsContainer}>
+                    {menuCategories.map((cat) => {
+                      const id = String(cat._id || cat.id);
+                      return (
+                        <TouchableOpacity
+                          key={id}
+                          style={[
+                            styles.categoryChip,
+                            formData.category === id && styles.categoryChipSelected
+                          ]}
+                          onPress={() => setFormData((prev) => ({ ...prev, category: id }))}
+                        >
+                          <Text
+                            style={[
+                              styles.categoryChipText,
+                              formData.category === id && styles.categoryChipTextSelected
+                            ]}
+                          >
+                            {cat.name}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
             {}
             <View style={styles.field}>
@@ -430,6 +446,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.text.secondary,
     marginTop: constants.SPACING.xs,
+  },
+  selectedCategoryText: {
+    fontSize: 16,
+    color: colors.text.primary,
+    marginBottom: constants.SPACING.sm,
   },
   errorText: {
     fontSize: 14,
