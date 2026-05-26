@@ -21,9 +21,11 @@ const MenuItemCard = ({
     description,
     price,
     category,
-    available = true,
+    available: itemAvailable,
+    availability,
     image = null
   } = item;
+  const available = typeof availability === 'boolean' ? availability : itemAvailable !== false;
   const handleDelete = () => {
     Alert.alert(
       i18n.t('common.confirm'),
