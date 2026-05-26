@@ -18,6 +18,7 @@ import { ScreenHeader, RestaurantImagePicker, MultiSelectModalField } from '../c
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { resolveRestaurantPlaceId } from '../utils/restaurantIdUtils';
 
 const categoryIdFromMenuItem = (menuItem) => {
   if (!menuItem?.category) return '';
@@ -42,7 +43,7 @@ const variantsFromMenuItem = (menuItem) => {
 
 const AddEditMenuItemScreen = ({ route, navigation }) => {
   const { mode, item } = route.params || {};
-  const { addMenuItem, updateMenuItem } = useRestaurant();
+  const { addMenuItem, updateMenuItem, restaurant } = useRestaurant();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -164,10 +165,19 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const categoryId = resolveCategoryForSave();
+      const restaurantId = resolveRestaurantPlaceId(restaurant);
+      const restaurantData = typeof restaurant?.restaurant === 'object'
+        ? restaurant.restaurant
+        : restaurant;
       const menuItemData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: parseFloat(formData.price.replace(',', '.')),
+        restaurant: restaurantId,
+        restaurants: {
+          value: restaurantId,
+          label: restaurantData?.name || '',
+        },
         category: categoryId,
         availability: formData.available,
         image: formData.image.trim(),

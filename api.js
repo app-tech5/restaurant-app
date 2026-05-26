@@ -335,11 +335,9 @@ class ApiClient {
   }
 
   async addMenuItem(menuItem) {
-    const rid = this.resolveRestaurantPlaceId();
-    const body = { ...menuItem, ...(rid ? { restaurant: rid } : {}) };
     return await this.apiCall('/resource/products', {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: JSON.stringify(menuItem),
     });
   }
 
