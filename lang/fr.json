@@ -196,6 +196,8 @@
     "available": "Disponible",
     "unavailable": "Indisponible",
     "categories": "Catégories",
+    "variants": "Options",
+    "variantsEmpty": "Aucune option disponible.",
     "addCategory": "Ajouter une catégorie",
     "deleteCategory": "Supprimer la catégorie",
     "validation": {

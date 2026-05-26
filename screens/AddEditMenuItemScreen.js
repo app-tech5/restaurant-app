@@ -14,7 +14,7 @@ import {
 import { Button, Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import apiClient from '../api';
-import { ScreenHeader, RestaurantImagePicker } from '../components';
+import { ScreenHeader, RestaurantImagePicker, MultiSelectModalField } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -33,6 +33,13 @@ const availabilityFromMenuItem = (menuItem) => {
   return menuItem?.available !== false;
 };
 
+const variantsFromMenuItem = (menuItem) => {
+  if (!Array.isArray(menuItem?.variants)) return [];
+  return menuItem.variants
+    .map((variant) => String(variant?.value || variant?._id || variant?.id || ''))
+    .filter(Boolean);
+};
+
 const AddEditMenuItemScreen = ({ route, navigation }) => {
   const { mode, item } = route.params || {};
   const { addMenuItem, updateMenuItem } = useRestaurant();
@@ -46,10 +53,12 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     image: '',
     preparation_time: '15',
     ingredients: '',
-    tags: ''
+    tags: '',
+    variants: []
   });
   const [errors, setErrors] = useState({});
   const [menuCategories, setMenuCategories] = useState([]);
+  const [variants, setVariants] = useState([]);
   const isEditMode = mode === 'edit';
 
   useEffect(() => {
@@ -68,6 +77,21 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+    apiClient
+      .listVariants()
+      .then((items) => {
+        if (!cancelled) setVariants(Array.isArray(items) ? items : []);
+      })
+      .catch(() => {
+        if (!cancelled) setVariants([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     if (isEditMode && item) {
       setFormData({
         name: item.name || '',
@@ -78,7 +102,8 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         image: item.image || '',
         preparation_time: item.preparation_time ? item.preparation_time.toString() : '15',
         ingredients: Array.isArray(item.ingredients) ? item.ingredients.join(', ') : '',
-        tags: Array.isArray(item.tags) ? item.tags.join(', ') : ''
+        tags: Array.isArray(item.tags) ? item.tags.join(', ') : '',
+        variants: variantsFromMenuItem(item)
       });
     }
   }, [isEditMode, item]);
@@ -148,7 +173,13 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         image: formData.image.trim(),
         preparation_time: parseInt(formData.preparation_time, 10),
         ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()).filter(i => i) : [],
-        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t) : []
+        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t) : [],
+        variants: variants
+          .filter((variant) => formData.variants?.includes(String(variant._id || variant.id)))
+          .map((variant) => ({
+            value: variant._id || variant.id,
+            label: variant.name,
+          }))
       };
       const itemId = item?._id ?? item?.id;
       if (isEditMode && !itemId) {
@@ -337,6 +368,18 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                   thumbColor={formData.available ? colors.white : colors.grey[400]}
                 />
               </View>
+            </View>
+            {}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{i18n.t('menu.variants')}</Text>
+              <MultiSelectModalField
+                label={i18n.t('menu.variants')}
+                items={variants}
+                selectedValues={formData.variants}
+                onChange={(values) => setFormData((prev) => ({ ...prev, variants: values }))}
+                emptyText={i18n.t('menu.variantsEmpty')}
+                confirmLabel={i18n.t('common.ok')}
+              />
             </View>
             {}
             <View style={styles.field}>

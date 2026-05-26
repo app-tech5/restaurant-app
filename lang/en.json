@@ -261,6 +261,8 @@
     "ingredients": "Ingredients",
     "ingredientsPlaceholder": "e.g. chicken, rice, spices",
     "ingredientsHint": "Separate ingredients with commas",
+    "variants": "Options",
+    "variantsEmpty": "No options available.",
     "tagsPlaceholder": "e.g. spicy, vegetarian, popular",
     "tagsHint": "Separate tags with commas",
     "categoryPlaceholder": "e.g. Main courses, Desserts, Beverages...",
