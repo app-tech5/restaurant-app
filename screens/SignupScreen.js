@@ -26,6 +26,8 @@ export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
@@ -150,9 +152,19 @@ export default function SignupScreen({ navigation }) {
                 <Input
                   placeholder={i18n.t('auth.password')}
                   leftIcon={<Icon name="lock" type="material" color={colors.primary} size={20} />}
+                  rightIcon={
+                    <TouchableOpacity onPress={() => setShowPassword((prev) => !prev)}>
+                      <Icon
+                        name={showPassword ? 'visibility-off' : 'visibility'}
+                        type="material"
+                        color={colors.primary}
+                        size={20}
+                      />
+                    </TouchableOpacity>
+                  }
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   autoCapitalize="none"
                   autoCorrect={false}
                   containerStyle={styles.inputContainer}
@@ -162,9 +174,19 @@ export default function SignupScreen({ navigation }) {
                 <Input
                   placeholder={i18n.t('auth.confirmPassword')}
                   leftIcon={<Icon name="lock-outline" type="material" color={colors.primary} size={20} />}
+                  rightIcon={
+                    <TouchableOpacity onPress={() => setShowConfirmPassword((prev) => !prev)}>
+                      <Icon
+                        name={showConfirmPassword ? 'visibility-off' : 'visibility'}
+                        type="material"
+                        color={colors.primary}
+                        size={20}
+                      />
+                    </TouchableOpacity>
+                  }
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  secureTextEntry
+                  secureTextEntry={!showConfirmPassword}
                   autoCapitalize="none"
                   autoCorrect={false}
                   containerStyle={styles.inputContainer}

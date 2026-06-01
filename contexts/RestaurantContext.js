@@ -37,15 +37,16 @@ export const RestaurantProvider = ({ children }) => {
     setRestaurant,
     setIsAuthenticated
   } = useRestaurantAuth();
+  const isReady = isAuthenticated && !needsOnboarding;
   const {
     loadRestaurantProfile,
     invalidateRestaurantProfileCache
-  } = useRestaurantProfile(restaurant, isAuthenticated);
+  } = useRestaurantProfile(restaurant, isReady);
   const {
     stats,
     loadRestaurantStats,
     invalidateRestaurantStatsCache
-  } = useRestaurantStats(restaurant, isAuthenticated);
+  } = useRestaurantStats(restaurant, isReady);
   const {
     orders,
     loadRestaurantOrders,
@@ -54,7 +55,7 @@ export const RestaurantProvider = ({ children }) => {
     prepareOrder,
     readyForPickup,
     invalidateOrdersCache
-  } = useRestaurantOrders(restaurant, isAuthenticated);
+  } = useRestaurantOrders(restaurant, isReady);
   const {
     menu,
     loadMenu,
@@ -63,11 +64,11 @@ export const RestaurantProvider = ({ children }) => {
     deleteMenuItem,
     toggleMenuItemAvailability,
     invalidateMenuCache
-  } = useRestaurantMenu(restaurant, isAuthenticated);
+  } = useRestaurantMenu(restaurant, isReady);
 
   const [socket, setSocket] = useState(null);
   useEffect(() => {
-    if (!restaurant?._id) {
+    if (!isReady || !restaurant?._id) {
       return;
     }
     const url = String(config.API_BASE_URL).replace(/\/api\/?$/, '');
@@ -84,12 +85,12 @@ export const RestaurantProvider = ({ children }) => {
     return () => {
       socketInstance.disconnect();
     };
-  }, [restaurant?._id]);
+  }, [isReady, restaurant?._id]);
 
   const appStateRef = useRef(AppState.currentState);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isReady || !restaurant) {
       return;
     }
 
@@ -119,7 +120,7 @@ export const RestaurantProvider = ({ children }) => {
     });
 
     return () => subscription.remove();
-  }, [isAuthenticated, restaurant, refreshRestaurantProfile]);
+  }, [isReady, restaurant, refreshRestaurantProfile]);
 
   const logout = async () => {
     const restaurantId = resolveRestaurantPlaceId(restaurant);

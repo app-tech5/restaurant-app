@@ -3,8 +3,8 @@ import { useRestaurant } from './RestaurantContext';
 import { useSettingsManager } from '../hooks/useSettingsManager';
 const SettingContext = createContext();
 export function SettingProvider({ children }) {
-  const { isAuthenticated } = useRestaurant();
-  const settingsData = useSettingsManager(isAuthenticated);
+  const { isAuthenticated, needsOnboarding } = useRestaurant();
+  const settingsData = useSettingsManager(isAuthenticated && !needsOnboarding);
   const value = {
     ...settingsData
   };
