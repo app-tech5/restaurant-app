@@ -87,7 +87,7 @@ class ApiClient {
   }
 
   async restaurantLogin(email, password) {
-    const response = await this.apiCall('/auth/login', {
+    const response = await this.apiCall('/auth/restaurant-login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });

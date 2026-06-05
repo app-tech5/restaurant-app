@@ -46,7 +46,7 @@ export default function LoginScreen({ navigation }) {
     }
     setIsLoading(true);
     try {
-      const result = await login(email, password);
+      const result = await login(email.trim(), password);
       if (result.success) {
         navigation.replace('DrawerNavigator');
       } else {
