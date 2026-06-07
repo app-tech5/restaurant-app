@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { FAB } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
@@ -7,16 +7,30 @@ import { useMenuFilters, useMenuActions } from '../hooks';
 import { colors } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import apiClient from '../api';
+import { loadMenuWithSmartCache } from '../utils/cacheUtils';
+import { useFocusEffect } from '@react-navigation/native';
+
 const MenuScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const { menu, isAuthenticated } = useRestaurant();
+  const { menu, setMenu, restaurant, isAuthenticated } = useRestaurant();
   const menuFilters = useMenuFilters(menu);
   const menuActions = useMenuActions(navigation);
-  useEffect(() => {
-    if (isAuthenticated) {
-      menuActions.loadMenuItems();
-    }
-  }, [isAuthenticated]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!isAuthenticated || !restaurant?._id) {
+        return;
+      }
+  
+      loadMenuWithSmartCache(
+        restaurant._id,
+        () => apiClient.getRestaurantMenu(),
+        (data) => setMenu(Array.isArray(data) ? data : []),
+        (data) => setMenu(Array.isArray(data) ? data : [])
+      );
+    }, [isAuthenticated, restaurant?._id])
+  );
   if (!menu) {
     return (
       <View style={styles.container}>

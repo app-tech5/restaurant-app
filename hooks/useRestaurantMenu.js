@@ -113,6 +113,7 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
   };
   return {
     menu,
+    setMenu,
     loadMenu,
     addMenuItem,
     updateMenuItem,

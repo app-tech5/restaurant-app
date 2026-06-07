@@ -58,6 +58,7 @@ export const RestaurantProvider = ({ children }) => {
   } = useRestaurantOrders(restaurant, isReady);
   const {
     menu,
+    setMenu,
     loadMenu,
     addMenuItem,
     updateMenuItem,
@@ -162,6 +163,7 @@ export const RestaurantProvider = ({ children }) => {
     readyForPickup,
     invalidateOrdersCache,
     menu,
+    setMenu,
     loadMenu,
     addMenuItem,
     updateMenuItem,
