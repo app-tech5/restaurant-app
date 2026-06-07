@@ -23,3 +23,4 @@ export { default as MenuCategoriesTabs } from './MenuCategoriesTabs';
 export { default as MenuList } from './MenuList';
 export { default as SettingRow } from './SettingRow';
 export { default as MultiSelectModalField } from './MultiSelectModalField';
+export { default as ChipSelectField } from './ChipSelectField';

@@ -14,11 +14,12 @@ import {
 import { Button, Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import apiClient from '../api';
-import { ScreenHeader, RestaurantImagePicker, MultiSelectModalField } from '../components';
+import { ScreenHeader, RestaurantImagePicker, MultiSelectModalField, ChipSelectField } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { resolveRestaurantPlaceId } from '../utils/restaurantIdUtils';
+import { normalizeProductTags, PRODUCT_TAGS } from '../utils/productTags';
 
 const categoryIdFromMenuItem = (menuItem) => {
   if (!menuItem?.category) return '';
@@ -54,7 +55,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     image: '',
     preparation_time: '15',
     ingredients: '',
-    tags: '',
+    tags: [],
     variants: []
   });
   const [errors, setErrors] = useState({});
@@ -103,7 +104,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         image: item.image || '',
         preparation_time: item.preparation_time ? item.preparation_time.toString() : '15',
         ingredients: Array.isArray(item.ingredients) ? item.ingredients.join(', ') : '',
-        tags: Array.isArray(item.tags) ? item.tags.join(', ') : '',
+        tags: normalizeProductTags(item.tags),
         variants: variantsFromMenuItem(item)
       });
     }
@@ -183,7 +184,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         image: formData.image.trim(),
         preparation_time: parseInt(formData.preparation_time, 10),
         ingredients: formData.ingredients ? formData.ingredients.split(',').map(i => i.trim()).filter(i => i) : [],
-        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t) : [],
+        tags: formData.tags,
         variants: variants
           .filter((variant) => formData.variants?.includes(String(variant._id || variant.id)))
           .map((variant) => ({
@@ -228,8 +229,16 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
     const cleanedText = text.replace(/[^0-9.,]/g, '');
     setFormData(prev => ({ ...prev, price: cleanedText }));
   };
-  const selectedCategoryName =
-    menuCategories.find((c) => String(c._id || c.id) === String(formData.category))?.name || '';
+
+  const categoryOptions = menuCategories.map((cat) => ({
+    value: String(cat._id || cat.id),
+    label: cat.name,
+  }));
+
+  const tagOptions = PRODUCT_TAGS.map((tagId) => ({
+    value: tagId,
+    label: i18n.t(`menu.productTags.${tagId}`),
+  }));
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -327,40 +336,13 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.category')} *</Text>
-              {selectedCategoryName ? (
-                <Text style={styles.selectedCategoryText}>{selectedCategoryName}</Text>
-              ) : null}
               {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
-              {menuCategories.length === 0 ? (
-                <Text style={styles.fieldHint}>{i18n.t('onboarding.categoriesEmpty')}</Text>
-              ) : (
-                <View style={styles.categorySuggestions}>
-                  <View style={styles.suggestionsContainer}>
-                    {menuCategories.map((cat) => {
-                      const id = String(cat._id || cat.id);
-                      return (
-                        <TouchableOpacity
-                          key={id}
-                          style={[
-                            styles.categoryChip,
-                            formData.category === id && styles.categoryChipSelected
-                          ]}
-                          onPress={() => setFormData((prev) => ({ ...prev, category: id }))}
-                        >
-                          <Text
-                            style={[
-                              styles.categoryChipText,
-                              formData.category === id && styles.categoryChipTextSelected
-                            ]}
-                          >
-                            {cat.name}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-                </View>
-              )}
+              <ChipSelectField
+                options={categoryOptions}
+                value={formData.category}
+                onChange={(category) => setFormData((prev) => ({ ...prev, category }))}
+                emptyText={i18n.t('onboarding.categoriesEmpty')}
+              />
             </View>
             {}
             <View style={styles.field}>
@@ -410,12 +392,11 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
             {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('common.tags')}</Text>
-              <TextInput
-                style={[styles.textInput]}
+              <ChipSelectField
+                options={tagOptions}
                 value={formData.tags}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, tags: text }))}
-                placeholder={i18n.t('menu.tagsPlaceholder')}
-                maxLength={200}
+                onChange={(tags) => setFormData((prev) => ({ ...prev, tags }))}
+                multiple
               />
               <Text style={styles.fieldHint}>
                 {i18n.t('menu.tagsHint')}
@@ -500,47 +481,10 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginTop: constants.SPACING.xs,
   },
-  selectedCategoryText: {
-    fontSize: 16,
-    color: colors.text.primary,
-    marginBottom: constants.SPACING.sm,
-  },
   errorText: {
     fontSize: 14,
     color: colors.error,
     marginTop: constants.SPACING.xs,
-  },
-  categorySuggestions: {
-    marginTop: constants.SPACING.md,
-  },
-  suggestionsLabel: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginBottom: constants.SPACING.sm,
-  },
-  suggestionsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: constants.SPACING.sm,
-  },
-  categoryChip: {
-    paddingHorizontal: constants.SPACING.md,
-    paddingVertical: constants.SPACING.xs,
-    borderRadius: constants.BORDER_RADIUS,
-    backgroundColor: colors.grey[100],
-    borderWidth: 1,
-    borderColor: colors.grey[200],
-  },
-  categoryChipSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  categoryChipText: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  categoryChipTextSelected: {
-    color: colors.white,
   },
   switchRow: {
     flexDirection: 'row',

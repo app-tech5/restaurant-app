@@ -263,8 +263,12 @@
     "ingredientsHint": "Separate ingredients with commas",
     "variants": "Options",
     "variantsEmpty": "No options available.",
-    "tagsPlaceholder": "e.g. spicy, vegetarian, popular",
-    "tagsHint": "Separate tags with commas",
+    "tagsHint": "Select applicable labels",
+    "productTags": {
+      "vegetarian": "Vegetarian",
+      "vegan": "Vegan",
+      "spicy": "Spicy"
+    },
     "categoryPlaceholder": "e.g. Main courses, Desserts, Beverages...",
     "suggestions": "Suggestions",
     "requiredFields": "* Required fields",
@@ -589,6 +593,7 @@
     "invalidEmail": "Invalid email format",
     "updateSuccess": "Restaurant information updated successfully",
     "updateError": "Unable to save changes",
+    "geocodeFailed": "Unable to locate this address. Check the address, city, and country.",
     "loading": "Loading...",
     "locationInfo": "Location Information",
     "country": "Country",

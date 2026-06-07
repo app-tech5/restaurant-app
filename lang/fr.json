@@ -198,6 +198,12 @@
     "categories": "Catégories",
     "variants": "Options",
     "variantsEmpty": "Aucune option disponible.",
+    "tagsHint": "Sélectionnez les labels applicables",
+    "productTags": {
+      "vegetarian": "Végétarien",
+      "vegan": "Vegan",
+      "spicy": "Épicé"
+    },
     "addCategory": "Ajouter une catégorie",
     "deleteCategory": "Supprimer la catégorie",
     "validation": {
@@ -459,6 +465,7 @@
     "invalidEmail": "Format d'e-mail invalide",
     "updateSuccess": "Informations mises à jour",
     "updateError": "Impossible d'enregistrer les modifications",
+    "geocodeFailed": "Impossible de localiser cette adresse. Vérifiez l'adresse, la ville et le pays.",
     "loading": "Chargement...",
     "locationInfo": "Localisation",
     "country": "Pays",

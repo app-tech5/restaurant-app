@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import apiClient from '../api';
-import { colors, constants } from '../global';
+import { colors } from '../global';
 import i18n from '../i18n';
+import ChipSelectField from './ChipSelectField';
 
 export default function Categories({
   selectedIds = [],
@@ -49,16 +49,10 @@ export default function Categories({
     };
   }, []);
 
-  const toggle = (id) => {
-    if (disabled || !onChangeSelectedIds) return;
-    const key = String(id);
-    const current = (selectedIds || []).map(String);
-    onChangeSelectedIds(
-      current.includes(key)
-        ? current.filter((x) => x !== key)
-        : [...current, key]
-    );
-  };
+  const options = list.map((cat) => ({
+    value: String(cat._id || cat.id),
+    label: cat.name,
+  }));
 
   return (
     <View>
@@ -68,33 +62,15 @@ export default function Categories({
       {hint ? <Text style={styles.hint}>{hint}</Text> : null}
       {loading ? (
         <ActivityIndicator size="small" color={colors.primary} style={styles.loader} />
-      ) : list.length === 0 ? (
-        <Text style={styles.empty}>
-          {emptyMessage || i18n.t('onboarding.categoriesEmpty')}
-        </Text>
       ) : (
-        <View style={styles.chipRow}>
-          {list.map((cat) => {
-            const id = String(cat._id || cat.id);
-            const active = (selectedIds || []).map(String).includes(id);
-            return (
-              <TouchableOpacity
-                key={id}
-                style={[
-                  styles.chip,
-                  active && styles.chipSelected,
-                  disabled && styles.chipDisabled,
-                ]}
-                onPress={() => toggle(id)}
-                disabled={disabled}
-              >
-                <Text style={[styles.chipText, active && styles.chipTextSelected]}>
-                  {cat.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        <ChipSelectField
+          options={options}
+          value={selectedIds}
+          onChange={onChangeSelectedIds}
+          multiple
+          disabled={disabled}
+          emptyText={emptyMessage || i18n.t('onboarding.categoriesEmpty')}
+        />
       )}
     </View>
   );
@@ -118,37 +94,5 @@ const styles = StyleSheet.create({
   },
   loader: {
     marginVertical: 12,
-  },
-  empty: {
-    fontSize: 13,
-    color: colors.text.secondary,
-    marginVertical: 8,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: constants.SPACING.sm,
-  },
-  chip: {
-    paddingHorizontal: constants.SPACING.md,
-    paddingVertical: constants.SPACING.xs,
-    borderRadius: constants.BORDER_RADIUS,
-    backgroundColor: colors.grey[100],
-    borderWidth: 1,
-    borderColor: colors.grey[200],
-  },
-  chipSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  chipDisabled: {
-    opacity: 0.85,
-  },
-  chipText: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  chipTextSelected: {
-    color: colors.white,
   },
 });

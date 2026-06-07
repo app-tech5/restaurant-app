@@ -24,6 +24,7 @@ import {
   buildRestaurantCategoriesPayload,
   withRestaurantAccountEmail,
 } from '../utils/restaurantUtils';
+import { geocodeAddress } from '../utils/geocoding';
 
 const THEME_LABEL_KEYS = {
   default: 'restaurantProfile.themeDefault',
@@ -86,10 +87,36 @@ const RestaurantProfileScreen = ({ navigation }) => {
     }
     try {
       setIsLoading(true);
+
+      const locationChanged =
+        formData.address.trim() !== String(restaurant?.address || '').trim() ||
+        formData.city.trim() !== String(restaurant?.city || '').trim() ||
+        formData.country.trim() !== String(restaurant?.country || '').trim();
+
+      let latitude = restaurant?.latitude;
+      let longitude = restaurant?.longitude;
+
+      if (locationChanged) {
+        const geo = await geocodeAddress({
+          address: formData.address,
+          city: formData.city,
+          country: formData.country,
+        });
+        if (!geo) {
+          Alert.alert(
+            i18n.t('errors.validationError'),
+            i18n.t('restaurantProfile.geocodeFailed')
+          );
+          return;
+        }
+        latitude = String(geo.lat);
+        longitude = String(geo.lon);
+      }
+
       const payload = buildRestaurantProfileUpdatePayload({
         ...formData,
-        latitude: restaurant?.latitude,
-        longitude: restaurant?.longitude,
+        latitude,
+        longitude,
         categories: buildRestaurantCategoriesPayload(
           formData.selectedCategoryIds,
           categoryOptions
