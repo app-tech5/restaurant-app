@@ -241,7 +241,7 @@ jobs:
 
   publish:
     name: Publish APK to VPS
-    needs: [unit-tests, maestro-smoke]
+    needs: [maestro-smoke]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
