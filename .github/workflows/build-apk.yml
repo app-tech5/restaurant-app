@@ -1,21 +1,52 @@
-name: Build and publish APK
+name: Build, test and publish APK
+
+# All heavy work (Gradle + Android emulator + Maestro) runs on GitHub Actions only.
+# APK is published to the VPS only if unit + Maestro smoke tests pass.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: restaurant-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APK_FILENAME: ${{ vars.APK_FILENAME }}
+  VPS_DOWNLOADS_DIR: ${{ vars.VPS_DOWNLOADS_DIR }}
+  PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+  EXPO_PUBLIC_API_URL: ${{ vars.EXPO_PUBLIC_API_URL }}
+  EXPO_PUBLIC_DEMO_MODE: 'true'
+  EXPO_PUBLIC_DEMO_EMAIL: ${{ vars.EXPO_PUBLIC_DEMO_EMAIL }}
+  EXPO_PUBLIC_DEMO_PASSWORD: ${{ vars.EXPO_PUBLIC_DEMO_PASSWORD }}
+  DEMO_PACKAGE_ID: com.goodfood.restaurant.demo
+
 jobs:
-  build-and-publish:
+  unit-tests:
+    name: Unit tests (Jest)
     runs-on: ubuntu-latest
-    env:
-      APK_FILENAME: ${{ vars.APK_FILENAME }}
-      VPS_DOWNLOADS_DIR: ${{ vars.VPS_DOWNLOADS_DIR }}
-      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
-      EXPO_PUBLIC_API_URL: ${{ vars.EXPO_PUBLIC_API_URL }}
-      EXPO_PUBLIC_DEMO_MODE: 'true'
-      EXPO_PUBLIC_DEMO_EMAIL: ${{ vars.EXPO_PUBLIC_DEMO_EMAIL }}
-      EXPO_PUBLIC_DEMO_PASSWORD: ${{ vars.EXPO_PUBLIC_DEMO_PASSWORD }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest
+        run: npm test -- --ci --watchAll=false --passWithNoTests
+
+  build-apk:
+    name: Build release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -105,10 +136,6 @@ jobs:
 
       - name: Prepare APK artifact
         run: |
-          if [ -z "$APK_FILENAME" ]; then
-            echo "APK_FILENAME is empty — set vars.APK_FILENAME in GitHub (Settings → Variables)"
-            exit 1
-          fi
           APK_PATH=$(find android/app/build/outputs/apk/release -name '*-release.apk' -type f | head -1)
           if [ -z "$APK_PATH" ]; then
             echo "No release APK found"
@@ -117,6 +144,109 @@ jobs:
           fi
           cp "$APK_PATH" "$APK_FILENAME"
           ls -lh "$APK_FILENAME"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: restaurant-demo-apk
+          path: ${{ env.APK_FILENAME }}
+          if-no-files-found: error
+          retention-days: 7
+
+  maestro-smoke:
+    name: Maestro smoke (emulator)
+    needs: [build-apk]
+    runs-on: macos-14
+    timeout-minutes: 75
+    steps:
+      - name: Checkout Maestro flows
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .maestro
+          sparse-checkout-cone-mode: false
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: restaurant-demo-apk
+          path: artifacts
+
+      - name: Verify APK present
+        run: |
+          set -euo pipefail
+          ls -lh "artifacts/${APK_FILENAME}"
+          test -f "artifacts/${APK_FILENAME}"
+
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+          "$HOME/.maestro/bin/maestro" --version
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Run Maestro smoke on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: aarch64
+          target: google_apis
+          profile: pixel_6
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            set -euo pipefail
+            adb wait-for-device
+            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+
+            # Soft connectivity check (demo login uses live API for builtin account).
+            curl -fsS --max-time 15 "${EXPO_PUBLIC_API_URL%/}/auth/restaurant-login" -o /dev/null || true
+
+            adb install -r "artifacts/${APK_FILENAME}"
+            adb shell monkey -p "${DEMO_PACKAGE_ID}" -c android.intent.category.LAUNCHER 1 || true
+            sleep 8
+
+            FLOW=".maestro/ci-smoke.yaml"
+            test -f "$FLOW"
+
+            mkdir -p artifacts/maestro
+            maestro test "$FLOW" \
+              --format junit \
+              --output artifacts/maestro/report.xml
+
+            if [ -d "$HOME/.maestro/tests" ]; then
+              cp -R "$HOME/.maestro/tests" artifacts/maestro/tests
+            fi
+
+      - name: Upload Maestro report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: restaurant-maestro-smoke
+          path: artifacts/maestro/
+          if-no-files-found: warn
+          retention-days: 14
+
+  publish:
+    name: Publish APK to VPS
+    needs: [unit-tests, maestro-smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: restaurant-demo-apk
+          path: .
 
       - name: Prepare downloads directory on VPS
         uses: appleboy/ssh-action@v1.2.0
@@ -143,3 +273,4 @@ jobs:
         run: |
           BASE="${PUBLIC_SITE_URL%/}"
           echo "APK available at ${BASE}/downloads/${APK_FILENAME}"
+          echo "Published only after Jest + Maestro smoke passed."

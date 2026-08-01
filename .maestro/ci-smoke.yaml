@@ -1,0 +1,173 @@
+# CI-only Maestro smoke for the restaurant demo APK.
+# appId must match the package rename in .github/workflows/build-apk.yml
+appId: com.goodfood.restaurant.demo
+name: CI smoke — restaurant core features
+---
+- launchApp:
+    clearState: true
+
+# Login (demo credentials are prefilled when EXPO_PUBLIC_DEMO_MODE=true)
+- extendedWaitUntil:
+    visible: "Sign In"
+    timeout: 90000
+- assertVisible: "Welcome!"
+- assertVisible: "Demo mode enabled - Use demo credentials"
+- tapOn: "Sign In"
+- extendedWaitUntil:
+    visible: "Dashboard"
+    timeout: 90000
+- assertVisible: "Dashboard"
+- assertVisible: "Open menu"
+
+# Dashboard content / quick actions
+- assertVisible:
+    text: ".*[Oo]rder.*"
+    optional: true
+- scroll
+- waitForAnimationToEnd
+
+# Orders
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Orders"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Orders"
+    timeout: 30000
+- assertVisible: "Orders"
+- runFlow:
+    when:
+      visible: "View"
+    commands:
+      - tapOn: "View"
+      - waitForAnimationToEnd
+      - assertVisible:
+          text: ".*"
+      - back
+      - waitForAnimationToEnd
+
+# Menu
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Menu"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Menu"
+    timeout: 30000
+- assertVisible: "Menu"
+- scroll
+- waitForAnimationToEnd
+
+# Analytics
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Analytics"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Analytics"
+    timeout: 30000
+- assertVisible: "Analytics"
+- scroll
+- waitForAnimationToEnd
+
+# Customer reviews
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Customer reviews"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Customer reviews"
+    timeout: 30000
+- assertVisible: "Customer reviews"
+
+# Reports
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Reports"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Reports"
+    timeout: 30000
+- assertVisible: "Reports"
+- scroll
+- waitForAnimationToEnd
+
+# Notifications
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Notifications"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Notifications"
+    timeout: 30000
+- assertVisible: "Notifications"
+
+# Support
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Support"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Support"
+    timeout: 30000
+- assertVisible: "Support"
+
+# Profile
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Profile"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Profile"
+    timeout: 30000
+- assertVisible: "Profile"
+- scroll
+- waitForAnimationToEnd
+
+# Settings + nested screens
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Settings"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 30000
+- assertVisible: "Settings"
+
+- tapOn:
+    text: "Opening hours"
+    optional: true
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+- tapOn:
+    text: "Delivery settings"
+    optional: true
+- tapOn:
+    text: "Delivery"
+    optional: true
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+- tapOn:
+    text: "Payment settings"
+    optional: true
+- tapOn:
+    text: "Payment"
+    optional: true
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# Back to dashboard — app still usable
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Dashboard"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Dashboard"
+    timeout: 30000
+- assertVisible: "Dashboard"
+- assertVisible: "Open menu"
