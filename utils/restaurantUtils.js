@@ -316,10 +316,13 @@ export const getRestaurantOrderCustomerFields = (order) => {
 export const calculateRestaurantStats = (orders = [], menu = []) => {
   const safeOrders = Array.isArray(orders) ? orders : [];
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const todayOrders = safeOrders.filter(order =>
-    new Date(order.createdAt) >= today
-  );
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const tomorrowStart = new Date(todayStart);
+  tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+  const todayOrders = safeOrders.filter(order => {
+    const createdAt = new Date(order.createdAt);
+    return createdAt >= todayStart && createdAt < tomorrowStart;
+  });
   const totalRevenue = safeOrders
     .filter(order => order.status === ORDER_STATUSES.DELIVERED)
     .reduce((sum, order) => sum + (order.totalPrice || 0), 0);

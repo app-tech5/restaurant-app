@@ -16,7 +16,14 @@
     "support": "Support",
     "profile": "Profil",
     "settings": "Paramètres",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "menuManagement": "Gestion des menus",
+    "menuCategories": "Gestion des catégories de menu",
+    "menuAnalytics": "Analyses du menu",
+    "ordersHistory": "Historique des commandes",
+    "languageSettings": "Paramètres de langue",
+    "notificationSettings": "Paramètres de notifications",
+    "return": "Retour"
   },
 
   "auth": {
@@ -196,6 +203,13 @@
     "available": "Disponible",
     "unavailable": "Indisponible",
     "categories": "Catégories",
+    "uncategorized": "Sans catégorie",
+    "items": "plats",
+    "item": "plat",
+    "totalItems": "Total plats",
+    "topSelling": "Plats les plus vendus",
+    "noItems": "Aucune catégorie",
+    "noItemsSubtitle": "Ajoutez des plats pour voir les catégories",
     "variants": "Options",
     "variantsEmpty": "Aucune option disponible.",
     "tagsHint": "Sélectionnez les labels applicables",
@@ -247,6 +261,15 @@
       "vsYesterday": "vs hier",
       "vsLastWeek": "vs semaine dernière",
       "perTotal": "du total"
+    },
+    "days": {
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mer",
+      "thu": "Jeu",
+      "fri": "Ven",
+      "sat": "Sam",
+      "sun": "Dim"
     }
   },
 
@@ -351,15 +374,6 @@
     }
   },
 
-  "navigation": {
-    "menuManagement": "Gestion des menus",
-    "menuCategories": "Gestion des catégories de menu",
-    "menuAnalytics": "Analyses du menu",
-    "ordersHistory": "Historique des commandes",
-    "languageSettings": "Paramètres de langue",
-    "notificationSettings": "Paramètres de notifications",
-    "return": "Retour"
-  },
   "charts": {
     "victoryIntegration": "Victory Native sera intégré ici"
   },
@@ -531,6 +545,11 @@
     "currencySaved": "Devise mise à jour dans les paramètres globaux.",
     "currencySaveError": "Enregistrement impossible. Vérifiez vos droits ou réessayez.",
     "languageChanged": "Langue changée en {{language}}",
+    "languageLoadError": "Impossible de changer la langue",
+    "orderStatusChanges": "Changements de statut des commandes",
+    "lowStockAlerts": "Alertes stock bas",
+    "lowStockAlertsSubtitle": "Alertes quand un plat est en rupture",
+    "marketingNotifSubtitle": "Offres spéciales et promotions",
     "aboutTitle": "À propos",
     "aboutMessage": "Good Food Restaurant v1.0.0\n\nApplication de gestion de restaurant",
     "privacyTitle": "Politique de confidentialité",

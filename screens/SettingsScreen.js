@@ -10,17 +10,18 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSettings } from '../contexts/SettingContext';
 import { useUserSettings } from '../hooks/useUserSettings';
 import { ScreenHeader, SettingRow } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import { safeBottomPad } from '../utils/safeBottom';
 const SettingsScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const {
     currency,
     language,
-    changeLanguage,
-    getAvailableLanguages,
     getAvailableCurrencies,
     changeCurrency,
   } = useSettings();
@@ -54,42 +55,8 @@ const SettingsScreen = ({ navigation }) => {
       Alert.alert(i18n.t('errors.serverError'), result.error);
     }
   };
-  const handleLanguageChange = async () => {
-    try {
-      const availableLanguages = await getAvailableLanguages();
-      const languageOptions = availableLanguages.map(lang => ({
-        text: `${lang.name} (${lang.code.toUpperCase()})`,
-        onPress: () => handleLanguageSelection(lang.code),
-        style: lang.code === i18n.locale ? 'destructive' : 'default'
-      }));
-      languageOptions.push({
-        text: i18n.t('common.cancel'),
-        style: 'cancel'
-      });
-      Alert.alert(
-        i18n.t('settings.changeLanguage'),
-        i18n.t('settings.selectLanguage'),
-        languageOptions
-      );
-    } catch (error) {
-      console.error('Error loading languages:', error);
-      Alert.alert(i18n.t('errors.error'), 'Unable to load languages');
-    }
-  };
-  const handleLanguageSelection = async (languageCode) => {
-    try {
-      await changeLanguage(languageCode);
-      const { changeLanguage: changeI18nLanguage } = require('../i18n');
-      changeI18nLanguage(languageCode);
-      Alert.alert(
-        i18n.t('success.saved'),
-        i18n.t('settings.languageChanged', { language: languageCode.toUpperCase() }),
-        [{ text: i18n.t('common.ok') }]
-      );
-    } catch (error) {
-      console.error('Error changing language:', error);
-      Alert.alert(i18n.t('errors.error'), 'Unable to change language');
-    }
+  const handleLanguageChange = () => {
+    navigation.navigate('LanguageSettings');
   };
   const handleCurrencyChange = async () => {
     try {
@@ -164,11 +131,13 @@ const SettingsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.settings')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
       />
       <ScrollView
         style={styles.scrollView}
+        contentContainerStyle={{
+          paddingBottom: constants.SPACING.xl,
+        }}
         showsVerticalScrollIndicator={false}
       >
         {}
@@ -376,6 +345,7 @@ const SettingsScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+      <View style={{ height: safeBottomPad(insets.bottom, 0) }} />
     </View>
   );
 };

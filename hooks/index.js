@@ -10,3 +10,4 @@ export { useReportCalculations } from './useReportCalculations';
 export { useSettings } from '../contexts/SettingContext';
 export { useSettingsManager } from './useSettingsManager';
 export { useNotificationNavigation } from './useNotificationNavigation';
+export { useScreenHeaderNav } from './useScreenHeaderNav';

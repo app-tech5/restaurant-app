@@ -1,11 +1,17 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MenuScreen, AddEditMenuItemScreen } from '../screens';
+import {
+  MenuScreen,
+  AddEditMenuItemScreen,
+  MenuCategoriesScreen,
+  MenuAnalyticsScreen,
+} from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
+
 const Stack = createStackNavigator();
+
 const MenuStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -13,10 +19,9 @@ const MenuStackNavigator = () => {
       screenOptions={{
         header: (props) => (
           <ScreenHeader
-            title={i18n.t('navigation.menu')}
-            showBackButton={props.back !== undefined}
-            onLeftPress={props.navigation.goBack}
+            title={props.options?.title || i18n.t('navigation.menu')}
             {...props.options}
+            autoLeftNav
           />
         ),
         headerStyle: {
@@ -32,24 +37,24 @@ const MenuStackNavigator = () => {
         component={MenuScreen}
         options={{
           title: i18n.t('navigation.menu'),
-          headerShown: false, 
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="AddEditMenuItem"
         component={AddEditMenuItemScreen}
         options={({ route }) => ({
-          title: route.params?.mode === 'add'
-            ? i18n.t('menu.addItem')
-            : i18n.t('menu.editItem'),
-          headerShown: false, 
+          title:
+            route.params?.mode === 'add' ? i18n.t('menu.addItem') : i18n.t('menu.editItem'),
+          headerShown: false,
         })}
       />
       <Stack.Screen
         name="MenuCategories"
         component={MenuCategoriesScreen}
         options={{
-          title: 'Catégories de menu',
+          title: i18n.t('navigation.menuCategories'),
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -57,31 +62,11 @@ const MenuStackNavigator = () => {
         component={MenuAnalyticsScreen}
         options={{
           title: i18n.t('navigation.menuAnalytics'),
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
   );
 };
-const MenuCategoriesScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{i18n.t('navigation.menuCategories')}</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-const MenuAnalyticsScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{i18n.t('navigation.menuAnalytics')}</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+
 export default MenuStackNavigator;

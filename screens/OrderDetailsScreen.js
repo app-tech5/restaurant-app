@@ -21,15 +21,48 @@ import {
 } from '../utils/restaurantUtils';
 import i18n from '../i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import apiClient from '../api';
 const OrderDetailsScreen = ({ route, navigation }) => {
   const paramsOrder = route.params?.order;
-  const [order, setOrder] = useState(paramsOrder);
+  const paramsOrderId =
+    route.params?.orderId ||
+    paramsOrder?._id ||
+    paramsOrder?.id ||
+    null;
+  const hasValidOrder = !!(paramsOrder && (paramsOrder._id || paramsOrder.id));
+  const [order, setOrder] = useState(hasValidOrder ? paramsOrder : null);
+  const [loadingOrder, setLoadingOrder] = useState(!hasValidOrder && !!paramsOrderId);
   useEffect(() => {
     const next = route.params?.order;
-    if (next?._id) {
+    if (next && (next._id || next.id)) {
       setOrder(next);
+      setLoadingOrder(false);
+      return;
     }
-  }, [route.params?.order?._id]);
+    const orderId =
+      route.params?.orderId ||
+      (typeof next === 'object' && next ? next._id || next.id : null);
+    if (!orderId) {
+      setLoadingOrder(false);
+      return;
+    }
+    let cancelled = false;
+    setLoadingOrder(true);
+    apiClient
+      .getOrderById(orderId)
+      .then((fetched) => {
+        if (!cancelled) setOrder(fetched);
+      })
+      .catch(() => {
+        if (!cancelled) setOrder(null);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingOrder(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [route.params?.order?._id, route.params?.order?.id, route.params?.orderId]);
   const {
     updateOrderStatus,
     acceptOrder,
@@ -38,13 +71,25 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   } = useRestaurant();
   const { formatCurrency } = useSettings();
   const [isLoading, setIsLoading] = useState(false);
-  if (!order) {
+  if (loadingOrder) {
     return (
       <SafeAreaView style={styles.container}>
         <ScreenHeader
           title={i18n.t('orderDetails.title')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
+        />
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{i18n.t('common.loading')}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+  if (!order || !(order._id || order.id)) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScreenHeader
+          title={i18n.t('orderDetails.title')}
+          autoLeftNav
         />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{i18n.t('orderDetails.notFound')}</Text>
@@ -59,13 +104,15 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     );
   }
   const {
-    _id,
+    _id: orderMongoId,
+    id: orderAltId,
     items = [],
     status,
     createdAt,
     estimatedTime,
     notes,
   } = order;
+  const _id = orderMongoId || orderAltId;
   const {
     customerName,
     customerPhone,
@@ -243,8 +290,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
   <ScreenHeader
     title={`${i18n.t('orderDetails.title')} #${_id.slice(-6)}`}
-    showBackButton
-    onLeftPress={() => navigation.goBack()}
+    autoLeftNav
   />
   <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
     {}
@@ -297,7 +343,11 @@ const OrderDetailsScreen = ({ route, navigation }) => {
         )}
         {paymentMethod && (
           <View style={styles.infoRow}>
-            <Icon name="payment" size={20} color={colors.grey[600]} />
+            <Icon
+              name={paymentMethod === 'cash' ? 'payments' : 'credit-card'}
+              size={20}
+              color={colors.grey[600]}
+            />
             <Text style={styles.infoText}>
               {i18n.t('orderDetails.payment')}: {paymentMethod === 'card' ? i18n.t('orderDetails.paymentCard') :
                 paymentMethod === 'cash' ? i18n.t('orderDetails.paymentCash') : paymentMethod}

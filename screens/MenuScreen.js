@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { FAB } from 'react-native-elements';
+import React, { useCallback } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { FAB, Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { Loading, ScreenHeader, MenuSearchBar, MenuCategoriesTabs, MenuList } from '../components';
 import { useMenuFilters, useMenuActions } from '../hooks';
@@ -22,33 +22,48 @@ const MenuScreen = ({ navigation }) => {
       if (!isAuthenticated || !restaurant?._id) {
         return;
       }
-  
+
       loadMenuWithSmartCache(
         restaurant._id,
         () => apiClient.getRestaurantMenu(),
         (data) => setMenu(Array.isArray(data) ? data : []),
         (data) => setMenu(Array.isArray(data) ? data : [])
       );
-    }, [isAuthenticated, restaurant?._id])
+    }, [isAuthenticated, restaurant?._id, setMenu])
   );
+
   if (!menu) {
     return (
       <View style={styles.container}>
-        <ScreenHeader
-          title={i18n.t('navigation.menu')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
-        />
+        <ScreenHeader title={i18n.t('navigation.menu')} autoLeftNav />
         <Loading fullScreen text={i18n.t('common.loading')} />
       </View>
     );
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.menu')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
+        rightComponent={
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('MenuCategories')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={styles.headerAction}
+            >
+              <Icon name="category" type="material" size={22} color={colors.text.primary} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('MenuAnalytics')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={styles.headerAction}
+            >
+              <Icon name="insights" type="material" size={22} color={colors.text.primary} />
+            </TouchableOpacity>
+          </View>
+        }
       />
       <MenuSearchBar
         searchQuery={menuFilters.searchQuery}
@@ -80,10 +95,19 @@ const MenuScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.grey[50],
   },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerAction: {
+    marginLeft: 12,
+  },
 });
+
 export default MenuScreen;

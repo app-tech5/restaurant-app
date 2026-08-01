@@ -9,7 +9,10 @@ import {
 } from '../utils/storageUtils';
 import { withRestaurantAccountEmail, buildRestaurantTaxField } from '../utils/restaurantUtils';
 import { resolveRestaurantPlaceId, userHasLinkedRestaurant } from '../utils/restaurantIdUtils';
-import { loadRestaurantProfileWithSmartCache } from '../utils/cacheUtils';
+import {
+  loadRestaurantProfileWithSmartCache,
+  clearAllLocalAppDataOnLogout,
+} from '../utils/cacheUtils';
 import {
   buildDeliverySettingsOnboardingPayload,
   isRestaurantAvailableForDelivery,
@@ -107,18 +110,15 @@ export const useRestaurantAuth = () => {
   const login = async (email, password) => {
     try {
       setIsLoading(true);
-      const config = require('../config').default || require('../config');
       const response = await apiClient.restaurantLogin(email, password);
       if (response.user && response.token) {
         const authenticatedUser = response.user;
         await updateRestaurantCache(authenticatedUser, response.token);
         setIsAuthenticated(true);
         let merged = null;
-        if (!config.DEMO_MODE) {
-          try {
-            merged = await refreshRestaurantProfile(authenticatedUser, response.token);
-          } catch (refreshError) {
-          }
+        try {
+          merged = await refreshRestaurantProfile(authenticatedUser, response.token);
+        } catch (refreshError) {
         }
         if (!merged) {
           merged = apiClient.restaurant || authenticatedUser;
@@ -173,6 +173,7 @@ export const useRestaurantAuth = () => {
 
   const logout = async () => {
     try {
+      await clearAllLocalAppDataOnLogout();
       await apiClient.logout();
       setRestaurant(null);
       setIsAuthenticated(false);

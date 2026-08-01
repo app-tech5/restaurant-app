@@ -85,8 +85,7 @@ const SupportScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScreenHeader
         title={`${i18n.t('navigation.support')} - ${appName || 'Good Food'}`}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
       />
       <ScrollView
         style={styles.scrollView}

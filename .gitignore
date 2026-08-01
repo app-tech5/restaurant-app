@@ -98,6 +98,9 @@ junit.xml
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*.local
+!.env.example
+
 
 # Logs
 logs/
@@ -216,3 +219,6 @@ config/secrets.js
 
 # Application specific
 # Add any application-specific files that should be ignored
+
+# Local Maestro / QA screenshots (not for git)
+scripts/screenshots/

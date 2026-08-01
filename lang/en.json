@@ -249,6 +249,13 @@
     "available": "Available",
     "unavailable": "Unavailable",
     "categories": "Categories",
+    "uncategorized": "Uncategorized",
+    "items": "items",
+    "item": "item",
+    "totalItems": "Total items",
+    "topSelling": "Top selling dishes",
+    "noItems": "No categories",
+    "noItemsSubtitle": "Add menu items to see categories",
     "price": "Price",
     "category": "Category",
     "addCategory": "Add category",
@@ -341,7 +348,16 @@
     "completedOrders": "Completed orders",
     "activeItems": "Active items",
     "averageRevenuePerDay": "Average revenue per day",
-    "responseTime": "Response time"
+    "responseTime": "Response time",
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    }
   },
   "reports": {
     "title": "Reports",
@@ -667,6 +683,11 @@
     "currencySaved": "Currency updated in global settings.",
     "currencySaveError": "Could not save. Check your rights or try again.",
     "languageChanged": "Language changed to {{language}}",
+    "languageLoadError": "Unable to change language",
+    "orderStatusChanges": "Order status changes",
+    "lowStockAlerts": "Low stock alerts",
+    "lowStockAlertsSubtitle": "Alerts when a dish is out of stock",
+    "marketingNotifSubtitle": "Special offers and promotions",
     "aboutTitle": "About",
     "aboutMessage": "Good Food Restaurant v1.0.0\n\nRestaurant management application",
     "privacyTitle": "Privacy Policy",

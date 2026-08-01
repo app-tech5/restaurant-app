@@ -3,10 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../global';
 import i18n from '../i18n';
 import { config } from '../config';
+import { safeBottomPad } from '../utils/safeBottom';
+
 export default function SplashScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       <View style={styles.container1}>
@@ -29,9 +33,12 @@ export default function SplashScreen({ navigation }) {
           </View>
         </Animatable.View>
       </View>
-      <Animatable.View style={styles.container2} animation="fadeInUpBig">
+      <Animatable.View
+        style={[styles.container2, { paddingBottom: safeBottomPad(insets.bottom, 24) }]}
+        animation="fadeInUpBig"
+      >
         <View style={styles.button}>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <LinearGradient
               colors={colors.auth.gradient1}
               style={styles.signInButton}
@@ -57,8 +64,8 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   logoContainer: {
     alignItems: 'center',
@@ -96,23 +103,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    justifyContent: 'center',
   },
   signInText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.white,
   },
   signInButton: {
     width: 180,
     height: 50,
-    justifyContent: "space-around",
-    alignItems: "center",
+    justifyContent: 'space-around',
+    alignItems: 'center',
     borderRadius: 25,
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingHorizontal: 20,
   },
   button: {
-    alignItems: "flex-end",
-    marginTop: 80,
+    alignItems: 'flex-end',
     marginRight: 20,
-  }
+  },
 });

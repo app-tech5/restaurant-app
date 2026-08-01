@@ -89,6 +89,9 @@ export const useReportData = (reportType, period) => {
       case 'orders':
         title = `${periodText} - Statistiques des commandes`;
         break;
+      case 'customers':
+        title = `${periodText} - Rapport clients`;
+        break;
       default:
         title = `${periodText} - Rapport`;
     }

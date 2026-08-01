@@ -36,11 +36,10 @@ const AnalyticsCard = ({
     }
   };
   const formatChange = (change) => {
-    if (typeof change === 'number') {
-      const sign = change >= 0 ? '+' : '';
-      return `${sign}${change}%`;
-    }
-    return change;
+    const n = typeof change === 'number' ? change : Number(change);
+    if (!Number.isFinite(n)) return '0%';
+    const sign = n > 0 ? '+' : '';
+    return `${sign}${n}%`;
   };
   return (
     <Card containerStyle={[styles.card, style]}>

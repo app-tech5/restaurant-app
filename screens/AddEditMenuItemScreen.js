@@ -248,8 +248,7 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
       >
         <ScreenHeader
           title={isEditMode ? i18n.t('menu.editItem') : i18n.t('menu.addItem')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
           rightComponent={
             <TouchableOpacity
               onPress={handleSave}

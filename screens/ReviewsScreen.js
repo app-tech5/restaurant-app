@@ -201,8 +201,7 @@ const ReviewsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <ScreenHeader
           title={i18n.t('reviews.title')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
         />
         <EmptyState
           icon="refresh"
@@ -215,8 +214,7 @@ const ReviewsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('reviews.title')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
         rightComponent={renderSortButton()}
       />
       {}

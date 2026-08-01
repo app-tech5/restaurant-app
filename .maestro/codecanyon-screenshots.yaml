@@ -1,0 +1,161 @@
+appId: com.goodfood.restaurant
+name: CodeCanyon restaurant best-feature screenshots
+---
+# Restaurant already logged in (demo).
+
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- takeScreenshot: 02-drawer
+- tapOn: "Dashboard"
+- waitForAnimationToEnd
+- takeScreenshot: 01-dashboard
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 01b-dashboard-scrolled
+
+# Orders
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Orders"
+- waitForAnimationToEnd
+- takeScreenshot: 03-orders
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 03b-orders-scrolled
+
+# Open first order if possible
+- tapOn:
+    text: "View"
+    optional: true
+- tapOn:
+    text: "Details"
+    optional: true
+- tapOn:
+    point: "50%,40%"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: 04-order-details
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 04b-order-details-more
+- back
+- waitForAnimationToEnd
+
+# Menu
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Menu"
+- waitForAnimationToEnd
+- takeScreenshot: 05-menu
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 05b-menu-scrolled
+- tapOn:
+    text: "Categories"
+    optional: true
+- tapOn:
+    text: ".*[Cc]ategor.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: 05c-menu-categories
+- back
+- waitForAnimationToEnd
+- tapOn:
+    text: "Add"
+    optional: true
+- tapOn:
+    text: ".*"
+    optional: true
+- waitForAnimationToEnd
+
+# Analytics
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Analytics"
+- waitForAnimationToEnd
+- takeScreenshot: 06-analytics
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 06b-analytics-scrolled
+
+# Reviews
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Customer reviews"
+- waitForAnimationToEnd
+- takeScreenshot: 07-reviews
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 07b-reviews-scrolled
+
+# Reports
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Reports"
+- waitForAnimationToEnd
+- takeScreenshot: 08-reports
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 08b-reports-scrolled
+
+# Notifications
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Notifications"
+- waitForAnimationToEnd
+- takeScreenshot: 09-notifications
+
+# Support
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Support"
+- waitForAnimationToEnd
+- takeScreenshot: 10-support
+
+# Profile
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Profile"
+- waitForAnimationToEnd
+- takeScreenshot: 11-profile
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 11b-profile-scrolled
+
+# Settings + payment / delivery / hours
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- tapOn: "Settings"
+- waitForAnimationToEnd
+- takeScreenshot: 12-settings
+- scroll
+- waitForAnimationToEnd
+- takeScreenshot: 12b-settings-scrolled
+
+- tapOn:
+    text: "Opening hours"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: 13-opening-hours
+- back
+- waitForAnimationToEnd
+
+- tapOn:
+    text: "Delivery settings"
+    optional: true
+- tapOn:
+    text: "Delivery"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: 14-delivery-settings
+- back
+- waitForAnimationToEnd
+
+- tapOn:
+    text: "Payment settings"
+    optional: true
+- tapOn:
+    text: "Payment"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: 15-payment-settings

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Alert, Text, ActivityIndicator } from 'react-native';
-import { ListItem, Badge, Icon } from 'react-native-elements';
+import { Badge, Icon } from 'react-native-elements';
 import { ScreenHeader, EmptyState } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
@@ -76,37 +76,59 @@ const NotificationsScreen = ({ navigation }) => {
     }
   };
 
+  const resolveOrderId = (notification) => {
+    const fromAction = notification?.actionData?.orderId;
+    if (fromAction) return String(fromAction);
+    const related = notification?.relatedEntity;
+    if (related && typeof related === 'object') {
+      const id = related._id || related.id;
+      return id ? String(id) : null;
+    }
+    if (related) return String(related);
+    return null;
+  };
+
+  const openOrderFromNotification = async (notification) => {
+    const orderId = resolveOrderId(notification);
+    if (!orderId) {
+      navigation.navigate('Orders', { screen: 'OrdersMain' });
+      return;
+    }
+    try {
+      const order = await apiClient.getOrderById(orderId);
+      navigation.navigate('Orders', {
+        screen: 'OrderDetails',
+        params: { order, orderId: String(order._id || order.id || orderId) },
+        initial: false,
+      });
+    } catch {
+      Alert.alert(
+        i18n.t('common.error'),
+        i18n.t('orderDetails.notFound'),
+        [
+          {
+            text: i18n.t('orderDetails.back'),
+            onPress: () => navigation.navigate('Orders', { screen: 'OrdersMain' }),
+          },
+        ]
+      );
+    }
+  };
+
   const handleNotificationPress = async (notification) => {
     await markAsRead(notification);
 
     const action = notification.action;
-    const orderIdFromAction = notification.actionData?.orderId;
-    const relatedId = notification.relatedEntity;
     const relatedModel = notification.relatedEntityModel;
+    const isOrderNotif =
+      action === 'view_order' ||
+      relatedModel === 'Order' ||
+      notification.type === 'order' ||
+      notification.type === 'order_status' ||
+      notification.type === 'delivery_update';
 
-    if (action === 'view_order' && orderIdFromAction) {
-      try {
-        const order = await apiClient.getOrderById(orderIdFromAction);
-        navigation.navigate('Orders', {
-          screen: 'OrderDetails',
-          params: { order },
-        });
-      } catch {
-        navigation.navigate('Orders', { screen: 'OrdersMain' });
-      }
-      return;
-    }
-
-    if (relatedModel === 'Order' && relatedId) {
-      try {
-        const order = await apiClient.getOrderById(relatedId);
-        navigation.navigate('Orders', {
-          screen: 'OrderDetails',
-          params: { order },
-        });
-      } catch {
-        navigation.navigate('Orders', { screen: 'OrdersMain' });
-      }
+    if (isOrderNotif) {
+      await openOrderFromNotification(notification);
       return;
     }
 
@@ -201,16 +223,31 @@ const NotificationsScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const formatNotificationText = (text, item) => {
+    const raw = String(text || '');
+    if (!raw.includes('%s')) return raw;
+    const orderId =
+      item?.actionData?.orderId ||
+      item?.relatedEntity ||
+      item?.actionData?.id ||
+      '';
+    const replacement = orderId ? String(orderId) : '';
+    return raw.replace(/%s/g, replacement);
+  };
+
   const renderNotification = ({ item }) => {
     const iconConfig = getNotificationIcon(item.type);
     const timeLabel = formatTimeAgo(new Date(item.createdAt || item.updatedAt || Date.now()));
+    const title = formatNotificationText(item.title, item);
+    const message = formatNotificationText(item.message, item);
     return (
-      <ListItem
+      <TouchableOpacity
         onPress={() => handleNotificationPress(item)}
-        containerStyle={[
+        style={[
           styles.notificationItem,
           !item.isRead && styles.unreadNotification,
         ]}
+        activeOpacity={0.7}
       >
         <Icon
           name={iconConfig.name}
@@ -219,16 +256,16 @@ const NotificationsScreen = ({ navigation }) => {
           size={24}
           containerStyle={styles.notificationIcon}
         />
-        <ListItem.Content>
-          <View style={styles.notificationContent}>
-            <ListItem.Title style={styles.notificationTitle}>{item.title}</ListItem.Title>
-            <ListItem.Subtitle style={styles.notificationMessage}>{item.message}</ListItem.Subtitle>
-            <Text style={styles.notificationTime}>{timeLabel}</Text>
-          </View>
-        </ListItem.Content>
-        {!item.isRead && <View style={styles.unreadIndicator} testID="unread-indicator" />}
-        <ListItem.Chevron />
-      </ListItem>
+        <View style={styles.notificationContent}>
+          <Text style={styles.notificationTitle}>{title}</Text>
+          <Text style={styles.notificationMessage}>{message}</Text>
+          <Text style={styles.notificationTime}>{timeLabel}</Text>
+        </View>
+        {!item.isRead ? (
+          <View style={styles.unreadIndicator} testID="unread-indicator" />
+        ) : null}
+        <Icon name="chevron-right" type="material" color={colors.grey[400]} size={22} />
+      </TouchableOpacity>
     );
   };
 
@@ -248,8 +285,7 @@ const NotificationsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.notifications')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
         rightComponent={
           unreadCount > 0 ? (
             <TouchableOpacity onPress={markAllAsRead} testID="mark-all-read-button">
@@ -271,7 +307,7 @@ const NotificationsScreen = ({ navigation }) => {
         <FlatList
           data={filteredNotifications}
           renderItem={renderNotification}
-          keyExtractor={(item) => String(item._id)}
+          keyExtractor={(item, index) => String(item._id || item.id || `notif-${index}`)}
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={renderEmpty}
           showsVerticalScrollIndicator={false}
@@ -348,6 +384,8 @@ const styles = StyleSheet.create({
     borderRadius: constants.BORDER_RADIUS,
     marginBottom: constants.SPACING.sm,
     padding: constants.SPACING.md,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   unreadNotification: {
     borderLeftWidth: 4,
@@ -358,6 +396,7 @@ const styles = StyleSheet.create({
   },
   notificationContent: {
     flex: 1,
+    marginRight: constants.SPACING.sm,
   },
   notificationTitle: {
     fontSize: 16,
@@ -380,7 +419,7 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: colors.primary,
-    alignSelf: 'center',
+    marginRight: constants.SPACING.sm,
   },
 });
 

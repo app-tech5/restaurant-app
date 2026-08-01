@@ -3,26 +3,25 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { colors } from '../global';
 import HamburgerButton from './HamburgerButton';
-const ScreenHeader = ({
+import { useScreenHeaderNav } from '../hooks/useScreenHeaderNav';
+
+function ScreenHeaderView({
   title,
   subtitle = null,
   leftComponent = null,
   rightComponent = null,
   onLeftPress = null,
-  onRightPress = null,
   showBackButton = false,
+  showDrawerMenu = false,
   backButtonColor = colors.black,
   containerStyle = {},
   titleStyle = {},
   subtitleStyle = {},
   centerContainerStyle = {},
-  showDrawerMenu = false,
-}) => {
+}) {
   const renderLeftComponent = () => {
     if (showDrawerMenu) {
-      return (
-        <HamburgerButton />
-      )
+      return <HamburgerButton />;
     }
     if (leftComponent) {
       return leftComponent;
@@ -33,49 +32,53 @@ const ScreenHeader = ({
           onPress={onLeftPress}
           style={styles.backButton}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
         >
-          <Icon
-            name="arrow-back"
-            type="material"
-            size={24}
-            color={backButtonColor}
-          />
+          <Icon name="arrow-back" type="material" size={24} color={backButtonColor} />
         </TouchableOpacity>
       );
     }
     return null;
   };
-  const renderRightComponent = () => {
-    if (rightComponent) {
-      return (
-        <View style={styles.rightContainer}>
-          {rightComponent}
-        </View>
-      );
-    }
-    return null;
-  };
+
   return (
     <View style={[styles.container, containerStyle]}>
-      <View style={styles.leftContainer}>
-        {renderLeftComponent()}
-      </View>
+      <View style={styles.leftContainer}>{renderLeftComponent()}</View>
       <View style={[styles.centerContainer, centerContainerStyle]}>
         <Text style={[styles.title, titleStyle]} numberOfLines={1}>
           {title}
         </Text>
-        {subtitle && (
+        {subtitle ? (
           <Text style={[styles.subtitle, subtitleStyle]} numberOfLines={1}>
             {subtitle}
           </Text>
-        )}
+        ) : null}
       </View>
-      <View style={styles.rightContainer}>
-        {renderRightComponent()}
-      </View>
+      <View style={styles.rightContainer}>{rightComponent}</View>
     </View>
   );
+}
+
+function ScreenHeaderAuto(props) {
+  const autoNav = useScreenHeaderNav();
+  return (
+    <ScreenHeaderView
+      {...props}
+      showDrawerMenu={autoNav.showDrawerMenu}
+      showBackButton={autoNav.showBackButton}
+      onLeftPress={autoNav.onLeftPress}
+    />
+  );
+}
+
+const ScreenHeader = ({ autoLeftNav = false, ...props }) => {
+  if (autoLeftNav) {
+    return <ScreenHeaderAuto {...props} />;
+  }
+  return <ScreenHeaderView {...props} />;
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -98,6 +101,7 @@ const styles = StyleSheet.create({
   },
   rightContainer: {
     alignItems: 'flex-end',
+    minWidth: 40,
   },
   backButton: {
     padding: 4,
@@ -115,4 +119,5 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 });
+
 export default ScreenHeader;

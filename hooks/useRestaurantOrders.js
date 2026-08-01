@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
 import apiClient from '../api';
-import { config } from '../config';
 import { loadOrdersWithSmartCache, clearOrdersCache } from '../utils/cacheUtils';
-import { isRestaurantAuthenticated } from '../utils/restaurantUtils';
+
 export const useRestaurantOrders = (restaurant, isAuthenticated) => {
   const [orders, setOrders] = useState([]);
   const loadRestaurantOrders = async (status = null) => {
@@ -12,18 +10,15 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     }
     try {
       await loadOrdersWithSmartCache(
-        restaurant._id, 
-        () => apiClient.getRestaurantOrders(status), 
-        (data, fromCache) => {
+        restaurant._id,
+        () => apiClient.getRestaurantOrders(status),
+        (data) => {
           setOrders(data);
-          if (fromCache) {
-          }
         },
         (data) => {
           setOrders(data);
         },
-        (loading) => {
-        },
+        () => {},
         (errorMsg) => {
           console.error('Erreur chargement commandes:', errorMsg);
         }
@@ -33,14 +28,9 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     }
   };
   const acceptOrder = async (orderId) => {
-    if (config.DEMO_MODE) {
-      Alert.alert('Mode Démo', 'Commande acceptée (simulation)');
-      await loadRestaurantOrders(); 
-      return { success: true };
-    }
     try {
       const response = await apiClient.acceptOrder(orderId);
-      await loadRestaurantOrders(); 
+      await loadRestaurantOrders();
       return response;
     } catch (error) {
       console.error('Accept order error:', error);
@@ -48,14 +38,9 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     }
   };
   const prepareOrder = async (orderId) => {
-    if (config.DEMO_MODE) {
-      Alert.alert('Mode Démo', 'Commande en préparation (simulation)');
-      await loadRestaurantOrders();
-      return { success: true };
-    }
     try {
       const response = await apiClient.prepareOrder(orderId);
-      await loadRestaurantOrders(); 
+      await loadRestaurantOrders();
       return response;
     } catch (error) {
       console.error('Prepare order error:', error);
@@ -63,14 +48,9 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     }
   };
   const readyForPickup = async (orderId) => {
-    if (config.DEMO_MODE) {
-      Alert.alert('Mode Démo', 'Commande prête (simulation)');
-      await loadRestaurantOrders();
-      return { success: true };
-    }
     try {
       const response = await apiClient.readyForPickup(orderId);
-      await loadRestaurantOrders(); 
+      await loadRestaurantOrders();
       return response;
     } catch (error) {
       console.error('Ready for pickup error:', error);
@@ -78,14 +58,9 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     }
   };
   const updateOrderStatus = async (orderId, status) => {
-    if (config.DEMO_MODE) {
-      Alert.alert('Mode Démo', `Statut changé à "${status}" (simulation)`);
-      await loadRestaurantOrders();
-      return { success: true };
-    }
     try {
       const response = await apiClient.updateOrderStatus(orderId, status);
-      await loadRestaurantOrders(); 
+      await loadRestaurantOrders();
       return response;
     } catch (error) {
       console.error('Update order status error:', error);
@@ -96,9 +71,9 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     if (restaurant?._id) {
       try {
         await clearOrdersCache(restaurant._id);
-        await loadRestaurantOrders(); 
+        await loadRestaurantOrders();
       } catch (error) {
-        console.error('Erreur lors de l\'invalidation du cache des commandes:', error);
+        console.error("Erreur lors de l'invalidation du cache des commandes:", error);
       }
     }
   };
@@ -109,6 +84,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
     acceptOrder,
     prepareOrder,
     readyForPickup,
-    invalidateOrdersCache
+    invalidateOrdersCache,
   };
 };

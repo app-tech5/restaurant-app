@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Text, Alert } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { OrderCard, Loading, EmptyState, ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import { getOrderStatusLabel } from '../utils/restaurantUtils';
 import i18n from '../i18n';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { safeBottomPad } from '../utils/safeBottom';
 const OrdersScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const {
     orders,
     loadRestaurantOrders,
@@ -139,21 +142,26 @@ const OrdersScreen = ({ navigation }) => {
       <View style={styles.container}>
         <ScreenHeader
           title={i18n.t('navigation.orders')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
         />
         <Loading fullScreen text={i18n.t('common.loading')} />
       </View>
     );
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.orders')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
+        rightComponent={
+          <TouchableOpacity
+            onPress={() => navigation.navigate('OrderHistory')}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Icon name="history" type="material" size={22} color={colors.text.primary} />
+          </TouchableOpacity>
+        }
       />
-      {}
       <View style={styles.tabsContainer}>
         {[
           { key: 'all', label: i18n.t('orders.tabs.all') },
@@ -192,7 +200,10 @@ const OrdersScreen = ({ navigation }) => {
         data={filteredOrders}
         renderItem={renderOrder}
         keyExtractor={(item) => item._id}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={[
+          styles.listContainer,
+          { paddingBottom: safeBottomPad(insets.bottom, constants.SPACING.lg) },
+        ]}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -204,7 +215,8 @@ const OrdersScreen = ({ navigation }) => {
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}
       />
-    </SafeAreaView>
+      <View style={{ height: safeBottomPad(insets.bottom, 0) }} />
+    </View>
   );
 };
 const styles = StyleSheet.create({

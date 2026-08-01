@@ -13,10 +13,9 @@ const ReviewsStackNavigator = () => {
       screenOptions={{
         header: (props) => (
           <ScreenHeader
-            title={i18n.t('reviews.title')}
-            showBackButton={props.back !== undefined}
-            onLeftPress={props.navigation.goBack}
+            title={props.options?.title || i18n.t('navigation.reviews')}
             {...props.options}
+            autoLeftNav
           />
         ),
         headerStyle: {

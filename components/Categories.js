@@ -49,10 +49,14 @@ export default function Categories({
     };
   }, []);
 
-  const options = list.map((cat) => ({
-    value: String(cat._id || cat.id),
-    label: cat.name,
-  }));
+  const options = [];
+  const seen = new Set();
+  list.forEach((cat) => {
+    const value = String(cat._id || cat.id || '');
+    if (!value || seen.has(value)) return;
+    seen.add(value);
+    options.push({ value, label: cat.name });
+  });
 
   return (
     <View>

@@ -1,11 +1,16 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { OrdersScreen, OrderDetailsScreen } from '../screens';
+import {
+  OrdersScreen,
+  OrderDetailsScreen,
+  OrderHistoryScreen,
+} from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
+
 const Stack = createStackNavigator();
+
 const OrdersStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -13,10 +18,9 @@ const OrdersStackNavigator = () => {
       screenOptions={{
         header: (props) => (
           <ScreenHeader
-            title={i18n.t('navigation.orders')}
-            showBackButton={props.back !== undefined}
-            onLeftPress={props.navigation.goBack}
+            title={props.options?.title || i18n.t('navigation.orders')}
             {...props.options}
+            autoLeftNav
           />
         ),
         headerStyle: {
@@ -32,7 +36,7 @@ const OrdersStackNavigator = () => {
         component={OrdersScreen}
         options={{
           title: i18n.t('navigation.orders'),
-          headerShown: false, 
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -40,7 +44,7 @@ const OrdersStackNavigator = () => {
         component={OrderDetailsScreen}
         options={{
           title: i18n.t('orders.orderDetails'),
-          headerShown: false, 
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -48,20 +52,11 @@ const OrdersStackNavigator = () => {
         component={OrderHistoryScreen}
         options={{
           title: i18n.t('orders.orderHistory'),
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
   );
 };
-const OrderHistoryScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{i18n.t('navigation.ordersHistory')}</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+
 export default OrdersStackNavigator;

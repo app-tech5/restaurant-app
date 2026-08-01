@@ -23,12 +23,12 @@ const DashboardScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [calculatedStats, setCalculatedStats] = useState(null);
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && restaurant?._id) {
       loadStats();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, restaurant?._id]);
   useEffect(() => {
-    if (Array.isArray(orders) && stats) {
+    if (Array.isArray(orders)) {
       const calcStats = calculateRestaurantStats(orders, []);
       setCalculatedStats(calcStats);
     }
@@ -77,7 +77,7 @@ const DashboardScreen = ({ navigation }) => {
   if (restaurant && !isRestaurantActivated(restaurant)) {
     return (
       <SafeAreaView style={styles.container}>
-        <ScreenHeader title={i18n.t('navigation.dashboard')} showDrawerMenu />
+        <ScreenHeader title={i18n.t('navigation.dashboard')} autoLeftNav />
         <RestaurantNotActivatedMessage />
       </SafeAreaView>
     );
@@ -85,14 +85,14 @@ const DashboardScreen = ({ navigation }) => {
   if (!calculatedStats) {
     return (
       <View style={styles.container}>
-        <ScreenHeader title={i18n.t('navigation.dashboard')} />
+        <ScreenHeader title={i18n.t('navigation.dashboard')} autoLeftNav />
         <Loading fullScreen text={i18n.t('common.loading')} />
       </View>
     );
   }
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenHeader title={i18n.t('navigation.dashboard')} showDrawerMenu/>
+      <ScreenHeader title={i18n.t('navigation.dashboard')} autoLeftNav/>
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -153,7 +153,7 @@ const DashboardScreen = ({ navigation }) => {
               icon="bar-chart"
               color={colors.warning}
               size="medium"
-              style={styles.quickActionCard}
+              style={[styles.quickActionCard, styles.quickActionCardFull]}
               onPress={() => navigation.navigate('Analytics')}
             />
           </View>
@@ -242,6 +242,10 @@ const styles = StyleSheet.create({
   },
   quickActionCard: {
     width: '49%',
+    marginBottom: constants.SPACING.sm,
+  },
+  quickActionCardFull: {
+    width: '100%',
   },
   recentOrders: {
     flexDirection: 'row',

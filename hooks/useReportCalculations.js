@@ -103,6 +103,12 @@ export const useReportCalculations = (filteredOrders, reportType) => {
           showStatusChart: true,
           showPeakHours: true
         };
+      case 'customers':
+        return {
+          ...baseData,
+          showStatusChart: true,
+          showTopItems: true
+        };
       default:
         return baseData;
     }

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenHeader } from '../components';
 import { colors, constants } from '../global';
 import i18n from '../i18n';
+import { safeBottomPad } from '../utils/safeBottom';
 const ReportsScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const reportTypes = [
     {
@@ -53,7 +56,7 @@ const ReportsScreen = ({ navigation }) => {
       description: i18n.t('reports.customerReportDescription'),
       icon: 'people',
       color: colors.grey[700],
-      available: false, 
+      available: true,
     },
   ];
   const periodOptions = [
@@ -147,11 +150,14 @@ const ReportsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.reports')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
       />
       <ScrollView
         style={styles.scrollView}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: safeBottomPad(insets.bottom, constants.SPACING.xl) },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         {}
@@ -203,6 +209,7 @@ const ReportsScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <View style={{ height: safeBottomPad(insets.bottom, 0) }} />
     </View>
   );
 };
@@ -213,6 +220,9 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: constants.SPACING.xl,
   },
   periodSection: {
     margin: constants.SPACING.md,

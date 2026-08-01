@@ -1,9 +1,12 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { RestaurantProfileScreen } from '../screens';
+import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
+
 const Stack = createStackNavigator();
+
 const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -11,10 +14,9 @@ const ProfileStackNavigator = () => {
       screenOptions={{
         header: (props) => (
           <ScreenHeader
-            title={i18n.t('navigation.profile')}
-            showBackButton={props.back !== undefined}
-            onLeftPress={props.navigation.goBack}
+            title={props.options?.title || i18n.t('navigation.profile')}
             {...props.options}
+            autoLeftNav
           />
         ),
         headerStyle: {
@@ -30,10 +32,11 @@ const ProfileStackNavigator = () => {
         component={RestaurantProfileScreen}
         options={{
           title: i18n.t('restaurantProfile.title'),
-          headerShown: false, 
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
   );
 };
+
 export default ProfileStackNavigator;

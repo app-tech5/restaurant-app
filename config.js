@@ -1,8 +1,10 @@
 export const config = {
-  DEMO_MODE: false, 
-  DEMO_EMAIL: 'demo@restaurant.com',
-  DEMO_PASSWORD: 'password123',
-  API_BASE_URL: 'http://localhost:5000/api',
+  // Set by `npm run start:demo` / `start:live` via `.env.local` (wins over `.env`).
+  // Restart Metro after switching mode, then reload the app.
+  DEMO_MODE: process.env.EXPO_PUBLIC_DEMO_MODE !== 'false',
+  DEMO_EMAIL: process.env.EXPO_PUBLIC_DEMO_EMAIL || 'demo@restaurant.com',
+  DEMO_PASSWORD: process.env.EXPO_PUBLIC_DEMO_PASSWORD || 'password123',
+  API_BASE_URL: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api',
   API_TIMEOUT: 10000, 
   APP_NAME: 'Good Food',
   APP_SUBTITLE: 'Restaurant',

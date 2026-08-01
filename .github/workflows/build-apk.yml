@@ -1,0 +1,145 @@
+name: Build and publish APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      APK_FILENAME: ${{ vars.APK_FILENAME }}
+      VPS_DOWNLOADS_DIR: ${{ vars.VPS_DOWNLOADS_DIR }}
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+      EXPO_PUBLIC_API_URL: ${{ vars.EXPO_PUBLIC_API_URL }}
+      EXPO_PUBLIC_DEMO_MODE: 'true'
+      EXPO_PUBLIC_DEMO_EMAIL: ${{ vars.EXPO_PUBLIC_DEMO_EMAIL }}
+      EXPO_PUBLIC_DEMO_PASSWORD: ${{ vars.EXPO_PUBLIC_DEMO_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify GitHub Variables
+        run: |
+          missing=""
+          for var in APK_FILENAME VPS_DOWNLOADS_DIR PUBLIC_SITE_URL EXPO_PUBLIC_API_URL EXPO_PUBLIC_DEMO_EMAIL EXPO_PUBLIC_DEMO_PASSWORD; do
+            eval "val=\$$var"
+            if [ -z "$val" ]; then missing="$missing $var"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "Variables GitHub manquantes:$missing"
+            echo "Configurez-les : gh variable set NAME --body VALUE --repo app-tech5/restaurant-app"
+            exit 1
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Prepare standalone demo APK
+        run: |
+          npm uninstall expo-dev-client
+          node <<'NODE'
+          const fs = require('fs');
+          const appJsonPath = 'app.json';
+          const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
+          appJson.expo.name = 'Good Food Restaurant Demo';
+          appJson.expo.android.package = 'com.goodfood.restaurant.demo';
+          fs.writeFileSync(appJsonPath, `${JSON.stringify(appJson, null, 2)}\n`);
+          NODE
+          sed -i.bak "s/applicationId 'com.goodfood.restaurant'/applicationId 'com.goodfood.restaurant.demo'/" android/app/build.gradle
+          rm -f android/app/build.gradle.bak
+          sed -i.bak 's/<string name="app_name">Good Food Restaurant<\/string>/<string name="app_name">Good Food Restaurant Demo<\/string>/' android/app/src/main/res/values/strings.xml
+          rm -f android/app/src/main/res/values/strings.xml.bak
+          npm install
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            android/.gradle
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Create debug keystore for release signing
+        run: |
+          if [ -f android/app/debug.keystore ]; then
+            echo "debug.keystore already present, skipping generation"
+          else
+            keytool -genkeypair -v \
+              -storetype PKCS12 \
+              -keystore android/app/debug.keystore \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
+      - name: Build APK (Gradle)
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew :app:assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a
+          ls -lh app/build/outputs/apk/release/
+
+      - name: Prepare APK artifact
+        run: |
+          if [ -z "$APK_FILENAME" ]; then
+            echo "APK_FILENAME is empty — set vars.APK_FILENAME in GitHub (Settings → Variables)"
+            exit 1
+          fi
+          APK_PATH=$(find android/app/build/outputs/apk/release -name '*-release.apk' -type f | head -1)
+          if [ -z "$APK_PATH" ]; then
+            echo "No release APK found"
+            find android/app/build/outputs/apk -name '*.apk' -type f
+            exit 1
+          fi
+          cp "$APK_PATH" "$APK_FILENAME"
+          ls -lh "$APK_FILENAME"
+
+      - name: Prepare downloads directory on VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: VPS_DOWNLOADS_DIR
+          script: |
+            mkdir -p "$VPS_DOWNLOADS_DIR"
+            chmod 755 "$VPS_DOWNLOADS_DIR"
+
+      - name: Upload APK to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: ${{ env.APK_FILENAME }}
+          target: ${{ env.VPS_DOWNLOADS_DIR }}/
+          overwrite: true
+
+      - name: APK published
+        run: |
+          BASE="${PUBLIC_SITE_URL%/}"
+          echo "APK available at ${BASE}/downloads/${APK_FILENAME}"

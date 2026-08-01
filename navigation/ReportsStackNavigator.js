@@ -13,10 +13,9 @@ const ReportsStackNavigator = () => {
       screenOptions={{
         header: (props) => (
           <ScreenHeader
-            title={i18n.t('navigation.reports')}
-            showBackButton={props.back !== undefined}
-            onLeftPress={props.navigation.goBack}
+            title={props.options?.title || i18n.t('navigation.reports')}
             {...props.options}
+            autoLeftNav
           />
         ),
         headerStyle: {

@@ -18,3 +18,8 @@ export { default as PaymentSettingsScreen } from './PaymentSettingsScreen';
 export { default as OrderDetailsScreen } from './OrderDetailsScreen';
 export { default as AddEditMenuItemScreen } from './AddEditMenuItemScreen';
 export { default as ReportDetailsScreen } from './ReportDetailsScreen';
+export { default as LanguageSettingsScreen } from './LanguageSettingsScreen';
+export { default as NotificationSettingsScreen } from './NotificationSettingsScreen';
+export { default as OrderHistoryScreen } from './OrderHistoryScreen';
+export { default as MenuCategoriesScreen } from './MenuCategoriesScreen';
+export { default as MenuAnalyticsScreen } from './MenuAnalyticsScreen';

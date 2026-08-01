@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
@@ -11,18 +10,21 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input, Button, Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import { colors } from '../global';
 import { config } from '../config';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import { safeBottomPad } from '../utils/safeBottom';
 import i18n from '../i18n';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_MIN_LENGTH = 6;
 
 export default function SignupScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -84,30 +86,37 @@ export default function SignupScreen({ navigation }) {
   return (
     <LinearGradient colors={colors.auth.gradient1} style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.keyboardAvoidingView}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}
         >
           <ScrollView
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={[
+              styles.scrollContent,
+              { paddingBottom: safeBottomPad(insets.bottom, 40) },
+            ]}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
+            bounces
           >
-            <Animatable.View animation="fadeInUp" duration={1000} style={styles.contentContainer}>
-              <Animatable.View animation="bounceIn" delay={300} style={styles.logoContainer}>
-                <Icon name="restaurant" type="material" color={colors.white} size={64} />
+            <Animatable.View animation="fadeInUp" duration={800} style={styles.contentContainer}>
+              <Animatable.View animation="bounceIn" delay={200} style={styles.logoContainer}>
+                <Icon name="restaurant" type="material" color={colors.white} size={44} />
                 <Text style={styles.appTitle}>{config.APP_NAME}</Text>
                 <Text style={styles.appSubtitle}>{config.APP_SUBTITLE}</Text>
               </Animatable.View>
 
-              <Animatable.View animation="fadeInUp" delay={500} style={styles.formContainer}>
+              <Animatable.View animation="fadeInUp" delay={350} style={styles.formContainer}>
                 <Text style={styles.welcomeText}>{i18n.t('auth.signupTitle')}</Text>
                 <Text style={styles.subtitleText}>{i18n.t('auth.signupSubtitle')}</Text>
 
                 <Input
                   placeholder={i18n.t('auth.ownerName')}
                   leftIcon={<Icon name="person" type="material" color={colors.primary} size={20} />}
+                  leftIconContainerStyle={styles.leftIcon}
+                  inputContainerStyle={styles.inputInner}
                   value={name}
                   onChangeText={setName}
                   autoCapitalize="words"
@@ -119,6 +128,8 @@ export default function SignupScreen({ navigation }) {
                 <Input
                   placeholder={i18n.t('auth.email')}
                   leftIcon={<Icon name="email" type="material" color={colors.primary} size={20} />}
+                  leftIconContainerStyle={styles.leftIcon}
+                  inputContainerStyle={styles.inputInner}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -131,6 +142,8 @@ export default function SignupScreen({ navigation }) {
                 <Input
                   placeholder={i18n.t('auth.phone')}
                   leftIcon={<Icon name="phone" type="material" color={colors.primary} size={20} />}
+                  leftIconContainerStyle={styles.leftIcon}
+                  inputContainerStyle={styles.inputInner}
                   value={phone}
                   onChangeText={setPhone}
                   keyboardType="phone-pad"
@@ -142,6 +155,8 @@ export default function SignupScreen({ navigation }) {
                 <Input
                   placeholder={i18n.t('auth.address')}
                   leftIcon={<Icon name="place" type="material" color={colors.primary} size={20} />}
+                  leftIconContainerStyle={styles.leftIcon}
+                  inputContainerStyle={styles.inputInner}
                   value={address}
                   onChangeText={setAddress}
                   autoCapitalize="sentences"
@@ -152,8 +167,14 @@ export default function SignupScreen({ navigation }) {
                 <Input
                   placeholder={i18n.t('auth.password')}
                   leftIcon={<Icon name="lock" type="material" color={colors.primary} size={20} />}
+                  leftIconContainerStyle={styles.leftIcon}
+                  rightIconContainerStyle={styles.rightIcon}
+                  inputContainerStyle={styles.inputInner}
                   rightIcon={
-                    <TouchableOpacity onPress={() => setShowPassword((prev) => !prev)}>
+                    <TouchableOpacity
+                      onPress={() => setShowPassword((prev) => !prev)}
+                      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    >
                       <Icon
                         name={showPassword ? 'visibility-off' : 'visibility'}
                         type="material"
@@ -173,9 +194,15 @@ export default function SignupScreen({ navigation }) {
                 />
                 <Input
                   placeholder={i18n.t('auth.confirmPassword')}
-                  leftIcon={<Icon name="lock-outline" type="material" color={colors.primary} size={20} />}
+                  leftIcon={<Icon name="lock" type="material" color={colors.primary} size={20} />}
+                  leftIconContainerStyle={styles.leftIcon}
+                  rightIconContainerStyle={styles.rightIcon}
+                  inputContainerStyle={styles.inputInner}
                   rightIcon={
-                    <TouchableOpacity onPress={() => setShowConfirmPassword((prev) => !prev)}>
+                    <TouchableOpacity
+                      onPress={() => setShowConfirmPassword((prev) => !prev)}
+                      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    >
                       <Icon
                         name={showConfirmPassword ? 'visibility-off' : 'visibility'}
                         type="material"
@@ -212,6 +239,7 @@ export default function SignupScreen({ navigation }) {
                 <TouchableOpacity
                   onPress={() => navigation.replace('Login')}
                   style={styles.secondaryLink}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                 >
                   <Text style={styles.secondaryLinkText}>
                     {i18n.t('auth.alreadyHaveAccount')}{' '}
@@ -219,6 +247,7 @@ export default function SignupScreen({ navigation }) {
                   </Text>
                 </TouchableOpacity>
               </Animatable.View>
+              <View style={{ height: Math.max(safeBottomPad(insets.bottom, 8), 24) }} />
             </Animatable.View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -234,31 +263,33 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingTop: 8,
   },
   contentContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    width: '100%',
+    paddingBottom: 8,
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 12,
   },
   appTitle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.white,
-    marginTop: 8,
+    marginTop: 4,
   },
   appSubtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.white,
     opacity: 0.9,
   },
   formContainer: {
     backgroundColor: colors.white,
     borderRadius: 20,
-    padding: 24,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 24,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -266,20 +297,37 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   welcomeText: {
-    fontSize: 22,
+    fontSize: 21,
     fontWeight: 'bold',
     color: colors.text.primary,
     textAlign: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   subtitleText: {
     fontSize: 13,
     color: colors.text.secondary,
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   inputContainer: {
-    marginBottom: 8,
+    marginBottom: 0,
+    paddingHorizontal: 0,
+  },
+  inputInner: {
+    minHeight: 44,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+  },
+  leftIcon: {
+    marginLeft: 0,
+    marginRight: 8,
+    height: 40,
+    justifyContent: 'center',
+  },
+  rightIcon: {
+    marginRight: 0,
+    height: 40,
+    justifyContent: 'center',
   },
   inputText: {
     color: colors.text.primary,
@@ -290,14 +338,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   primaryButtonContainer: {
-    marginTop: 14,
+    marginTop: 12,
   },
   primaryButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   secondaryLink: {
-    marginTop: 18,
+    marginTop: 16,
+    marginBottom: 4,
     alignItems: 'center',
   },
   secondaryLinkText: {

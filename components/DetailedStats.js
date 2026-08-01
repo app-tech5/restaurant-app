@@ -6,18 +6,20 @@ const DetailedStats = ({ metrics, isLoading }) => {
   if (!metrics || isLoading) {
     return null;
   }
+  const revenue = Number(metrics.revenue?.value);
+  const avgPerDay = Number.isFinite(revenue) ? revenue / 30 : 0;
   const stats = [
     {
       label: i18n.t('analytics.completedOrders'),
-      value: metrics.completedOrders,
+      value: metrics.completedOrders ?? 0,
     },
     {
       label: i18n.t('analytics.activeItems'),
-      value: '24', 
+      value: '24',
     },
     {
       label: i18n.t('analytics.averageRevenuePerDay'),
-      value: `${(metrics.revenue.value / 30).toFixed(2)}€`,
+      value: `${avgPerDay.toFixed(2)}€`,
     },
     {
       label: i18n.t('analytics.responseTime'),

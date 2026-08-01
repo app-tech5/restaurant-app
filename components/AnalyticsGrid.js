@@ -32,8 +32,10 @@ const AnalyticsGrid = ({ metrics, isLoading }) => {
     {
       title: i18n.t('analytics.averageOrderValue'),
       value: metrics.averageOrderValue.formatted,
-      change: 5.7, 
-      changeType: 'positive',
+      change: Number.isFinite(Number(metrics.averageOrderValue.trend))
+        ? Number(metrics.averageOrderValue.trend)
+        : 0,
+      changeType: Number(metrics.averageOrderValue.trend) >= 0 ? 'positive' : 'negative',
       icon: 'trending-up',
     },
   ];

@@ -169,7 +169,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
   if (!isAuthenticated) {
     return (
       <View style={styles.container}>
-        <ScreenHeader title={i18n.t('delivery.title')} navigation={navigation} />
+        <ScreenHeader title={i18n.t('delivery.title')} autoLeftNav />
         <View style={styles.centerContent}>
           <Text style={styles.errorText}>{i18n.t('auth.loginRequired')}</Text>
         </View>
@@ -184,7 +184,7 @@ const DeliverySettingsScreen = ({ navigation }) => {
     >
       <ScreenHeader
         title={i18n.t('delivery.title')}
-        navigation={navigation}
+        autoLeftNav
         rightComponent={
           !isEditing ? (
             <TouchableOpacity onPress={() => setIsEditing(true)} disabled={settingsLoading}>
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   scrollView: { flex: 1 },
   scrollContent: {
     padding: constants.SPACING.md,
-    paddingBottom: constants.SPACING.xl,
+    paddingBottom: constants.SPACING.xl * 2,
   },
   editButton: {
     color: colors.primary,

@@ -13,8 +13,10 @@ import {
 import { colors, constants } from '../global';
 import { useAnalytics } from '../hooks/useAnalytics';
 import i18n from '../i18n';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { safeBottomPad } from '../utils/safeBottom';
 const AnalyticsScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const { restaurant, isAuthenticated } = useRestaurant();
   const {
     derivedMetrics,
@@ -29,8 +31,7 @@ const AnalyticsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <ScreenHeader
           title={i18n.t('navigation.analytics')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
         />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>
@@ -45,22 +46,23 @@ const AnalyticsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <ScreenHeader
           title={i18n.t('navigation.analytics')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
         />
         <Loading fullScreen text={i18n.t('common.loading')} />
       </View>
     );
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('navigation.analytics')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
       />
       <ScrollView
         style={styles.scrollView}
+        contentContainerStyle={{
+          paddingBottom: safeBottomPad(insets.bottom, constants.SPACING.xl),
+        }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -104,7 +106,8 @@ const AnalyticsScreen = ({ navigation }) => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+      <View style={{ height: safeBottomPad(insets.bottom, 0) }} />
+    </View>
   );
 };
 const styles = StyleSheet.create({

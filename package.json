@@ -4,6 +4,11 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:demo": "node scripts/expo-start-mode.js demo",
+    "start:live": "node scripts/expo-start-mode.js live",
+    "start:localhost": "expo start --localhost",
+    "start:demo:localhost": "node scripts/expo-start-mode.js demo --localhost",
+    "start:live:localhost": "node scripts/expo-start-mode.js live --localhost",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
@@ -12,7 +17,18 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint .",
-    "lint-fix": "eslint . --fix"
+    "lint-fix": "eslint . --fix",
+    "hermes": "node scripts/hermes-cdp.js",
+    "hermes:demo": "node scripts/hermes-demo-merge-test.js",
+    "hermes:forms": "node scripts/hermes-forms-test.js",
+    "hermes:forms:live": "node scripts/hermes-forms-test.js --mode live",
+    "hermes:signup": "node scripts/hermes-signup-test.js --mode demo",
+    "hermes:signup:live": "node scripts/hermes-signup-test.js --mode live",
+    "test:hermes": "node scripts/hermes/run-all.js",
+    "screenshot": "node scripts/adb-capture-restaurant.js",
+    "screenshot:visual": "node scripts/hermes-visual-adb-audit.js",
+    "screenshot:explore": "node scripts/adb-capture-restaurant.js --explore",
+    "screenshot:pick": "node scripts/hermes-restaurant-pick-screenshot.js"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.3",
@@ -64,6 +80,9 @@
     "react-native-worklets": "^0.5.1",
     "react-test-renderer": "^19.1.0",
     "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "ws": "^8.21.0"
   },
   "keywords": [
     "restaurant",

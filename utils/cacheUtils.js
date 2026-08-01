@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DEMO_STORAGE_KEY } from '../api/demo/localStore';
+
 const CACHE_KEYS = {
   SETTINGS: 'restaurant_app_settings',
   RESTAURANT_ORDERS: 'restaurant_orders',
@@ -217,6 +219,40 @@ export const clearRestaurantProfileCache = async (restaurantId) => {
 export const clearSettingsCache = async () => {
   const cacheKey = getCacheKey('global', CACHE_KEYS.SETTINGS);
   await AsyncStorage.removeItem(cacheKey);
+};
+
+const clearCachesBySuffix = async (suffix) => {
+  const keys = await AsyncStorage.getAllKeys();
+  const matching = keys.filter(
+    (key) => key === suffix || key.endsWith(`_${suffix}`)
+  );
+  if (matching.length) {
+    await AsyncStorage.multiRemove(matching);
+  }
+};
+
+export const clearAllLocalAppDataOnLogout = async () => {
+  try {
+    await Promise.all([
+      clearCachesBySuffix(CACHE_KEYS.RESTAURANT_ORDERS),
+      clearCachesBySuffix(CACHE_KEYS.RESTAURANT_STATS),
+      clearCachesBySuffix(CACHE_KEYS.RESTAURANT_MENU),
+      clearCachesBySuffix(CACHE_KEYS.RESTAURANT_PROFILE),
+      clearCachesBySuffix(CACHE_KEYS.SETTINGS),
+    ]);
+
+    await AsyncStorage.multiRemove([
+      CACHE_KEYS.CACHE_VERSION,
+      DEMO_STORAGE_KEY,
+      'restaurantToken',
+      'restaurantData',
+      'restaurantDeviceToken',
+      'restaurantSettings',
+    ]);
+  } catch (error) {
+    console.error('Erreur vidage stockage local (logout):', error);
+    throw error;
+  }
 };
 export const saveSettingsToCache = async (settings) => {
   const cacheKey = getCacheKey('global', CACHE_KEYS.SETTINGS);

@@ -116,7 +116,7 @@ const OpeningHoursScreen = ({ navigation }) => {
       <View style={styles.container}>
         <ScreenHeader
           title={i18n.t('openingHours.title')}
-          navigation={navigation}
+          autoLeftNav
         />
         <View style={styles.centerContent}>
           <Text style={styles.errorText}>
@@ -133,7 +133,7 @@ const OpeningHoursScreen = ({ navigation }) => {
     >
       <ScreenHeader
         title={i18n.t('openingHours.title')}
-        navigation={navigation}
+        autoLeftNav
         rightComponent={
           !isEditing ? (
             <TouchableOpacity onPress={handleEdit}>
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: constants.SPACING.md,
-    paddingBottom: constants.SPACING.xl,
+    paddingBottom: constants.SPACING.xl * 2,
   },
   editButton: {
     color: colors.primary,

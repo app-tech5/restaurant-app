@@ -5,9 +5,12 @@ import { resolveRestaurantPlaceId as resolveRestaurantId } from './utils/restaur
 import { buildRestaurantReviewsResult } from './utils/restaurantReviewUtils';
 import { buildRestaurantStatsData } from './utils/restaurantStatsUtils';
 import { buildRestaurantAnalyticsData } from './utils/restaurantAnalyticsUtils';
+import { handleDemoWrite, handleDemoRead, mergeDemoRead } from './api/demo/handlers';
+import { clearDemoState } from './api/demo/localStore';
 
 const API_BASE_URL = appConfig.API_BASE_URL;
 const API_TIMEOUT = appConfig.API_TIMEOUT;
+const isDemoMode = () => appConfig.DEMO_MODE === true;
 
 class ApiClient {
   constructor() {
@@ -34,9 +37,23 @@ class ApiClient {
       }
       if (restaurantData) {
         this.restaurant = JSON.parse(restaurantData);
+        this.userId = this.restaurant._id || this.restaurant.id || null;
       }
     } catch (error) {
       console.error('Error initializing restaurant from storage:', error);
+    }
+  }
+
+  async saveRestaurantToStorage() {
+    try {
+      if (this.token) {
+        await AsyncStorage.setItem('restaurantToken', this.token);
+      }
+      if (this.restaurant) {
+        await AsyncStorage.setItem('restaurantData', JSON.stringify(this.restaurant));
+      }
+    } catch (error) {
+      console.error('Error saving restaurant to storage:', error);
     }
   }
 
@@ -64,6 +81,21 @@ class ApiClient {
   }
 
   async _apiFetch(endpoint, options, baseHeaders) {
+    const method = (options.method || 'GET').toUpperCase();
+
+    if (isDemoMode()) {
+      const localWrite = await handleDemoWrite(this, endpoint, method, options);
+      if (localWrite !== null) {
+        return localWrite;
+      }
+      if (method === 'GET') {
+        const localRead = await handleDemoRead(this, endpoint, method);
+        if (localRead !== null) {
+          return localRead;
+        }
+      }
+    }
+
     const url = `${API_BASE_URL}${endpoint}`;
     const fetchOptions = {
       ...options,
@@ -79,6 +111,9 @@ class ApiClient {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       const data = await response.json();
+      if (isDemoMode() && method === 'GET') {
+        return mergeDemoRead(endpoint, data);
+      }
       return data;
     } catch (error) {
       console.error(`❌ API Error: ${endpoint}`, error);
@@ -95,6 +130,7 @@ class ApiClient {
       this.restaurant = response.user;
       this.token = response.token;
       this.userId = response.user._id || response.user.id || null;
+      await this.saveRestaurantToStorage();
     }
     return response;
   }
@@ -115,6 +151,7 @@ class ApiClient {
       this.restaurant = response.user;
       this.token = response.token;
       this.userId = response.user._id || response.user.id || null;
+      await this.saveRestaurantToStorage();
     }
     return response;
   }
@@ -150,6 +187,7 @@ class ApiClient {
     this.userId = null;
     try {
       await AsyncStorage.multiRemove(['restaurantToken', 'restaurantData']);
+      await clearDemoState();
     } catch (error) {
       console.error('Error clearing storage on logout:', error);
     }
@@ -449,7 +487,18 @@ class ApiClient {
   }
 
   async getOrderById(orderId) {
-    return await this.apiCall(`/resource/orders/${orderId}`);
+    const id = typeof orderId === 'object' && orderId
+      ? (orderId._id || orderId.id)
+      : orderId;
+    if (!id) {
+      throw new Error('Missing order id');
+    }
+    const raw = await this.apiCall(`/resource/orders/${encodeURIComponent(String(id))}`);
+    const order = raw?.data && (raw.data._id || raw.data.id) ? raw.data : raw;
+    if (!order || !(order._id || order.id)) {
+      throw new Error('Order not found');
+    }
+    return order;
   }
 
   async createImageLink(imageUri) {
@@ -518,4 +567,8 @@ class ApiClient {
 }
 
 const apiClient = new ApiClient();
+// Hermes E2E reads this instead of brute-forcing Metro module ids (which crashes RN).
+if (typeof globalThis !== 'undefined') {
+  globalThis.__GOODFOOD_RESTAURANT_API__ = apiClient;
+}
 export default apiClient;

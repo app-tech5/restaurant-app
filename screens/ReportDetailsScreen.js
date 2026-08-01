@@ -21,8 +21,7 @@ const ReportDetailsScreen = ({ route, navigation }) => {
       <View style={styles.container}>
         <ScreenHeader
           title={i18n.t('reports.reportDetailsTitle')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
         />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>{i18n.t('reports.loadingReport')}</Text>
@@ -34,8 +33,7 @@ const ReportDetailsScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('reports.reportDetailsTitle')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
       />
       <ScrollView
         style={styles.scrollView}

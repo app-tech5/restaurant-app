@@ -228,10 +228,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
+    flexShrink: 0,
+    marginLeft: constants.SPACING.xs,
   },
   availabilityText: {
     color: colors.white,
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: 'bold',
   },
   actionsContainer: {

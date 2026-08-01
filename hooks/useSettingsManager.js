@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from '../api';
 import { loadSettingsWithSmartCache, clearSettingsCache, saveSettingsToCache } from '../utils/cacheUtils';
 import {
@@ -7,6 +8,7 @@ import {
   getAppName,
   resetSettingsState
 } from '../utils/settingsUtils';
+import { changeLanguage as changeI18nLanguage } from '../i18n';
 export const useSettingsManager = (isAuthenticated) => {
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -71,7 +73,23 @@ export const useSettingsManager = (isAuthenticated) => {
     }
   };
   const changeLanguage = async (languageCode) => {
+    const languages = await getAvailableLanguages();
+    const selected =
+      languages.find((lang) => String(lang.code) === String(languageCode)) || {
+        code: languageCode,
+        name: String(languageCode).toUpperCase(),
+      };
     try {
+      await AsyncStorage.setItem('userLanguage', String(languageCode));
+      changeI18nLanguage(String(languageCode));
+      setSettings((prev) => ({
+        ...(prev || {}),
+        language: {
+          code: selected.code,
+          name: selected.name,
+          _id: selected._id,
+        },
+      }));
       return { success: true };
     } catch (error) {
       console.error('Erreur changement langue:', error);

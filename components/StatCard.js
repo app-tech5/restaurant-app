@@ -32,7 +32,12 @@ const StatCard = ({
         <Text style={[styles.title, { fontSize: 14 }]}>
           {title}
         </Text>
-        <Text style={[styles.value, { fontSize: 20, color }]}>
+        <Text
+          style={[styles.value, { fontSize: 20, color }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.65}
+        >
           {value}
         </Text>
         {subtitle && (

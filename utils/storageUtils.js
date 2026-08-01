@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DEMO_STORAGE_KEY } from '../api/demo/localStore';
+
 const STORAGE_KEYS = {
   RESTAURANT_DATA: 'restaurantData',
   RESTAURANT_TOKEN: 'restaurantToken',
@@ -40,7 +42,8 @@ export const clearRestaurantCache = async () => {
     await AsyncStorage.multiRemove([
       STORAGE_KEYS.RESTAURANT_DATA,
       STORAGE_KEYS.RESTAURANT_TOKEN,
-      STORAGE_KEYS.DEVICE_TOKEN
+      STORAGE_KEYS.DEVICE_TOKEN,
+      DEMO_STORAGE_KEY,
     ]);
   } catch (error) {
     console.error('❌ Erreur nettoyage cache restaurant:', error);

@@ -11,6 +11,7 @@ import {
   Platform,
   Switch
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { ScreenHeader, Loading, Categories, RestaurantImagePicker } from '../components';
 import { colors, constants } from '../global';
@@ -25,6 +26,7 @@ import {
   withRestaurantAccountEmail,
 } from '../utils/restaurantUtils';
 import { geocodeAddress } from '../utils/geocoding';
+import { safeBottomPad } from '../utils/safeBottom';
 
 const THEME_LABEL_KEYS = {
   default: 'restaurantProfile.themeDefault',
@@ -33,6 +35,7 @@ const THEME_LABEL_KEYS = {
 };
 
 const RestaurantProfileScreen = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const { restaurant, setRestaurant } = useRestaurant();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -159,8 +162,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
       <View style={styles.container}>
         <ScreenHeader
           title={i18n.t('restaurantProfile.title')}
-          showBackButton
-          onLeftPress={() => navigation.goBack()}
+          autoLeftNav
         />
         <Loading fullScreen text={i18n.t('restaurantProfile.loading')} />
       </View>
@@ -170,8 +172,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScreenHeader
         title={i18n.t('restaurantProfile.title')}
-        showBackButton
-        onLeftPress={() => navigation.goBack()}
+        autoLeftNav
         rightComponent={
           isEditing ? (
             <View style={styles.headerButtons}>
@@ -198,7 +199,10 @@ const RestaurantProfileScreen = ({ navigation }) => {
       >
         <ScrollView
           style={styles.scrollView}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[
+            styles.content,
+            { paddingBottom: safeBottomPad(insets.bottom, constants.SPACING.xl * 2) },
+          ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           nestedScrollEnabled
@@ -519,6 +523,7 @@ const RestaurantProfileScreen = ({ navigation }) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <View style={{ height: safeBottomPad(insets.bottom, 0) }} />
     </View>
   );
 };

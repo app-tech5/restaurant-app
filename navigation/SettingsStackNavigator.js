@@ -1,11 +1,20 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SettingsScreen, RestaurantProfileScreen, OpeningHoursScreen, DeliverySettingsScreen, PaymentSettingsScreen } from '../screens';
+import {
+  SettingsScreen,
+  RestaurantProfileScreen,
+  OpeningHoursScreen,
+  DeliverySettingsScreen,
+  PaymentSettingsScreen,
+  LanguageSettingsScreen,
+  NotificationSettingsScreen,
+} from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
 import i18n from '../i18n';
+
 const Stack = createStackNavigator();
+
 const SettingsStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -13,10 +22,9 @@ const SettingsStackNavigator = () => {
       screenOptions={{
         header: (props) => (
           <ScreenHeader
-            title={i18n.t('navigation.settings')}
-            showBackButton={props.back !== undefined}
-            onLeftPress={props.navigation.goBack}
+            title={props.options?.title || i18n.t('navigation.settings')}
             {...props.options}
+            autoLeftNav
           />
         ),
         headerStyle: {
@@ -32,7 +40,7 @@ const SettingsStackNavigator = () => {
         component={SettingsScreen}
         options={{
           title: i18n.t('navigation.settings'),
-          headerShown: false, 
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -40,6 +48,7 @@ const SettingsStackNavigator = () => {
         component={OpeningHoursScreen}
         options={{
           title: i18n.t('settings.openingHours'),
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -47,6 +56,7 @@ const SettingsStackNavigator = () => {
         component={DeliverySettingsScreen}
         options={{
           title: i18n.t('settings.delivery'),
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -54,6 +64,7 @@ const SettingsStackNavigator = () => {
         component={PaymentSettingsScreen}
         options={{
           title: i18n.t('settings.payment'),
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -61,6 +72,7 @@ const SettingsStackNavigator = () => {
         component={LanguageSettingsScreen}
         options={{
           title: i18n.t('settings.language'),
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -68,6 +80,7 @@ const SettingsStackNavigator = () => {
         component={NotificationSettingsScreen}
         options={{
           title: i18n.t('navigation.notificationSettings'),
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -75,32 +88,11 @@ const SettingsStackNavigator = () => {
         component={RestaurantProfileScreen}
         options={{
           title: 'Profil restaurant',
-          headerShown: false, 
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
   );
 };
-const LanguageSettingsScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{i18n.t('navigation.languageSettings')}</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-const NotificationSettingsScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{i18n.t('navigation.notificationSettings')}</Text>
-      <Text>À implémenter...</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: colors.primary, marginTop: 20 }}>{i18n.t('navigation.return')}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+
 export default SettingsStackNavigator;
