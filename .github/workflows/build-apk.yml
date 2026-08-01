@@ -160,23 +160,28 @@ jobs:
       - name: Run Maestro smoke on emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 29
           arch: arm64-v8a
-          target: google_apis
-          profile: pixel_6
+          target: default
+          profile: pixel_4
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-boot-timeout: 1200
+          cores: 3
+          ram-size: 4096
+          heap-size: 512
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             set -euo pipefail
             adb wait-for-device
             adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+            adb shell input keyevent 82 || true
 
             curl -fsS --max-time 15 "${EXPO_PUBLIC_API_URL%/}/auth/restaurant-login" -o /dev/null || true
 
             adb install -r "artifacts/${APK_FILENAME}"
             adb shell monkey -p "${DEMO_PACKAGE_ID}" -c android.intent.category.LAUNCHER 1 || true
-            sleep 8
+            sleep 10
 
             FLOW=".maestro/ci-smoke.yaml"
             test -f "$FLOW"
