@@ -95,8 +95,7 @@ jobs:
           chmod +x android/gradlew
           cd android
           ./gradlew :app:assembleRelease --build-cache --no-daemon \
-            -PreactNativeArchitectures=arm64-v8a \
-            -x lintVitalRelease -x lintVitalAnalyzeRelease -x lintVitalReportRelease
+            -PreactNativeArchitectures=arm64-v8a
           ls -lh app/build/outputs/apk/release/
 
       - name: Prepare APK artifact
