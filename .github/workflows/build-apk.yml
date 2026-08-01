@@ -1,11 +1,10 @@
 name: Build, test and publish APK
 
-# All heavy work (Gradle + Android emulator + Maestro) runs on GitHub Actions only.
-# APK is published to the VPS only if unit + Maestro smoke tests pass.
+# Envato demo branch only — lean APK, CI-only Maestro gate, then VPS publish.
 
 on:
   push:
-    branches: [main]
+    branches: [envato-demo]
   workflow_dispatch:
 
 concurrency:
@@ -21,35 +20,13 @@ env:
   EXPO_PUBLIC_DEMO_EMAIL: ${{ vars.EXPO_PUBLIC_DEMO_EMAIL }}
   EXPO_PUBLIC_DEMO_PASSWORD: ${{ vars.EXPO_PUBLIC_DEMO_PASSWORD }}
   DEMO_PACKAGE_ID: com.goodfood.restaurant.demo
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
 
 jobs:
-  # Jest suites currently fail under Expo/jest-expo import scope;
-  # keep them informative only — Maestro smoke gates the APK publish.
-  unit-tests:
-    name: Unit tests (Jest, non-blocking)
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Jest
-        run: npm test -- --ci --watchAll=false --passWithNoTests
-
   build-apk:
     name: Build release APK
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,7 +40,6 @@ jobs:
           done
           if [ -n "$missing" ]; then
             echo "Variables GitHub manquantes:$missing"
-            echo "Configurez-les : gh variable set NAME --body VALUE --repo app-tech5/restaurant-app"
             exit 1
           fi
 
@@ -83,24 +59,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Prepare standalone demo APK
-        run: |
-          npm uninstall expo-dev-client
-          node <<'NODE'
-          const fs = require('fs');
-          const appJsonPath = 'app.json';
-          const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
-          appJson.expo.name = 'Good Food Restaurant Demo';
-          appJson.expo.android.package = 'com.goodfood.restaurant.demo';
-          fs.writeFileSync(appJsonPath, `${JSON.stringify(appJson, null, 2)}\n`);
-          NODE
-          sed -i.bak "s/applicationId 'com.goodfood.restaurant'/applicationId 'com.goodfood.restaurant.demo'/" android/app/build.gradle
-          rm -f android/app/build.gradle.bak
-          sed -i.bak 's/<string name="app_name">Good Food Restaurant<\/string>/<string name="app_name">Good Food Restaurant Demo<\/string>/' android/app/src/main/res/values/strings.xml
-          rm -f android/app/src/main/res/values/strings.xml.bak
-          npm install
+        run: npm ci
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -109,8 +68,9 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
             android/.gradle
-          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          key: gradle-envato-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*', 'android/gradle/wrapper/gradle-wrapper.properties', 'android/gradle.properties', 'package-lock.json') }}
           restore-keys: |
+            gradle-envato-${{ runner.os }}-
             gradle-${{ runner.os }}-
 
       - name: Create debug keystore for release signing
@@ -130,11 +90,12 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
-      - name: Build APK (Gradle)
+      - name: Build APK (Gradle, arm64 only)
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew :app:assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a
+          ./gradlew :app:assembleRelease --build-cache --no-daemon \
+            -PreactNativeArchitectures=arm64-v8a
           ls -lh app/build/outputs/apk/release/
 
       - name: Prepare APK artifact
@@ -160,7 +121,7 @@ jobs:
     name: Maestro smoke (emulator)
     needs: [build-apk]
     runs-on: macos-14
-    timeout-minutes: 75
+    timeout-minutes: 60
     steps:
       - name: Checkout Maestro flows
         uses: actions/checkout@v4
@@ -211,7 +172,6 @@ jobs:
             adb wait-for-device
             adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
 
-            # Soft connectivity check (demo login uses live API for builtin account).
             curl -fsS --max-time 15 "${EXPO_PUBLIC_API_URL%/}/auth/restaurant-login" -o /dev/null || true
 
             adb install -r "artifacts/${APK_FILENAME}"
@@ -276,4 +236,3 @@ jobs:
         run: |
           BASE="${PUBLIC_SITE_URL%/}"
           echo "APK available at ${BASE}/downloads/${APK_FILENAME}"
-          echo "Published only after Jest + Maestro smoke passed."

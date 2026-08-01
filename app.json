@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Good Food Restaurant",
+    "name": "Good Food Restaurant Demo",
     "slug": "good-food-restaurant",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -29,7 +29,7 @@
         "foregroundImage": "./assets/images/logo512.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.goodfood.restaurant",
+      "package": "com.goodfood.restaurant.demo",
       "versionCode": 1,
       "permissions": [
         "ACCESS_COARSE_LOCATION",
@@ -51,9 +51,7 @@
     "plugins": [
       "expo-font",
       "expo-localization",
-      "expo-location",
-      "@react-native-firebase/app",
-      "@react-native-firebase/messaging"
+      "expo-location"
     ],
     "jsEngine": "hermes",
     "locales": {
