@@ -13,6 +13,12 @@ on:
         description: "Flow under .maestro/"
         required: true
         default: "ci-smoke.yaml"
+  push:
+    branches: [envato-demo]
+    paths:
+      - '.github/trigger-maestro'
+      - '.maestro/ci-smoke.yaml'
+      - '.github/workflows/maestro-smoke.yml'
 
 concurrency:
   group: restaurant-maestro-smoke-${{ github.ref }}
@@ -39,7 +45,7 @@ jobs:
       - name: Download existing APK artifact
         env:
           GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ inputs.artifact_run_id }}
+          RUN_ID: ${{ inputs.artifact_run_id || '30691523235' }}
         run: |
           set -euo pipefail
           mkdir -p artifacts
@@ -88,7 +94,7 @@ jobs:
             adb shell monkey -p "${DEMO_PACKAGE_ID}" -c android.intent.category.LAUNCHER 1 || true
             sleep 10
 
-            FLOW=".maestro/${{ inputs.maestro_flow }}"
+            FLOW=".maestro/${{ inputs.maestro_flow || 'ci-smoke.yaml' }}"
             test -f "$FLOW"
 
             mkdir -p artifacts/maestro

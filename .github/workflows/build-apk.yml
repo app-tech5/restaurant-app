@@ -6,6 +6,11 @@ name: Build and publish APK
 on:
   push:
     branches: [envato-demo]
+    paths-ignore:
+      - '.github/workflows/maestro-smoke.yml'
+      - '.github/trigger-maestro'
+      - '.maestro/**'
+      - '**.md'
   workflow_dispatch:
 
 concurrency:
