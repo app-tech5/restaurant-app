@@ -54,10 +54,6 @@
       "expo-location"
     ],
     "jsEngine": "hermes",
-    "locales": {
-      "fr": "./lang/fr.json",
-      "en": "./lang/en.json"
-    },
     "scheme": "goodfoodrestaurant",
     "extra": {
       "apiUrl": "https://api.goodfood.com",
