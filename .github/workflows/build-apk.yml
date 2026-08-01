@@ -1,6 +1,7 @@
-name: Build, test and publish APK
+name: Build and publish APK
 
-# Envato demo: lean arm64 APK for downloaders; x86_64 APK only for CI Maestro on Ubuntu.
+# Envato demo: lean arm64 APK. Maestro is a separate workflow that reuses this artifact
+# (see maestro-smoke.yml) — do not rebuild just to re-test.
 
 on:
   push:
@@ -13,21 +14,19 @@ concurrency:
 
 env:
   APK_FILENAME: ${{ vars.APK_FILENAME }}
-  APK_X86_FILENAME: GoodFoodRestaurant-x86.apk
   VPS_DOWNLOADS_DIR: ${{ vars.VPS_DOWNLOADS_DIR }}
   PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
   EXPO_PUBLIC_API_URL: ${{ vars.EXPO_PUBLIC_API_URL }}
   EXPO_PUBLIC_DEMO_MODE: 'true'
   EXPO_PUBLIC_DEMO_EMAIL: ${{ vars.EXPO_PUBLIC_DEMO_EMAIL }}
   EXPO_PUBLIC_DEMO_PASSWORD: ${{ vars.EXPO_PUBLIC_DEMO_PASSWORD }}
-  DEMO_PACKAGE_ID: com.goodfood.restaurant.demo
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
 
 jobs:
-  build-apk:
-    name: Build release APKs
+  build-and-publish:
+    name: Build + publish arm64 APK
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -91,7 +90,7 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
-      - name: Build arm64 APK (downloaders)
+      - name: Build APK (arm64 only)
         run: |
           chmod +x android/gradlew
           cd android
@@ -99,142 +98,20 @@ jobs:
             -PreactNativeArchitectures=arm64-v8a
           ls -lh app/build/outputs/apk/release/
 
-      - name: Prepare arm64 APK artifact
+      - name: Prepare APK artifact
         run: |
           APK_PATH=$(find android/app/build/outputs/apk/release -name '*-release.apk' -type f | head -1)
           test -n "$APK_PATH"
           cp "$APK_PATH" "$APK_FILENAME"
           ls -lh "$APK_FILENAME"
 
-      - name: Build x86_64 APK (CI Maestro only)
-        run: |
-          cd android
-          ./gradlew :app:assembleRelease --build-cache --no-daemon \
-            -PreactNativeArchitectures=x86_64
-          APK_PATH=$(find app/build/outputs/apk/release -name '*-release.apk' -type f | head -1)
-          test -n "$APK_PATH"
-          cp "$APK_PATH" "../$APK_X86_FILENAME"
-          ls -lh "../$APK_X86_FILENAME"
-
-      - name: Upload arm64 APK artifact
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: restaurant-demo-apk
           path: ${{ env.APK_FILENAME }}
           if-no-files-found: error
-          retention-days: 7
-
-      - name: Upload x86 APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: restaurant-demo-apk-x86
-          path: ${{ env.APK_X86_FILENAME }}
-          if-no-files-found: error
-          retention-days: 3
-
-  maestro-smoke:
-    name: Maestro smoke (Ubuntu emulator)
-    needs: [build-apk]
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - name: Checkout Maestro flows
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            .maestro
-          sparse-checkout-cone-mode: false
-
-      - name: Enable KVM
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger
-          sudo apt-get update
-          sudo apt-get install -y qemu-kvm
-          sudo chmod 666 /dev/kvm || true
-
-      - name: Download x86 APK artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: restaurant-demo-apk-x86
-          path: artifacts
-
-      - name: Verify APK present
-        run: |
-          set -euo pipefail
-          ls -lh "artifacts/${APK_X86_FILENAME}"
-          test -f "artifacts/${APK_X86_FILENAME}"
-
-      - name: Install Maestro
-        run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
-          "$HOME/.maestro/bin/maestro" --version
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Run Maestro smoke on emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          arch: x86_64
-          target: default
-          force-avd-creation: true
-          disable-animations: true
-          emulator-boot-timeout: 600
-          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            set -euo pipefail
-            adb wait-for-device
-            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
-            adb shell input keyevent 82 || true
-
-            curl -fsS --max-time 15 "${EXPO_PUBLIC_API_URL%/}/auth/restaurant-login" -o /dev/null || true
-
-            adb install -r "artifacts/${APK_X86_FILENAME}"
-            adb shell monkey -p "${DEMO_PACKAGE_ID}" -c android.intent.category.LAUNCHER 1 || true
-            sleep 10
-
-            FLOW=".maestro/ci-smoke.yaml"
-            test -f "$FLOW"
-
-            mkdir -p artifacts/maestro
-            maestro test "$FLOW" \
-              --format junit \
-              --output artifacts/maestro/report.xml
-
-            if [ -d "$HOME/.maestro/tests" ]; then
-              cp -R "$HOME/.maestro/tests" artifacts/maestro/tests
-            fi
-
-      - name: Upload Maestro report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: restaurant-maestro-smoke
-          path: artifacts/maestro/
-          if-no-files-found: warn
           retention-days: 14
-
-  publish:
-    name: Publish APK to VPS
-    needs: [maestro-smoke]
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Download arm64 APK artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: restaurant-demo-apk
-          path: .
 
       - name: Prepare downloads directory on VPS
         uses: appleboy/ssh-action@v1.2.0
@@ -261,3 +138,4 @@ jobs:
         run: |
           BASE="${PUBLIC_SITE_URL%/}"
           echo "APK available at ${BASE}/downloads/${APK_FILENAME}"
+          echo "Re-run Maestro without rebuild: workflow Maestro smoke (reuse APK) + artifact_run_id=${{ github.run_id }}"
