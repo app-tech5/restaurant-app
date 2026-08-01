@@ -1,6 +1,6 @@
 name: Build, test and publish APK
 
-# Envato demo branch only — lean APK, CI-only Maestro gate, then VPS publish.
+# Envato demo: lean arm64 APK for downloaders; x86_64 APK only for CI Maestro on Ubuntu.
 
 on:
   push:
@@ -13,6 +13,7 @@ concurrency:
 
 env:
   APK_FILENAME: ${{ vars.APK_FILENAME }}
+  APK_X86_FILENAME: GoodFoodRestaurant-x86.apk
   VPS_DOWNLOADS_DIR: ${{ vars.VPS_DOWNLOADS_DIR }}
   PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
   EXPO_PUBLIC_API_URL: ${{ vars.EXPO_PUBLIC_API_URL }}
@@ -24,9 +25,9 @@ env:
 
 jobs:
   build-apk:
-    name: Build release APK
+    name: Build release APKs
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -90,7 +91,7 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
-      - name: Build APK (Gradle, arm64 only)
+      - name: Build arm64 APK (downloaders)
         run: |
           chmod +x android/gradlew
           cd android
@@ -98,18 +99,24 @@ jobs:
             -PreactNativeArchitectures=arm64-v8a
           ls -lh app/build/outputs/apk/release/
 
-      - name: Prepare APK artifact
+      - name: Prepare arm64 APK artifact
         run: |
           APK_PATH=$(find android/app/build/outputs/apk/release -name '*-release.apk' -type f | head -1)
-          if [ -z "$APK_PATH" ]; then
-            echo "No release APK found"
-            find android/app/build/outputs/apk -name '*.apk' -type f
-            exit 1
-          fi
+          test -n "$APK_PATH"
           cp "$APK_PATH" "$APK_FILENAME"
           ls -lh "$APK_FILENAME"
 
-      - name: Upload APK artifact
+      - name: Build x86_64 APK (CI Maestro only)
+        run: |
+          cd android
+          ./gradlew :app:assembleRelease --build-cache --no-daemon \
+            -PreactNativeArchitectures=x86_64
+          APK_PATH=$(find app/build/outputs/apk/release -name '*-release.apk' -type f | head -1)
+          test -n "$APK_PATH"
+          cp "$APK_PATH" "../$APK_X86_FILENAME"
+          ls -lh "../$APK_X86_FILENAME"
+
+      - name: Upload arm64 APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: restaurant-demo-apk
@@ -117,11 +124,19 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      - name: Upload x86 APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: restaurant-demo-apk-x86
+          path: ${{ env.APK_X86_FILENAME }}
+          if-no-files-found: error
+          retention-days: 3
+
   maestro-smoke:
-    name: Maestro smoke (emulator)
+    name: Maestro smoke (Ubuntu emulator)
     needs: [build-apk]
-    runs-on: macos-14
-    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Checkout Maestro flows
         uses: actions/checkout@v4
@@ -130,17 +145,26 @@ jobs:
             .maestro
           sparse-checkout-cone-mode: false
 
-      - name: Download APK artifact
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger
+          sudo apt-get update
+          sudo apt-get install -y qemu-kvm
+          sudo chmod 666 /dev/kvm || true
+
+      - name: Download x86 APK artifact
         uses: actions/download-artifact@v4
         with:
-          name: restaurant-demo-apk
+          name: restaurant-demo-apk-x86
           path: artifacts
 
       - name: Verify APK present
         run: |
           set -euo pipefail
-          ls -lh "artifacts/${APK_FILENAME}"
-          test -f "artifacts/${APK_FILENAME}"
+          ls -lh "artifacts/${APK_X86_FILENAME}"
+          test -f "artifacts/${APK_X86_FILENAME}"
 
       - name: Install Maestro
         run: |
@@ -161,15 +185,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          arch: arm64-v8a
+          arch: x86_64
           target: default
-          profile: pixel_4
           force-avd-creation: true
           disable-animations: true
-          emulator-boot-timeout: 1200
-          cores: 3
-          ram-size: 4096
-          heap-size: 512
+          emulator-boot-timeout: 600
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             set -euo pipefail
@@ -179,7 +199,7 @@ jobs:
 
             curl -fsS --max-time 15 "${EXPO_PUBLIC_API_URL%/}/auth/restaurant-login" -o /dev/null || true
 
-            adb install -r "artifacts/${APK_FILENAME}"
+            adb install -r "artifacts/${APK_X86_FILENAME}"
             adb shell monkey -p "${DEMO_PACKAGE_ID}" -c android.intent.category.LAUNCHER 1 || true
             sleep 10
 
@@ -210,7 +230,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Download APK artifact
+      - name: Download arm64 APK artifact
         uses: actions/download-artifact@v4
         with:
           name: restaurant-demo-apk
