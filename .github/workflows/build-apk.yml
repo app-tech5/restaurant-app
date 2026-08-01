@@ -1,14 +1,11 @@
 name: Build and publish APK
 
-# Envato demo: lean arm64 APK. Maestro is a separate workflow that reuses this artifact
-# (see maestro-smoke.yml) — do not rebuild just to re-test.
+# Envato demo: lean arm64 APK → VPS. No Maestro / emulator jobs.
 
 on:
   push:
     branches: [envato-demo]
     paths-ignore:
-      - '.github/workflows/maestro-smoke.yml'
-      - '.github/trigger-maestro'
       - '.maestro/**'
       - '**.md'
   workflow_dispatch:
@@ -143,4 +140,3 @@ jobs:
         run: |
           BASE="${PUBLIC_SITE_URL%/}"
           echo "APK available at ${BASE}/downloads/${APK_FILENAME}"
-          echo "Re-run Maestro without rebuild: workflow Maestro smoke (reuse APK) + artifact_run_id=${{ github.run_id }}"
