@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements';
 import { colors } from '../global';
 import HamburgerButton from './HamburgerButton';
 import { useScreenHeaderNav } from '../hooks/useScreenHeaderNav';
+import i18n from '../i18n';
 
 function ScreenHeaderView({
   title,
@@ -33,7 +34,7 @@ function ScreenHeaderView({
           style={styles.backButton}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           accessibilityRole="button"
-          accessibilityLabel="Go back"
+          accessibilityLabel={i18n.t('common.goBack')}
         >
           <Icon name="arrow-back" type="material" size={24} color={backButtonColor} />
         </TouchableOpacity>
