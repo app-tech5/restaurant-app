@@ -71,11 +71,9 @@ export const useRestaurantAuth = () => {
         },
         null,
         (errorMsg) => {
-          console.error('Erreur chargement profil restaurant:', errorMsg);
         }
       );
     } catch (error) {
-      console.error('Error loading restaurant profile with smart cache:', error);
     }
     return applyRestaurantProfile(profileData, accountUser, token);
   };
@@ -99,7 +97,6 @@ export const useRestaurantAuth = () => {
           await syncPushToken();
         }
       } catch (error) {
-        console.error('Error initializing restaurant:', error);
       } finally {
         setIsLoading(false);
       }
@@ -131,7 +128,6 @@ export const useRestaurantAuth = () => {
         throw new Error('Réponse de connexion invalide');
       }
     } catch (error) {
-      console.error('Login error:', error);
       return { success: false, message: error.message || 'Erreur de connexion' };
     } finally {
       setIsLoading(false);
@@ -164,7 +160,6 @@ export const useRestaurantAuth = () => {
       await syncPushToken();
       return { success: true, user: authenticatedUser };
     } catch (error) {
-      console.error('Signup error:', error);
       return { success: false, message: error.message || 'Erreur de création de compte' };
     } finally {
       setIsLoading(false);
@@ -179,7 +174,6 @@ export const useRestaurantAuth = () => {
       setIsAuthenticated(false);
       setNeedsOnboarding(false);
     } catch (error) {
-      console.error('Logout error:', error);
       throw error;
     }
   };
@@ -195,7 +189,6 @@ export const useRestaurantAuth = () => {
         const taxes = await apiClient.listTaxes();
         taxField = buildRestaurantTaxField(taxes, restaurantBody?.country);
       } catch (taxError) {
-        console.warn('Could not load taxes for onboarding, leaving tax empty:', taxError?.message);
       }
       const newRestaurant = await apiClient.createRestaurantDoc({
         ...restaurantBody,
@@ -213,10 +206,6 @@ export const useRestaurantAuth = () => {
           buildDeliverySettingsOnboardingPayload(restaurantId, restaurantBody)
         );
       } catch (deliveryError) {
-        console.warn(
-          'Delivery settings creation failed (restaurant still created):',
-          deliveryError?.message
-        );
       }
 
       const linkedUser = await apiClient.linkUserToRestaurant(userId, restaurantId);
@@ -230,7 +219,6 @@ export const useRestaurantAuth = () => {
         try {
           await apiClient.updateRestaurantProfile({ isAvailableForDelivery: true });
         } catch (profileError) {
-          console.warn('Post-onboarding delivery profile sync skipped:', profileError?.message);
         }
       }
       const merged =
@@ -240,7 +228,6 @@ export const useRestaurantAuth = () => {
       setNeedsOnboarding(false);
       return { success: true, restaurant: merged };
     } catch (error) {
-      console.error('Onboarding error:', error);
       return { success: false, message: error.message || 'Erreur de création du restaurant' };
     }
   };

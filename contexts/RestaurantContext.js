@@ -115,7 +115,6 @@ export const RestaurantProvider = ({ children }) => {
           }
           await refreshRestaurantProfile(accountUser, cached?.token);
         } catch (error) {
-          console.error('Foreground profile refresh error:', error);
         }
       })();
     });

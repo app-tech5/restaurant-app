@@ -1,6 +1,5 @@
 import { Platform } from 'react-native';
 
-/** Register early from App.js. Posts a local notification so a heads-up can show while the app is backgrounded. */
 if (Platform.OS !== 'web') {
   try {
     const messaging = require('@react-native-firebase/messaging').default;

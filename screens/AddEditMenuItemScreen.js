@@ -216,7 +216,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         );
       }
     } catch (error) {
-      console.error('Error saving dish:', error);
       Alert.alert(
         i18n.t('menu.alerts.error'),
         isEditMode ? i18n.t('menu.alerts.updateFailed') : i18n.t('menu.alerts.addFailed')

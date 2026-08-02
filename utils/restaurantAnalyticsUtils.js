@@ -71,12 +71,6 @@ function onTimeDeliveryRateForOrders(orders) {
   return parseFloat(((onTime / delivered.length) * 100).toFixed(1));
 }
 
-/**
- * @param {string} period — 'today' | 'week' | 'month'
- * @param {object[]} orders
- * @param {object[]} reviews — same list as restaurant review screen (already scoped by restaurant)
- * @param {Date} [now]
- */
 export function buildRestaurantAnalyticsData(period, orders, reviews, now = new Date()) {
   const { startDate, endDate } = analyticsPeriodBounds(period, now);
   const list = orders.filter((o) => orderCreatedInRange(o, startDate, endDate));

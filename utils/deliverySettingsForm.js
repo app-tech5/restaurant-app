@@ -1,4 +1,4 @@
-/** Champs formulaire restaurant-app ↔ document API `DeliverySetting` (hors tarification admin). */
+
 
 export function deliverySettingsFormDefaults(restaurant) {
   let radius = 15;
@@ -28,7 +28,6 @@ export function deliverySettingsFormFromDoc(doc, restaurant) {
   };
 }
 
-/** PATCH restaurant : pas de tarification (admin via Delivery Settings). */
 export function buildRestaurantDeliverySettingsPayload(formData, restaurantId) {
   const maxDeliveryDistance = Math.min(
     50,
@@ -76,10 +75,6 @@ function formatAmount(value, currencySymbol) {
   return `${n.toFixed(2)} ${currencySymbol}`;
 }
 
-/**
- * Une seule phrase pour le resto (comme les apps livraison côté partenaire) :
- * pas de détail base/km/min/max.
- */
 export function getAdminDeliveryPricingSummary(doc, t, currencySymbol = '€') {
   if (!doc?._id) {
     return t('delivery.pricingNotConfigured');

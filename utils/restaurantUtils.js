@@ -37,7 +37,6 @@ export const isRestaurantAuthenticated = (restaurant) => {
   return restaurant && restaurant._id;
 };
 
-/** Email compte : champ direct, ou utilisateur lié `users.value` (API Restaurant). */
 export const getRestaurantEmailForDisplay = (restaurant) => {
   if (!restaurant) return '';
   if (typeof restaurant.email === 'string' && restaurant.email.trim()) {
@@ -50,7 +49,6 @@ export const getRestaurantEmailForDisplay = (restaurant) => {
   return '';
 };
 
-/** Fusionne le document Restaurant avec l'email du compte (réponse login / cache User). */
 export const withRestaurantAccountEmail = (profileDoc, accountUser) => {
   if (!profileDoc) return accountUser || null;
   const fromProfile = getRestaurantEmailForDisplay(profileDoc);
@@ -62,7 +60,6 @@ export const withRestaurantAccountEmail = (profileDoc, accountUser) => {
   return email ? { ...profileDoc, email } : { ...profileDoc };
 };
 
-/** Valeurs enum `serviceModes` du modèle Restaurant (backend). */
 export const RESTAURANT_SERVICE_MODES = Object.freeze(['delivery', 'pickup']);
 
 export function normalizeRestaurantServiceMode(raw) {
@@ -140,7 +137,6 @@ export function buildRestaurantCategoriesPayload(selectedIds, categoryList) {
     }));
 }
 
-/** Slug ASCII compact pour `alias` / `id` à partir du nom du restaurant. */
 export function slugifyRestaurantName(value) {
   const base = String(value || '')
     .toLowerCase()
@@ -159,12 +155,6 @@ export function normalizeRestaurantPrice(raw) {
   return RESTAURANT_PRICE_OPTIONS.includes(p) ? p : '$';
 }
 
-/**
- * Choisit la Tax à associer au nouveau restaurant.
- * - Match sur `location` (insensible à la casse) si `country` est fourni.
- * - Fallback : première taxe de la liste.
- * - Retourne `null` si la liste est vide.
- */
 export function pickDefaultTax(taxes, country) {
   const list = Array.isArray(taxes) ? taxes : [];
   if (list.length === 0) return null;
@@ -178,12 +168,6 @@ export function pickDefaultTax(taxes, country) {
   return list[0] || null;
 }
 
-/**
- * Construit le sous-objet `tax` du Restaurant compatible avec :
- *  - le `pre('find')` du backend (populate `tax.value` → ObjectId ref `Tax`),
- *  - le rendu admin-app (`detectSelectField` exige `value` + `label`).
- * Retourne `null` si aucune Tax disponible.
- */
 export function buildRestaurantTaxField(taxes, country) {
   const tax = pickDefaultTax(taxes, country);
   if (!tax || !tax._id) return null;
@@ -198,7 +182,6 @@ export function buildRestaurantTaxField(taxes, country) {
   };
 }
 
-/** Corps PUT `/resource/restaurants/:id` aligné sur le schéma Mongoose (sans `email`). */
 export function buildRestaurantProfileUpdatePayload(formData) {
   const ct = parseInt(String(formData.collectTime ?? '').replace(/\D/g, ''), 10);
   const phone = String(formData.phone || '').trim();
@@ -229,12 +212,6 @@ export function buildRestaurantProfileUpdatePayload(formData) {
   };
 }
 
-/**
- * Corps POST `/resource/restaurants` côté création.
- * - `alias` / `id` : dérivés du `name` (slug).
- * - `price` : sélectionné par l'utilisateur dans le formulaire (`$`..`$$$$`).
- * - `users.value` : ajouté par l'orchestrateur d'onboarding.
- */
 export function buildRestaurantOnboardingPayload(formData) {
   const base = buildRestaurantProfileUpdatePayload(formData);
   const slug = slugifyRestaurantName(formData?.name);
@@ -254,7 +231,6 @@ export const getOrderStatusColor = (status) => {
   return ORDER_STATUS_COLORS[status] || '#666';
 };
 
-/** Maps API order shape (user, delivery, payment) to fields used by restaurant UI. */
 function toOrderMoney(value) {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
   if (typeof value === 'string' && value.trim() !== '') {
@@ -275,7 +251,6 @@ export function getOrderLineExtrasSum(item) {
   }, 0);
 }
 
-/** Montant ligne aligné sur le backend : `total` si présent, sinon prix×qté + extras. */
 export function getOrderLineAmount(item) {
   if (!item) return 0;
   const totalField = toOrderMoney(item.total);

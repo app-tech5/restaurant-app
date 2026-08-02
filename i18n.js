@@ -15,7 +15,6 @@ export const initializeLanguage = async () => {
       i18n.locale = savedLanguage;
     }
   } catch (error) {
-    console.error('Error loading saved language:', error);
   }
 };
 export const changeLanguage = (language) => {

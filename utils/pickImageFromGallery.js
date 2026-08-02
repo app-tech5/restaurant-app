@@ -5,8 +5,6 @@ import apiClient from '../api';
 const MAX_UPLOAD_WIDTH = 1200;
 const UPLOAD_JPEG_QUALITY = 0.8;
 
-/** @typedef {'permission_denied' | 'cancelled' | 'no_asset'} PickFromGalleryFailureReason */
-
 export const PICK_FROM_GALLERY_REASON = {
   PERMISSION_DENIED: 'permission_denied',
   CANCELLED: 'cancelled',
@@ -37,9 +35,6 @@ async function uploadPreparedImage(uri) {
   return { ok: true, link };
 }
 
-/**
- * Pick image from gallery + upload to Cloudinary
- */
 export async function pickImageUriFromGallery(launchOptions = {}) {
   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -74,9 +69,6 @@ export async function pickImageUriFromGallery(launchOptions = {}) {
   return uploadPreparedImage(uri);
 }
 
-/**
- * Pick image from camera + upload to Cloudinary
- */
 export async function pickImageUriFromCamera(launchOptions = {}) {
   const { status } = await ImagePicker.requestCameraPermissionsAsync();
 

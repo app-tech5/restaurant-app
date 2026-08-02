@@ -34,7 +34,6 @@ function CustomDrawerContent(props) {
             try {
               await logout();
             } catch (error) {
-              console.error('Erreur lors de la déconnexion:', error);
               Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion');
             }
           },

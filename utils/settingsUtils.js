@@ -1,6 +1,6 @@
 import { DEFAULT_CURRENCY, getCurrency } from './currencyUtils';
 export const DEFAULT_LANGUAGE = { code: 'fr', name: 'Français' };
-export const DEFAULT_APP_NAME = 'Good Food Restaurant';
+export const DEFAULT_APP_NAME = 'Good Food Pro Restaurant';
 export const getSettingsCacheInfo = async () => {
   try {
     const { getSettingsFromCache } = await import('../utils/cacheUtils');

@@ -20,11 +20,9 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
         },
         () => {},
         (errorMsg) => {
-          console.error('Erreur chargement commandes:', errorMsg);
         }
       );
     } catch (error) {
-      console.error('Error loading restaurant orders with smart cache:', error);
     }
   };
   const acceptOrder = async (orderId) => {
@@ -33,7 +31,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
       await loadRestaurantOrders();
       return response;
     } catch (error) {
-      console.error('Accept order error:', error);
       throw error;
     }
   };
@@ -43,7 +40,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
       await loadRestaurantOrders();
       return response;
     } catch (error) {
-      console.error('Prepare order error:', error);
       throw error;
     }
   };
@@ -53,7 +49,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
       await loadRestaurantOrders();
       return response;
     } catch (error) {
-      console.error('Ready for pickup error:', error);
       throw error;
     }
   };
@@ -63,7 +58,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
       await loadRestaurantOrders();
       return response;
     } catch (error) {
-      console.error('Update order status error:', error);
       throw error;
     }
   };
@@ -73,7 +67,6 @@ export const useRestaurantOrders = (restaurant, isAuthenticated) => {
         await clearOrdersCache(restaurant._id);
         await loadRestaurantOrders();
       } catch (error) {
-        console.error("Erreur lors de l'invalidation du cache des commandes:", error);
       }
     }
   };

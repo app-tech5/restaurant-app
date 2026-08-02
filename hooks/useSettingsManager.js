@@ -33,7 +33,6 @@ export const useSettingsManager = (isAuthenticated) => {
         },
         (errorMsg) => {
           setError(errorMsg);
-          console.error('Erreur chargement settings:', errorMsg);
         }
       );
     } else {
@@ -55,7 +54,6 @@ export const useSettingsManager = (isAuthenticated) => {
       setError(null);
       saveSettingsToCache(appSettings);
     } catch (err) {
-      console.error('Erreur rechargement settings:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -69,7 +67,6 @@ export const useSettingsManager = (isAuthenticated) => {
       await clearSettingsCache();
       await refreshSettings();
     } catch (error) {
-      console.error('Erreur lors de l\'invalidation du cache:', error);
     }
   };
   const changeLanguage = async (languageCode) => {
@@ -92,7 +89,6 @@ export const useSettingsManager = (isAuthenticated) => {
       }));
       return { success: true };
     } catch (error) {
-      console.error('Erreur changement langue:', error);
       throw error;
     }
   };
@@ -104,7 +100,6 @@ export const useSettingsManager = (isAuthenticated) => {
       ];
       return mockLanguages;
     } catch (error) {
-      console.error('Erreur récupération langues:', error);
       return [
         { _id: '1', code: 'fr', name: 'Français', isDefault: true },
         { _id: '2', code: 'en', name: 'English', isDefault: false }
@@ -115,7 +110,6 @@ export const useSettingsManager = (isAuthenticated) => {
     try {
       return await apiClient.listCurrencies();
     } catch (error) {
-      console.error('Erreur récupération devises:', error);
       return [];
     }
   };

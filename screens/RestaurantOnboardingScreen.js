@@ -77,7 +77,6 @@ export default function RestaurantOnboardingScreen() {
     setSubmitting(true);
   
     try {
-      // 🔥 1. Géocodage de l'adresse
       const geo = await geocodeAddress({
         address: form.address,
         city: form.city,
@@ -102,7 +101,6 @@ export default function RestaurantOnboardingScreen() {
         ),
       });
   
-      // 🔥 3. Envoi backend
       const result = await completeOnboarding(body);
   
       if (!result.success) {
@@ -112,7 +110,6 @@ export default function RestaurantOnboardingScreen() {
         );
       }
     } catch (error) {
-      console.error('Onboarding submit error:', error);
       Alert.alert(
         i18n.t('common.error'),
         i18n.t('onboarding.errors.submit')

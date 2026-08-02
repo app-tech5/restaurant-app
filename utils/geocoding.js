@@ -28,15 +28,12 @@ function buildGeocodeQueries({ address, city, country }) {
     if (query) queries.push(query);
   };
 
-  // 1. Requête complète telle que saisie
   push(addr, cityPart, countryPart);
   push(stripAccents(addr), stripAccents(cityPart), stripAccents(countryPart));
 
-  // 2. Sans le nom du lieu (souvent absent d'OpenStreetMap) → ville + pays
   push(cityPart, countryPart);
   push(stripAccents(cityPart), stripAccents(countryPart));
 
-  // 3. Tout dans le champ adresse : retirer le 1er segment ou garder la fin
   if (addr) {
     const commaParts = addr.split(',').map((part) => part.trim()).filter(Boolean);
     if (commaParts.length > 1) {
@@ -102,7 +99,6 @@ export const geocodeAddress = async ({ address, city, country }) => {
 
     return null;
   } catch (error) {
-    console.log('Geocoding error:', error);
     return null;
   }
 };

@@ -29,10 +29,6 @@ export async function getDemoState() {
   }
 }
 
-if (typeof globalThis !== 'undefined') {
-  globalThis.__GOODFOOD_GET_DEMO_STATE__ = getDemoState;
-}
-
 export async function updateDemoState(updater) {
   const current = await getDemoState();
   const next = typeof updater === 'function' ? updater(current) : { ...current, ...updater };

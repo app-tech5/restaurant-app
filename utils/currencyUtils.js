@@ -34,7 +34,6 @@ export const formatCurrency = (amount, currency = null, locale = null) => {
       maximumFractionDigits: 2
     }).format(amount);
   } catch (error) {
-    console.warn('Intl.NumberFormat failed, using fallback:', error);
     return `${amount.toFixed(2)}${curr.symbol}`;
   }
 };

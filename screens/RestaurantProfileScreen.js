@@ -144,7 +144,6 @@ const RestaurantProfileScreen = ({ navigation }) => {
         throw new Error('Update failed');
       }
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error);
       Alert.alert(i18n.t('errors.serverError'), i18n.t('restaurantProfile.updateError'));
     } finally {
       setIsLoading(false);

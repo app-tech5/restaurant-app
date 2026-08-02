@@ -22,12 +22,10 @@ const LAST_NOTIFICATION_DATA_KEY = 'lastNotificationData';
 const LOCAL_ECHO_KEY = '__localForegroundEcho';
 let foregroundPresentationConfigured = false;
 
-/** Must match my-backend `fcm.js` android.notification.channelId */
 export const ANDROID_DEFAULT_PUSH_CHANNEL_ID = 'default';
 
 let androidChannelsEnsured = false;
 
-/** Android: immediate local notification needs channel on trigger (see expo parseTrigger). */
 const immediateNotificationTrigger =
   Platform.OS === 'android' ? { channelId: ANDROID_DEFAULT_PUSH_CHANNEL_ID } : null;
 
@@ -195,7 +193,6 @@ export const getNativePushToken = async () => {
 
     return String(tokenData);
   } catch (error) {
-    console.error('Error getting native push token', error);
     return null;
   }
 };
@@ -217,7 +214,6 @@ export const addNotificationTapListener = (onTap) => {
   };
 };
 
-/** Only data from the interaction that opened / responded to a notification — not "last push received". */
 export const getInitialNotificationData = async () => {
   const Notifications = loadNotificationsModule();
   if (!Notifications) return null;

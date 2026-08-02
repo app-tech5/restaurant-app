@@ -1,13 +1,5 @@
 import { useNavigation, useNavigationState, useIsFocused, StackActions } from '@react-navigation/native';
 
-/**
- * Left header action for screens inside the drawer:
- * - stack/drawer root → hamburger (open drawer)
- * - nested stack screen → pop() the stack only (never drawer goBack)
- *
- * navigation.goBack() is unsafe here: after the leaf is popped, a second
- * goBack (or a bubbled one) leaves the drawer and lands on Dashboard.
- */
 export function useScreenHeaderNav() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();

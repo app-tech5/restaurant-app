@@ -26,11 +26,9 @@ const ReviewsScreen = ({ navigation }) => {
           setReviews(reviews);
           setStats(stats);
         } else {
-          console.error('Erreur lors du chargement des avis:', response.message);
           Alert.alert('Erreur', 'Impossible de charger les avis clients');
         }
       } catch (error) {
-        console.error('Erreur API:', error);
         Alert.alert('Erreur', 'Erreur de connexion au serveur');
       } finally {
         setLoading(false);

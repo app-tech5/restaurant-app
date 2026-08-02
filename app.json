@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "Good Food Restaurant",
+    "name": "Good Food Pro Restaurant",
     "slug": "good-food-restaurant",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo512.png",
     "userInterfaceStyle": "light",
+    "scheme": "goodfoodrestaurant",
     "splash": {
       "image": "./assets/images/splash-screen.png",
       "resizeMode": "contain",
@@ -18,9 +19,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.goodfood.restaurant",
       "buildNumber": "1.0.0",
-      "requireFullScreen": false,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app uses your location to manage restaurant locations",
+        "NSLocationWhenInUseUsageDescription": "Good Food Pro Restaurant uses your location to manage restaurant locations.",
         "CFBundleAllowMixedLocalizations": true
       }
     },
@@ -39,15 +39,6 @@
         "android.permission.POST_NOTIFICATIONS"
       ]
     },
-    "web": {
-      "favicon": "./assets/images/logo512.png",
-      "name": "Good Food Restaurant",
-      "shortName": "Good Food",
-      "lang": "fr-FR",
-      "scope": "/",
-      "themeColor": "#ffffff",
-      "description": "Good Food restaurant management application"
-    },
     "plugins": [
       "expo-font",
       "expo-localization",
@@ -59,13 +50,6 @@
     "locales": {
       "fr": "./lang/fr.json",
       "en": "./lang/en.json"
-    },
-    "scheme": "goodfoodrestaurant",
-    "extra": {
-      "apiUrl": "https://api.goodfood.com",
-      "eas": {
-        "projectId": "6b3b8f77-601a-4cbf-91d1-b02974943033"
-      }
     },
     "primaryColor": "#FF6B35"
   }

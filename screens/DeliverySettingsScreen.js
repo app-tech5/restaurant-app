@@ -69,7 +69,6 @@ const DeliverySettingsScreen = ({ navigation }) => {
         if (cancelled) return;
         await loadDoc();
       } catch (e) {
-        console.warn('Delivery settings load failed:', e);
         if (!cancelled) {
           setBaselineDoc(null);
           setFormData(deliverySettingsFormDefaults(restaurant));
@@ -131,14 +130,12 @@ const DeliverySettingsScreen = ({ navigation }) => {
           );
         }
       } catch (e) {
-        console.warn('Restaurant profile sync skipped:', e);
       }
 
       Alert.alert(i18n.t('success.saved'), i18n.t('delivery.saveSuccess'), [
         { text: i18n.t('common.ok'), onPress: () => setIsEditing(false) },
       ]);
     } catch (error) {
-      console.error('Error updating delivery settings:', error);
       Alert.alert(i18n.t('errors.error'), i18n.t('delivery.saveError'));
     } finally {
       setIsLoading(false);

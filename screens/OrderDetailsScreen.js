@@ -173,7 +173,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
                 i18n.t('alerts.statusUpdated')
               );
             } catch (error) {
-              console.error('Erreur mise à jour statut:', error);
               Alert.alert(
                 i18n.t('alerts.error'),
                 i18n.t('alerts.statusUpdateFailed')
@@ -193,7 +192,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       setOrder((prev) => (prev ? { ...prev, status: 'accepted' } : prev));
       Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderAccepted'));
     } catch (error) {
-      console.error('Erreur acceptation:', error);
       Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.acceptFailed'));
     } finally {
       setIsLoading(false);
@@ -206,7 +204,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       setOrder((prev) => (prev ? { ...prev, status: 'preparing' } : prev));
       Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderPreparing'));
     } catch (error) {
-      console.error('Erreur préparation:', error);
       Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.prepareFailed'));
     } finally {
       setIsLoading(false);
@@ -219,7 +216,6 @@ const OrderDetailsScreen = ({ route, navigation }) => {
       setOrder((prev) => (prev ? { ...prev, status: 'ready' } : prev));
       Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.orderReady'));
     } catch (error) {
-      console.error('Erreur prêt:', error);
       Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.readyFailed'));
     } finally {
       setIsLoading(false);

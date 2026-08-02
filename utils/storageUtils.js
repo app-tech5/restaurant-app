@@ -17,7 +17,6 @@ export const updateRestaurantCache = async (restaurantData, token = null) => {
       await AsyncStorage.setItem(STORAGE_KEYS.RESTAURANT_TOKEN, token);
     }
   } catch (error) {
-    console.error('❌ Erreur sauvegarde restaurant:', error);
     throw error;
   }
 };
@@ -33,7 +32,6 @@ export const getRestaurantFromCache = async () => {
     }
     return null;
   } catch (error) {
-    console.error('❌ Erreur récupération restaurant:', error);
     return null;
   }
 };
@@ -46,7 +44,6 @@ export const clearRestaurantCache = async () => {
       DEMO_STORAGE_KEY,
     ]);
   } catch (error) {
-    console.error('❌ Erreur nettoyage cache restaurant:', error);
     throw error;
   }
 };
@@ -54,7 +51,6 @@ export const getDeviceTokenFromCache = async () => {
   try {
     return await AsyncStorage.getItem(STORAGE_KEYS.DEVICE_TOKEN);
   } catch (error) {
-    console.error('❌ Erreur récupération device token:', error);
     return null;
   }
 };
@@ -63,14 +59,12 @@ export const saveDeviceTokenToCache = async (deviceToken) => {
     if (!deviceToken) return;
     await AsyncStorage.setItem(STORAGE_KEYS.DEVICE_TOKEN, deviceToken);
   } catch (error) {
-    console.error('❌ Erreur sauvegarde device token:', error);
   }
 };
 export const saveSettings = async (settings) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
   } catch (error) {
-    console.error('❌ Erreur sauvegarde paramètres:', error);
     throw error;
   }
 };
@@ -79,7 +73,6 @@ export const getSettings = async () => {
     const settings = await AsyncStorage.getItem(STORAGE_KEYS.SETTINGS);
     return settings ? JSON.parse(settings) : null;
   } catch (error) {
-    console.error('❌ Erreur récupération paramètres:', error);
     return null;
   }
 };
@@ -87,7 +80,6 @@ export const clearSettings = async () => {
   try {
     await AsyncStorage.removeItem(STORAGE_KEYS.SETTINGS);
   } catch (error) {
-    console.error('❌ Erreur nettoyage paramètres:', error);
     throw error;
   }
 };
@@ -95,7 +87,6 @@ export const clearAllStorage = async () => {
   try {
     await AsyncStorage.clear();
   } catch (error) {
-    console.error('❌ Erreur nettoyage stockage:', error);
     throw error;
   }
 };
@@ -117,7 +108,6 @@ export const getStorageInfo = async () => {
       stores
     };
   } catch (error) {
-    console.error('❌ Erreur récupération info stockage:', error);
     return { error: error.message };
   }
 };

@@ -34,7 +34,6 @@ const saveToCache = async (key, data) => {
     };
     await AsyncStorage.setItem(key, JSON.stringify(cacheData));
   } catch (error) {
-    console.error('Erreur sauvegarde cache:', error);
   }
 };
 const getFromCache = async (key, ttl = CACHE_CONFIG.DEFAULT_TTL) => {
@@ -53,7 +52,6 @@ const getFromCache = async (key, ttl = CACHE_CONFIG.DEFAULT_TTL) => {
     }
     return cacheData;
   } catch (error) {
-    console.error('Erreur lecture cache:', error);
     return null;
   }
 };
@@ -98,7 +96,6 @@ export const loadWithSmartCache = async (
       }
     }
   } catch (error) {
-    console.error('Erreur chargement avec cache:', error);
     onError?.(error.message);
   } finally {
     onLoadingStateChange?.(false);
@@ -250,7 +247,6 @@ export const clearAllLocalAppDataOnLogout = async () => {
       'restaurantSettings',
     ]);
   } catch (error) {
-    console.error('Erreur vidage stockage local (logout):', error);
     throw error;
   }
 };

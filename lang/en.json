@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Good Food Restaurant",
+    "name": "Good Food Pro Restaurant",
     "slogan": "Cooking & Management",
     "version": "Version"
   },
@@ -689,7 +689,7 @@
     "lowStockAlertsSubtitle": "Alerts when a dish is out of stock",
     "marketingNotifSubtitle": "Special offers and promotions",
     "aboutTitle": "About",
-    "aboutMessage": "Good Food Restaurant v1.0.0\n\nRestaurant management application",
+    "aboutMessage": "Good Food Pro Restaurant v1.0.0\n\nRestaurant management application",
     "privacyTitle": "Privacy Policy",
     "privacyMessage": "Privacy policy will be available soon.",
     "termsTitle": "Terms of Service",

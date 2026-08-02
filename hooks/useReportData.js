@@ -15,7 +15,6 @@ export const useReportData = (reportType, period) => {
         loadRestaurantOrders()
       ]);
     } catch (error) {
-      console.error('Erreur chargement données rapport:', error);
     } finally {
       setIsLoading(false);
     }

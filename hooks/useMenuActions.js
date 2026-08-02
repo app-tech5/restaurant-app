@@ -14,7 +14,6 @@ export const useMenuActions = (navigation) => {
     try {
       await loadMenu();
     } catch (error) {
-      console.error('Erreur chargement menu:', error);
     }
   };
   const onRefresh = async () => {
@@ -41,7 +40,6 @@ export const useMenuActions = (navigation) => {
             try {
               await deleteMenuItem(itemId);
             } catch (error) {
-              console.error('Erreur suppression item:', error);
             }
           }
         }
@@ -52,7 +50,6 @@ export const useMenuActions = (navigation) => {
     try {
       await toggleMenuItemAvailability(itemId, available);
     } catch (error) {
-      console.error('Erreur changement disponibilité:', error);
     }
   };
   return {

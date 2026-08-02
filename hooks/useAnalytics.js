@@ -30,11 +30,9 @@ export const useAnalytics = (restaurant, isAuthenticated) => {
         },
         (errorMsg) => {
           setError(errorMsg);
-          console.error('Erreur chargement analytics:', errorMsg);
         }
       );
     } catch (err) {
-      console.error('Error loading analytics:', err);
       setError(err.message);
     } finally {
       setIsLoading(false);

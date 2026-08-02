@@ -40,7 +40,6 @@ const DashboardScreen = ({ navigation }) => {
         loadRestaurantOrders()
       ]);
     } catch (error) {
-      console.error('Erreur chargement stats et commandes:', error);
     }
   };
   const onRefresh = async () => {

@@ -30,7 +30,6 @@ const OrdersScreen = ({ navigation }) => {
     try {
       await loadRestaurantOrders();
     } catch (error) {
-      console.error('Erreur chargement commandes:', error);
     }
   };
   const onRefresh = async () => {
@@ -42,7 +41,6 @@ const OrdersScreen = ({ navigation }) => {
     try {
       await acceptOrder(orderId);
     } catch (error) {
-      console.error(i18n.t('errors.acceptOrder'), error);
     }
   };
   const handleRejectOrder = (orderId) => {
@@ -60,7 +58,6 @@ const OrdersScreen = ({ navigation }) => {
               await updateOrderStatus(orderId, 'cancelled');
               Alert.alert(i18n.t('alerts.success'), i18n.t('alerts.statusUpdated'));
             } catch (error) {
-              console.error('Erreur mise à jour statut:', error);
               Alert.alert(i18n.t('alerts.error'), i18n.t('alerts.statusUpdateFailed'));
             }
           }
@@ -72,14 +69,12 @@ const OrdersScreen = ({ navigation }) => {
     try {
       await prepareOrder(orderId);
     } catch (error) {
-      console.error(i18n.t('errors.prepareOrder'), error);
     }
   };
   const handleReadyForPickup = async (orderId) => {
     try {
       await readyForPickup(orderId);
     } catch (error) {
-      console.error(i18n.t('errors.readyOrder'), error);
     }
   };
   const handleOrderPress = (order) => {

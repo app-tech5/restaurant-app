@@ -18,7 +18,6 @@ export const useUserSettings = () => {
         throw new Error(response.message || 'Failed to load settings');
       }
     } catch (err) {
-      console.error('Error loading user settings:', err);
       setError(err.message);
       setUserSettings({
         notifications: {
@@ -50,7 +49,6 @@ export const useUserSettings = () => {
         throw new Error(response.message || 'Failed to update notifications');
       }
     } catch (err) {
-      console.error('Error updating notifications:', err);
       setError(err.message);
       return { success: false, error: err.message };
     }
@@ -69,7 +67,6 @@ export const useUserSettings = () => {
         throw new Error(response.message || 'Failed to update restaurant settings');
       }
     } catch (err) {
-      console.error('Error updating restaurant settings:', err);
       setError(err.message);
       return { success: false, error: err.message };
     }
@@ -85,7 +82,6 @@ export const useUserSettings = () => {
         throw new Error(response.message || 'Failed to update settings');
       }
     } catch (err) {
-      console.error('Error updating user settings:', err);
       setError(err.message);
       return { success: false, error: err.message };
     }

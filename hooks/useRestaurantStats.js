@@ -23,11 +23,9 @@ export const useRestaurantStats = (restaurant, isAuthenticated) => {
         (loading) => {
         },
         (errorMsg) => {
-          console.error('Erreur chargement stats:', errorMsg);
         }
       );
     } catch (error) {
-      console.error('Error loading restaurant stats with smart cache:', error);
     }
   };
   const invalidateRestaurantStatsCache = async () => {
@@ -36,7 +34,6 @@ export const useRestaurantStats = (restaurant, isAuthenticated) => {
         await clearRestaurantStatsCache(restaurant._id);
         await loadRestaurantStats(); 
       } catch (error) {
-        console.error('Erreur lors de l\'invalidation du cache des stats:', error);
       }
     }
   };

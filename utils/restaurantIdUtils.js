@@ -1,7 +1,4 @@
-/**
- * Mongo _id of the Restaurant document (not the User account id).
- * @param {object|null|undefined} restaurant — stored session user / profile object
- */
+
 export function resolveRestaurantPlaceId(restaurant) {
   const r = restaurant;
   if (!r) return null;
@@ -12,7 +9,6 @@ export function resolveRestaurantPlaceId(restaurant) {
   return r._id;
 }
 
-/** Compte lié à un restaurant ou profil restaurant déjà en cache */
 export function userHasLinkedRestaurant(user) {
   if (!user) return false;
   if (user.restaurant != null) {

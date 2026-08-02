@@ -1,9 +1,5 @@
 import { normalizeRestaurantServiceMode } from './restaurantUtils';
 
-/**
- * Corps minimal POST `/resource/deliverysettings` à l'onboarding.
- * Les défauts (frais, rayon, etc.) viennent du schéma Mongoose — ne pas les dupliquer ici.
- */
 export function buildDeliverySettingsOnboardingPayload(restaurantId, restaurantBody = {}) {
   const payload = { restaurant: restaurantId };
   const mode = normalizeRestaurantServiceMode(restaurantBody.serviceModes);

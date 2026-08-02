@@ -76,7 +76,6 @@ export default function SignupScreen({ navigation }) {
         );
       }
     } catch (error) {
-      console.error('Signup error:', error);
       Alert.alert(i18n.t('common.error'), i18n.t('auth.connectionError'));
     } finally {
       setIsLoading(false);

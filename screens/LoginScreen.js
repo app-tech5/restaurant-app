@@ -34,7 +34,6 @@ export default function LoginScreen({ navigation }) {
           navigation.replace('DrawerNavigator');
         }
       } catch (error) {
-        console.error('Error checking existing login:', error);
       }
     };
     checkExistingLogin();
@@ -53,7 +52,6 @@ export default function LoginScreen({ navigation }) {
         Alert.alert(i18n.t('common.error'), result.message || i18n.t('auth.networkError'));
       }
     } catch (error) {
-      console.error('Login error:', error);
       Alert.alert(i18n.t('common.error'), i18n.t('auth.connectionError'));
     } finally {
       setIsLoading(false);

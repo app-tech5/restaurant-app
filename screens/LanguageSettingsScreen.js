@@ -19,7 +19,6 @@ const LanguageSettingsScreen = ({ navigation }) => {
         const list = await getAvailableLanguages();
         if (mounted) setLanguages(Array.isArray(list) ? list : []);
       } catch (error) {
-        console.error('Language list error:', error);
         if (mounted) {
           setLanguages([
             { code: 'fr', name: 'Français' },
@@ -45,7 +44,6 @@ const LanguageSettingsScreen = ({ navigation }) => {
         i18n.t('settings.languageChanged', { language: String(code).toUpperCase() })
       );
     } catch (error) {
-      console.error('Language change error:', error);
       Alert.alert(i18n.t('errors.error'), i18n.t('settings.languageLoadError'));
     }
   };

@@ -1,4 +1,3 @@
-import './utils/hermesAutoOkAlerts';
 import './services/fcmBackgroundMessaging';
 import React, { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

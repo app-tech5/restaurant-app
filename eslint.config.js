@@ -1,4 +1,5 @@
 const noCommentsPlugin = require('eslint-plugin-no-comments');
+
 module.exports = [
   {
     ignores: [
@@ -14,8 +15,8 @@ module.exports = [
     files: ['**/*.js', '**/*.jsx'],
     plugins: {
       'no-comments': noCommentsPlugin,
-      'i18next': require('eslint-plugin-i18next'),
-      'react': require('eslint-plugin-react'),
+      i18next: require('eslint-plugin-i18next'),
+      react: require('eslint-plugin-react'),
     },
     languageOptions: {
       ecmaVersion: 2022,
@@ -35,6 +36,7 @@ module.exports = [
         fetch: 'readonly',
         alert: 'readonly',
         require: 'readonly',
+        global: 'readonly',
         __DEV__: 'readonly',
         Expo: 'readonly',
         describe: 'readonly',
@@ -47,12 +49,12 @@ module.exports = [
       },
     },
     rules: {
-      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
-      "no-console": ["warn", { allow: ["warn", "error"] }],
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
+      'no-console': 'error',
       'no-comments/disallowComments': 'error',
-      "max-lines-per-function": ["warn", 50], 
-      "complexity": ["warn", 10],
-      "react/jsx-max-depth": ["warn", { "max": 4 }], 
+      'max-lines-per-function': ['warn', 50],
+      complexity: ['warn', 10],
+      'react/jsx-max-depth': ['warn', { max: 4 }],
       'i18next/no-literal-string': [
         'error',
         {
@@ -113,7 +115,9 @@ module.exports = [
   {
     files: ['**/*.test.js', '**/*.spec.js', '__tests__/**/*.js'],
     rules: {
-      'no-console': 'off', 
+      'no-console': 'off',
+      'no-comments/disallowComments': 'off',
+      'i18next/no-literal-string': 'off',
     },
   },
 ];

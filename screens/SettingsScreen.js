@@ -68,7 +68,6 @@ const SettingsScreen = ({ navigation }) => {
       setCurrencyChoices(list);
       setCurrencyModalVisible(true);
     } catch (error) {
-      console.error('Currency list:', error);
       Alert.alert(i18n.t('errors.error'), i18n.t('settings.currencyLoadError'));
     }
   };
@@ -80,7 +79,6 @@ const SettingsScreen = ({ navigation }) => {
       await changeCurrency(String(id));
       Alert.alert(i18n.t('success.saved'), i18n.t('settings.currencySaved'));
     } catch (error) {
-      console.error('Currency save:', error);
       Alert.alert(i18n.t('errors.error'), i18n.t('settings.currencySaveError'));
     }
   };
@@ -309,7 +307,7 @@ const SettingsScreen = ({ navigation }) => {
         {}
         <View style={styles.versionContainer}>
           <Text style={styles.versionText}>
-            Good Food Restaurant v1.0.0
+            Good Food Pro Restaurant v1.0.0
           </Text>
         </View>
       </ScrollView>

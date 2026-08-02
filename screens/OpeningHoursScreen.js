@@ -83,7 +83,6 @@ const OpeningHoursScreen = ({ navigation }) => {
         throw new Error('Update failed');
       }
     } catch (error) {
-      console.error('Error updating opening hours:', error);
       Alert.alert(
         i18n.t('errors.error'),
         i18n.t('openingHours.saveError')

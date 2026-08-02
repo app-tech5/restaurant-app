@@ -161,7 +161,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
         throw new Error('Update failed');
       }
     } catch (error) {
-      console.error('Error updating payment settings:', error);
       Alert.alert(
         i18n.t('errors.error'),
         i18n.t('payment.saveError')

@@ -72,7 +72,6 @@ const NotificationsScreen = ({ navigation }) => {
         prev.map((n) => (n._id === notification._id ? { ...n, isRead: true } : n))
       );
     } catch {
-      // keep UI unchanged on failure
     }
   };
 
@@ -145,7 +144,6 @@ const NotificationsScreen = ({ navigation }) => {
       );
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     } catch {
-      // ignore
     }
   };
 
@@ -165,7 +163,6 @@ const NotificationsScreen = ({ navigation }) => {
               );
               setNotifications([]);
             } catch {
-              // ignore
             }
           },
         },

@@ -23,11 +23,9 @@ export const useRestaurantProfile = (restaurant, isAuthenticated) => {
         },
         null,
         (errorMsg) => {
-          console.error('Erreur chargement profil restaurant:', errorMsg);
         }
       );
     } catch (error) {
-      console.error('Error loading restaurant profile with smart cache:', error);
     }
     return profile;
   };
@@ -42,7 +40,6 @@ export const useRestaurantProfile = (restaurant, isAuthenticated) => {
       await clearRestaurantProfileCache(String(restaurantId));
       return loadRestaurantProfile();
     } catch (error) {
-      console.error('Erreur lors de l\'invalidation du cache du profil restaurant:', error);
       return null;
     }
   };

@@ -20,11 +20,9 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
         },
         () => {},
         (errorMsg) => {
-          console.error('Erreur chargement menu:', errorMsg);
         }
       );
     } catch (error) {
-      console.error('Error loading restaurant menu with smart cache:', error);
     }
   };
   const addMenuItem = async (menuItem) => {
@@ -33,7 +31,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
       await loadMenu();
       return response;
     } catch (error) {
-      console.error('Add menu item error:', error);
       throw error;
     }
   };
@@ -43,7 +40,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
       await loadMenu();
       return response;
     } catch (error) {
-      console.error('Update menu item error:', error);
       throw error;
     }
   };
@@ -53,7 +49,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
       await loadMenu();
       return response;
     } catch (error) {
-      console.error('Delete menu item error:', error);
       throw error;
     }
   };
@@ -63,7 +58,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
       await loadMenu();
       return response;
     } catch (error) {
-      console.error('Toggle menu item availability error:', error);
       throw error;
     }
   };
@@ -73,7 +67,6 @@ export const useRestaurantMenu = (restaurant, isAuthenticated) => {
         await clearMenuCache(restaurant._id);
         await loadMenu();
       } catch (error) {
-        console.error("Erreur lors de l'invalidation du cache du menu:", error);
       }
     }
   };

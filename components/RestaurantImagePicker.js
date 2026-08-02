@@ -16,11 +16,6 @@ import {
   PICK_FROM_GALLERY_REASON,
 } from '../utils/pickImageFromGallery';
 
-/**
- * Sélection / upload d'image restaurant (galerie, caméra, URL).
- * variant="elements" → onboarding (react-native-elements)
- * variant="profile" → écran profil (TextInput natif)
- */
 export default function RestaurantImagePicker({
   value = '',
   onChange,

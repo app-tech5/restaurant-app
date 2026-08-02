@@ -40,7 +40,6 @@ class ApiClient {
         this.userId = this.restaurant._id || this.restaurant.id || null;
       }
     } catch (error) {
-      console.error('Error initializing restaurant from storage:', error);
     }
   }
 
@@ -53,7 +52,6 @@ class ApiClient {
         await AsyncStorage.setItem('restaurantData', JSON.stringify(this.restaurant));
       }
     } catch (error) {
-      console.error('Error saving restaurant to storage:', error);
     }
   }
 
@@ -71,7 +69,7 @@ class ApiClient {
     return this._apiFetch(endpoint, options, this.getHeaders());
   }
 
-  /** POST multipart (ex. upload fichier) : pas de `Content-Type: application/json` (RN fixe le boundary). */
+  
   async apiCallMultipart(endpoint, options = {}) {
     const headers = {};
     if (this.token) {
@@ -116,7 +114,6 @@ class ApiClient {
       }
       return data;
     } catch (error) {
-      console.error(`❌ API Error: ${endpoint}`, error);
       throw error;
     }
   }
@@ -189,7 +186,6 @@ class ApiClient {
       await AsyncStorage.multiRemove(['restaurantToken', 'restaurantData']);
       await clearDemoState();
     } catch (error) {
-      console.error('Error clearing storage on logout:', error);
     }
     return { success: true };
   }
@@ -266,7 +262,7 @@ class ApiClient {
     });
   }
 
-  /** Liste réglages livraison pour le restaurant courant (`type` comme sur `products`). */
+  
   async fetchDeliverySettingsListForRestaurant() {
     const rid = this.resolveRestaurantPlaceId();
     if (!rid) {
@@ -405,19 +401,19 @@ class ApiClient {
     return { data: doc };
   }
 
-  /** Devises disponibles (réf. Mongo pour le champ `currency` du Setting global). */
+  
   async listCurrencies() {
     const raw = await this.apiCall('/resource/currencies');
     return Array.isArray(raw) ? raw : [];
   }
 
-  /** Taxes disponibles (réf. Mongo pour le champ `tax` du Restaurant). */
+  
   async listTaxes() {
     const raw = await this.apiCall('/resource/taxes');
     return Array.isArray(raw) ? raw : [];
   }
 
-  /** Catégories cuisine (collection Category → `Restaurant.categories`). */
+  
   async listCategories() {
     const raw = await this.apiCall('/resource/categories');
     return Array.isArray(raw) ? raw : [];
@@ -428,7 +424,7 @@ class ApiClient {
     return Array.isArray(raw) ? raw : [];
   }
 
-  /** Met à jour le Setting global (ex. `currency`: ObjectId). */
+  
   async updateSettingsDocument(settingsId, patch) {
     return await this.apiCall(`/resource/settings/${settingsId}`, {
       method: 'PUT',
@@ -516,12 +512,10 @@ class ApiClient {
   
   async uploadImageToCloudinary(imageUri) {
     try {
-      // 1. demander signature au backend
       const sig = await this.apiCall('/upload/cloudinary-signature', {
         method: 'GET',
       });
   
-      // 2. construire form data
       const formData = new FormData();
   
       formData.append('file', {
@@ -534,10 +528,7 @@ class ApiClient {
       formData.append('timestamp', sig.timestamp);
       formData.append('signature', sig.signature);
   
-      // optionnel (si tu utilises un upload preset)
-      // formData.append('upload_preset', 'YOUR_PRESET');
   
-      // 3. upload direct vers Cloudinary
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`,
         {
@@ -552,7 +543,6 @@ class ApiClient {
         throw new Error(data?.error?.message || 'Cloudinary upload failed');
       }
   
-      // 4. retourner URL optimisée
       return {
         url: data.secure_url,
         publicId: data.public_id,
@@ -560,15 +550,10 @@ class ApiClient {
         height: data.height,
       };
     } catch (error) {
-      console.error('❌ Cloudinary upload error:', error);
       throw error;
     }
   }
 }
 
 const apiClient = new ApiClient();
-// Hermes E2E reads this instead of brute-forcing Metro module ids (which crashes RN).
-if (typeof globalThis !== 'undefined') {
-  globalThis.__GOODFOOD_RESTAURANT_API__ = apiClient;
-}
 export default apiClient;

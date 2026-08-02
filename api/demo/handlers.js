@@ -30,7 +30,6 @@ const isLocalDemoToken = (token) =>
 const isLocalDemoRestaurantId = (id) =>
   String(id || '').startsWith('demo_restaurant');
 
-/** Resolve product restaurant id whether `type`/`restaurant` is an ObjectId string or populated doc. */
 const productRestaurantKey = (item) => {
   const candidates = [item?.type, item?.restaurant, item?.restaurantId];
   for (const value of candidates) {
@@ -104,9 +103,6 @@ const applyNotificationOverrides = (notifications, state) => {
     });
 };
 
-/**
- * Demo writes stay in AsyncStorage. Builtin demo login falls through to API.
- */
 export async function handleDemoWrite(client, endpoint, method, options = {}) {
   if (!config.DEMO_MODE || !WRITE_METHODS.has(method)) return null;
 
@@ -167,7 +163,6 @@ export async function handleDemoWrite(client, endpoint, method, options = {}) {
     return { token, user, message: 'Account created (demo)' };
   }
 
-  // Builtin demo account → real API login
   if (endpointPath === '/auth/restaurant-login' && method === 'POST') {
     if (isBuiltinDemoEmail(body.email)) {
       return null;
@@ -384,18 +379,12 @@ export async function handleDemoWrite(client, endpoint, method, options = {}) {
   }
 
   if (endpointPath.startsWith('/upload/')) {
-    return { url: `demo://upload/${Date.now()}.jpg`, success: true };
+    return { url: `demo:
   }
 
   return null;
 }
 
-/**
- * Local demo accounts never hit the API for restaurant-scoped GETs
- * (ids like demo_restaurant_* do not exist in Mongo).
- * Also short-circuit whenever the requested id/type is local, even if the
- * session token is a real JWT (stale placeId after signup tests).
- */
 export async function handleDemoRead(client, endpoint, method) {
   if (!config.DEMO_MODE || method !== 'GET') {
     return null;
@@ -499,14 +488,9 @@ export async function handleDemoRead(client, endpoint, method) {
     return { ...base, ...(state.profilePatch || {}) };
   }
 
-  // Catalog endpoints can still hit the API (categories, settings, taxes…).
   return null;
 }
 
-/**
- * Merge AsyncStorage demo patches onto API/DB read payloads
- * (builtin demo account that still reads seed data from Mongo).
- */
 export async function mergeDemoRead(endpoint, data) {
   if (!config.DEMO_MODE) return data;
 
@@ -532,7 +516,6 @@ export async function mergeDemoRead(endpoint, data) {
     const merged = applyProductOverrides(asList(data), state).filter((item) => {
       if (!restaurantType) return true;
       const itemType = productRestaurantKey(item);
-      // Local demo products must not leak onto builtin Mongo restaurant menus.
       if (isLocalDemoRestaurantId(itemType) && !isLocalDemoRestaurantId(restaurantType)) {
         return false;
       }
@@ -548,7 +531,6 @@ export async function mergeDemoRead(endpoint, data) {
     if (!state.restaurantPatch || !data) return data;
     const requestedId = endpointPath.split('/').pop();
     const patchId = state.restaurantPatch._id || state.restaurantPatch.id;
-    // Never overwrite a Mongo restaurant profile with a local signup patch.
     if (patchId && String(patchId) !== String(requestedId)) return data;
     if (isLocalDemoRestaurantId(patchId) && !isLocalDemoRestaurantId(requestedId)) return data;
     return { ...data, ...state.restaurantPatch };
@@ -575,7 +557,6 @@ export async function mergeDemoRead(endpoint, data) {
     const patch = state.deliverySettingsPatch;
     const patchType = String(patch.type || patch.restaurant || patch.restaurantId || '');
     if (isLocalDemoRestaurantId(patchType)) {
-      // Local signup delivery settings must not replace builtin demo API data.
       return data;
     }
     const list = asList(data);
