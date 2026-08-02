@@ -84,6 +84,10 @@ Edit `app.json` before store submission:
 - `expo.ios.bundleIdentifier`
 - icons / splash under `assets/`
 
+### Firebase (push)
+
+Replace the placeholder `android/app/google-services.json` with the file from **your** Firebase project (Android app package `com.goodfood.restaurant`, or update `app.json` / Gradle to match). Push will not work until this is configured.
+
 ---
 
 ## Project structure

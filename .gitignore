@@ -51,8 +51,14 @@ project.xcworkspace
 .maestro/
 scripts/screenshots/
 .vscode/
+.idea/
+.cursor/
+*.code-workspace
+sgconfig.yml
+rules/
 coverage/
 *.log
+.DS_Store
 
 # Local screenshot dumps
 /*.png
