@@ -26,7 +26,6 @@ const ActionCard = ({
       activeOpacity={0.7}
       {...props}
     >
-      {}
       <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
         <Icon
           name={icon}
@@ -35,7 +34,6 @@ const ActionCard = ({
           color={color}
         />
       </View>
-      {}
       <View style={styles.content}>
         <Text
           style={[
@@ -56,7 +54,6 @@ const ActionCard = ({
           </Text>
         )}
       </View>
-      {}
       <Icon
         name="chevron-right"
         type="material"

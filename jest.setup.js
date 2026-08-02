@@ -88,20 +88,6 @@ jest.mock('react-native-reanimated', () => ({
   runOnUI: jest.fn((fn) => fn()),
 }));
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
-jest.mock('react-native-maps', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  const MockMapView = React.forwardRef((props, ref) => (
-    <View ref={ref} {...props} testID="mock-map-view" />
-  ));
-  const MockMarker = (props) => <View {...props} testID="mock-marker" />;
-  return {
-    __esModule: true,
-    default: MockMapView,
-    Marker: MockMarker,
-    PROVIDER_GOOGLE: 'google',
-  };
-});
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(() =>
     Promise.resolve({ status: 'granted' })
@@ -131,7 +117,6 @@ jest.mock('react-native-animatable', () => ({
   Text: 'MockAnimatableText',
 }));
 jest.mock('react-native-google-places-autocomplete', () => 'MockGooglePlaces');
-jest.mock('react-native-maps-directions', () => 'MockMapsDirections');
 jest.mock('react-native-worklets', () => ({
   runOnUI: jest.fn((fn) => fn()),
   runOnJS: jest.fn((fn) => fn()),

@@ -16,7 +16,6 @@ export { default as PerformanceMetrics } from './PerformanceMetrics';
 export { default as DetailedStats } from './DetailedStats';
 export { default as ChartSection } from './ChartSection';
 export { default as OrderCard } from './OrderCard';
-export { default as OrderStatusBadge } from './OrderStatusBadge';
 export { default as MenuItemCard } from './MenuItemCard';
 export { default as MenuSearchBar } from './MenuSearchBar';
 export { default as MenuCategoriesTabs } from './MenuCategoriesTabs';

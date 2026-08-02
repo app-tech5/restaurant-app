@@ -262,7 +262,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
         />
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
-            {}
             <View style={styles.field}>
             <Text style={styles.fieldLabel}>{i18n.t('menu.itemNameLabel')}</Text>
               <TextInput
@@ -274,7 +273,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
             </View>
-            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.itemDescriptionLabel')}</Text>
               <TextInput
@@ -305,7 +303,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
             </View>
-            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.price')} *</Text>
               <TextInput
@@ -318,7 +315,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
             </View>
-            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.preparationTime')} *</Text>
               <TextInput
@@ -331,7 +327,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
               />
               {errors.preparation_time && <Text style={styles.errorText}>{errors.preparation_time}</Text>}
             </View>
-            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.category')} *</Text>
               {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
@@ -342,7 +337,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 emptyText={i18n.t('onboarding.categoriesEmpty')}
               />
             </View>
-            {}
             <View style={styles.field}>
               <View style={styles.switchRow}>
                 <View style={styles.switchLabel}>
@@ -359,7 +353,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 />
               </View>
             </View>
-            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.variants')}</Text>
               <MultiSelectModalField
@@ -371,7 +364,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 confirmLabel={i18n.t('common.ok')}
               />
             </View>
-            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('menu.ingredients')}</Text>
               <TextInput
@@ -387,7 +379,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 {i18n.t('menu.ingredientsHint')}
               </Text>
             </View>
-            {}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{i18n.t('common.tags')}</Text>
               <ChipSelectField
@@ -400,7 +391,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 {i18n.t('menu.tagsHint')}
               </Text>
             </View>
-            {}
             <View style={styles.buttonContainer}>
               <Button
                 title={isEditMode ? i18n.t('menu.editItem') : i18n.t('menu.addItem')}
@@ -410,7 +400,6 @@ const AddEditMenuItemScreen = ({ route, navigation }) => {
                 disabled={isLoading}
               />
             </View>
-            {}
             <View style={styles.infoContainer}>
               <Text style={styles.infoText}>
                 {i18n.t('menu.requiredFields')}

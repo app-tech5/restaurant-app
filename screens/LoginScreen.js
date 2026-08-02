@@ -70,7 +70,6 @@ export default function LoginScreen({ navigation }) {
             duration={1000}
             style={styles.contentContainer}
           >
-            {}
             <Animatable.View
               animation="bounceIn"
               delay={500}
@@ -85,7 +84,6 @@ export default function LoginScreen({ navigation }) {
               <Text style={styles.appTitle}>{config.APP_NAME}</Text>
               <Text style={styles.appSubtitle}>{config.APP_SUBTITLE}</Text>
             </Animatable.View>
-            {}
             <Animatable.View
               animation="fadeInUp"
               delay={800}

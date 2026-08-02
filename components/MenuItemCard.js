@@ -50,7 +50,6 @@ const MenuItemCard = ({
         style={styles.content}
         disabled={!onPress}
       >
-        {}
         <View style={styles.imageContainer}>
           {image ? (
             <Card.Image source={{ uri: image }} style={styles.image} />
@@ -65,7 +64,6 @@ const MenuItemCard = ({
             </View>
           )}
         </View>
-        {}
         <View style={styles.infoContainer}>
           <View style={styles.header}>
             <Text style={styles.name} numberOfLines={2}>
@@ -100,7 +98,6 @@ const MenuItemCard = ({
           </View>
         </View>
       </TouchableOpacity>
-      {}
       {showActions && (
         <View style={styles.actionsContainer}>
           {onToggleAvailability && (

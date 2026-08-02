@@ -159,7 +159,6 @@ const OpeningHoursScreen = ({ navigation }) => {
         }
       />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.systemInfo')}</Text>
           <View style={styles.infoField}>
@@ -179,7 +178,6 @@ const OpeningHoursScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('restaurantProfile.operatingHours')}</Text>
           {!formData.is_closed ? (

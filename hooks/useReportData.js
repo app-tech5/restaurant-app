@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import i18n from '../i18n';
+
 export const useReportData = (reportType, period) => {
   const { stats, orders, loadRestaurantStats, loadRestaurantOrders } = useRestaurant();
   const [isLoading, setIsLoading] = useState(false);
@@ -57,42 +59,42 @@ export const useReportData = (reportType, period) => {
     };
   }, [filteredOrders]);
   const reportInfo = useMemo(() => {
-    const now = new Date();
-    let title = '';
     let periodText = '';
     switch (period) {
       case 'day':
-        periodText = 'Aujourd\'hui';
+        periodText = i18n.t('reports.today');
         break;
       case 'week':
-        periodText = 'Cette semaine';
+        periodText = i18n.t('reports.thisWeek');
         break;
       case 'month':
       default:
-        periodText = 'Ce mois';
+        periodText = i18n.t('reports.thisMonth');
         break;
     }
+    let title = '';
     switch (reportType) {
       case 'daily':
-        title = `${periodText} - Rapport journalier`;
+        title = i18n.t('reports.dailyReport', { period: periodText });
         break;
       case 'weekly':
-        title = `${periodText} - Rapport hebdomadaire`;
+        title = i18n.t('reports.weeklyReport', { period: periodText });
         break;
       case 'monthly':
-        title = `${periodText} - Rapport mensuel`;
+        title = i18n.t('reports.monthlyReport', { period: periodText });
         break;
       case 'revenue':
-        title = `${periodText} - Analyse des revenus`;
+        title = i18n.t('reports.revenueReport', { period: periodText });
         break;
       case 'orders':
-        title = `${periodText} - Statistiques des commandes`;
+        title = i18n.t('reports.ordersReport', { period: periodText });
         break;
       case 'customers':
-        title = `${periodText} - Rapport clients`;
+        title = i18n.t('reports.customersReport', { period: periodText });
         break;
       default:
-        title = `${periodText} - Rapport`;
+        title = i18n.t('reports.customReport', { period: periodText });
+        break;
     }
     return { title, periodText };
   }, [reportType, period]);
@@ -102,6 +104,7 @@ export const useReportData = (reportType, period) => {
     filteredOrders,
     baseMetrics,
     reportInfo,
-    onRefresh
+    onRefresh,
+    stats
   };
 };

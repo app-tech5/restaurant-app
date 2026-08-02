@@ -138,7 +138,6 @@ const SettingsScreen = ({ navigation }) => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.restaurantSection')}</Text>
           <SettingRow
@@ -168,7 +167,6 @@ const SettingsScreen = ({ navigation }) => {
             }
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.servicesSection')}</Text>
           <SettingRow
@@ -184,7 +182,6 @@ const SettingsScreen = ({ navigation }) => {
             onPress={handlePaymentSettings}
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.notificationsSettings')}</Text>
           <SettingRow
@@ -203,7 +200,7 @@ const SettingsScreen = ({ navigation }) => {
           />
           <SettingRow
             title={i18n.t('settings.orderUpdatesNotif')}
-            subtitle="Order status changes"
+            subtitle={i18n.t('settings.orderStatusChanges')}
             icon="update"
             rightComponent={
               <Switch
@@ -217,7 +214,7 @@ const SettingsScreen = ({ navigation }) => {
           />
           <SettingRow
             title={i18n.t('settings.lowStockNotif')}
-            subtitle="Alerts when a dish is out of stock"
+            subtitle={i18n.t('settings.outOfStockAlerts')}
             icon="inventory"
             rightComponent={
               <Switch
@@ -231,7 +228,7 @@ const SettingsScreen = ({ navigation }) => {
           />
           <SettingRow
             title={i18n.t('settings.marketingNotif')}
-            subtitle="Special offers and promotions"
+            subtitle={i18n.t('settings.promoAlerts')}
             icon="campaign"
             rightComponent={
               <Switch
@@ -244,7 +241,6 @@ const SettingsScreen = ({ navigation }) => {
             }
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.preferencesSection')}</Text>
           <SettingRow
@@ -266,7 +262,6 @@ const SettingsScreen = ({ navigation }) => {
             value={currency?.code || 'EUR'}
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.supportHelpSection')}</Text>
           <SettingRow
@@ -282,7 +277,6 @@ const SettingsScreen = ({ navigation }) => {
             onPress={handleContact}
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('settings.informationSection')}</Text>
           <SettingRow
@@ -304,10 +298,9 @@ const SettingsScreen = ({ navigation }) => {
             onPress={handleTerms}
           />
         </View>
-        {}
         <View style={styles.versionContainer}>
           <Text style={styles.versionText}>
-            Good Food Pro Restaurant v1.0.0
+            {i18n.t('settings.aboutVersion')}
           </Text>
         </View>
       </ScrollView>

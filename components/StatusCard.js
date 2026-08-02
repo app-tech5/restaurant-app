@@ -44,7 +44,6 @@ const StatusCard = ({
       ]}
       {...props}
     >
-      {}
       <View style={[styles.iconContainer, { backgroundColor: color + '15' }]}>
         <Icon
           name={icon}
@@ -53,7 +52,6 @@ const StatusCard = ({
           color={color}
         />
       </View>
-      {}
       <View style={styles.content}>
         <Text
           style={[

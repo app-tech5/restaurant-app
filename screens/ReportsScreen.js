@@ -160,7 +160,6 @@ const ReportsScreen = ({ navigation }) => {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {}
         <View style={styles.periodSection}>
           <Text style={styles.sectionTitle}>{i18n.t('reports.periodTitle')}</Text>
           <View style={styles.periodSelector}>
@@ -183,14 +182,12 @@ const ReportsScreen = ({ navigation }) => {
             ))}
           </View>
         </View>
-        {}
         <View style={styles.reportsSection}>
           <Text style={styles.sectionTitle}>{i18n.t('reports.availableReports')}</Text>
           <View style={styles.reportsGrid}>
             {reportTypes.map(renderReportCard)}
           </View>
         </View>
-        {}
         <View style={styles.infoSection}>
           <View style={styles.infoCard}>
             <Icon

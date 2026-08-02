@@ -83,7 +83,6 @@ const OrderCard = ({
         style={styles.content}
         disabled={!onPress}
       >
-        {}
         <View style={styles.header}>
           <View style={styles.orderInfo}>
             <Text style={styles.orderNumber}>
@@ -99,7 +98,6 @@ const OrderCard = ({
             </Text>
           </View>
         </View>
-        {}
         <View style={styles.customerInfo}>
           <Icon
             name="person"
@@ -111,7 +109,6 @@ const OrderCard = ({
           <Text style={styles.customerName}>{customerName}</Text>
           <Text style={styles.customerPhone}>{customerPhone}</Text>
         </View>
-        {}
         <View style={styles.itemsContainer}>
           <Text style={styles.itemsTitle}>
             {items.length} {i18n.t(items.length > 1 ? 'common.items' : 'common.item')}
@@ -127,7 +124,6 @@ const OrderCard = ({
             </Text>
           )}
         </View>
-        {}
         <View style={styles.footer}>
           <View style={styles.totalContainer}>
             <Text style={styles.totalLabel}>{i18n.t('orders.total')}</Text>
@@ -150,7 +146,6 @@ const OrderCard = ({
           )}
         </View>
       </TouchableOpacity>
-      {}
       {actionButtons.length > 0 && (
         <View style={styles.actionsContainer}>
           {actionButtons.map((button, index) => (

@@ -4,7 +4,6 @@
     "slogan": "Cuisine & Gestion",
     "version": "Version"
   },
-
   "navigation": {
     "home": "Accueil",
     "dashboard": "Tableau de bord",
@@ -25,7 +24,6 @@
     "notificationSettings": "Paramètres de notifications",
     "return": "Retour"
   },
-
   "auth": {
     "login": "Connexion",
     "logout": "Déconnexion",
@@ -59,7 +57,8 @@
     "alreadyHaveAccount": "Vous avez déjà un compte ?",
     "signIn": "Se connecter",
     "signupError": "Impossible de créer le compte. Veuillez réessayer.",
-    "signupSuccess": "Compte créé avec succès"
+    "signupSuccess": "Compte créé avec succès",
+    "logoutError": "Une erreur est survenue lors de la déconnexion"
   },
   "onboarding": {
     "title": "Configurez votre restaurant",
@@ -117,7 +116,6 @@
     "statusActive": "Activé",
     "statusPending": "En attente de validation par l'administrateur"
   },
-
   "orderDetails": {
     "title": "Détails de la commande",
     "notFound": "Commande introuvable",
@@ -139,7 +137,6 @@
     "total": "Total",
     "specialNotes": "Notes spéciales"
   },
-
   "dashboard": {
     "title": "Tableau de bord",
     "todayOrders": "Commandes du jour",
@@ -160,7 +157,6 @@
     "restaurantStatus": "État du restaurant",
     "activeItems": "Articles actifs"
   },
-
   "orders": {
     "title": "Commandes",
     "activeOrders": "Commandes actives",
@@ -188,7 +184,6 @@
     "incomingCancelledSheetTitle": "Commande annulée",
     "incomingCancelledSheetSubtitle": "La commande #{{id}} a été annulée."
   },
-
   "menu": {
     "title": "Gestion du menu",
     "searchPlaceholder": "Rechercher un plat...",
@@ -228,7 +223,6 @@
       "missingItemId": "Identifiant du plat manquant."
     }
   },
-
   "analytics": {
     "title": "Analyses",
     "revenue": "Revenus",
@@ -272,16 +266,15 @@
       "sun": "Dim"
     }
   },
-
   "reports": {
     "title": "Rapports",
-    "dailyReport": "Rapport quotidien",
+    "dailyReport": "{period} - Rapport journalier",
     "dailyReportDescription": "Rapport détaillé de la journée",
-    "weeklyReport": "Rapport hebdomadaire",
+    "weeklyReport": "{period} - Rapport hebdomadaire",
     "weeklyReportDescription": "Analyse de la semaine écoulée",
-    "monthlyReport": "Rapport mensuel",
+    "monthlyReport": "{period} - Rapport mensuel",
     "monthlyReportDescription": "Rapport mensuel complet",
-    "revenueReport": "Rapport des revenus",
+    "revenueReport": "{period} - Analyse des revenus",
     "revenueReportDescription": "Analyse des revenus détaillée",
     "orderReport": "Rapport des commandes",
     "orderReportDescription": "Statistiques des commandes",
@@ -336,9 +329,15 @@
         "orders": "commandes",
         "ordersAbbrev": "cmd"
       }
-    }
+    },
+    "detailsTitle": "Détails du rapport",
+    "today": "Aujourd'hui",
+    "thisWeek": "Cette semaine",
+    "thisMonth": "Ce mois",
+    "customReport": "{period} - Rapport",
+    "ordersReport": "{period} - Statistiques des commandes",
+    "customersReport": "{period} - Rapport clients"
   },
-
   "notifications": {
     "title": "Notifications",
     "newOrder": "Nouvelle commande",
@@ -373,7 +372,6 @@
       "clearAllConfirm": "Supprimer"
     }
   },
-
   "charts": {
     "victoryIntegration": "Victory Native sera intégré ici"
   },
@@ -444,9 +442,9 @@
         "comment": "Bon restaurant avec une belle carte des vins. Service efficace et plats bien présentés.",
         "date": "2024-01-05"
       }
-    }
+    },
+    "loadError": "Impossible de charger les avis clients"
   },
-
   "restaurantProfile": {
     "title": "Profil restaurant",
     "edit": "Modifier",
@@ -518,7 +516,6 @@
     "themeDark": "Sombre",
     "themeLight": "Clair"
   },
-
   "settings": {
     "title": "Paramètres",
     "profile": "Profil restaurant",
@@ -546,7 +543,7 @@
     "currencySaveError": "Enregistrement impossible. Vérifiez vos droits ou réessayez.",
     "languageChanged": "Langue changée en {{language}}",
     "languageLoadError": "Impossible de changer la langue",
-    "orderStatusChanges": "Changements de statut des commandes",
+    "orderStatusChanges": "Changements de statut de commande",
     "lowStockAlerts": "Alertes stock bas",
     "lowStockAlertsSubtitle": "Alertes quand un plat est en rupture",
     "marketingNotifSubtitle": "Offres spéciales et promotions",
@@ -564,7 +561,6 @@
     "informationSection": "Informations",
     "restaurantInfo": "Informations restaurant",
     "restaurantInfoSubtitle": "Nom, adresse, description",
-    "openingHours": "Horaires d'ouverture",
     "openingHoursSubtitle": "Modifier vos horaires",
     "autoAcceptOrders": "Accepter automatiquement",
     "autoAcceptOrdersSubtitle": "Accepter automatiquement les commandes",
@@ -582,12 +578,14 @@
     "helpCenterSubtitle": "FAQ et guides d'utilisation",
     "contactUs": "Nous contacter",
     "contactUsSubtitle": "Support technique et assistance",
-    "informationSection": "Informations",
     "aboutSubtitle": "Version de l'application",
     "privacySubtitle": "Comment nous utilisons vos données",
     "termsSubtitle": "Conditions générales d'utilisation",
     "settingsUpdated": "Paramètres mis à jour avec succès",
-    "settingsUpdateError": "Erreur lors de la mise à jour des paramètres"
+    "settingsUpdateError": "Erreur lors de la mise à jour des paramètres",
+    "outOfStockAlerts": "Alertes lorsqu'un plat est en rupture",
+    "promoAlerts": "Offres spéciales et promotions",
+    "aboutVersion": "Good Food Pro Restaurant v1.0.0"
   },
   "payment": {
     "title": "Paramètres de paiement",
@@ -707,7 +705,6 @@
     "yes": "Oui",
     "cancel": "Annuler"
   },
-
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -754,9 +751,10 @@
     "latitude": "Latitude",
     "longitude": "Longitude",
     "hourRange": "{{start}}h - {{end}}h",
-    "itemQuantity": "{{quantity}}x {{name}}"
+    "itemQuantity": "{{quantity}}x {{name}}",
+    "openMenu": "Ouvrir le menu",
+    "goBack": "Retour"
   },
-
   "errors": {
     "networkError": "Erreur de réseau",
     "serverError": "Erreur du serveur",
@@ -770,12 +768,14 @@
     "invalidPhone": "Numéro de téléphone invalide",
     "weakPassword": "Mot de passe trop faible"
   },
-
   "success": {
     "saved": "Enregistré avec succès",
     "deleted": "Supprimé avec succès",
     "updated": "Mis à jour avec succès",
     "created": "Créé avec succès",
     "sent": "Envoyé avec succès"
+  },
+  "support": {
+    "available247": "Disponible 24h/24 et 7j/7"
   }
 }

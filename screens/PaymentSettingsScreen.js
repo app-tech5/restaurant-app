@@ -239,7 +239,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
         ) : null}
         {!settingsLoading ? (
         <>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('payment.methods')}</Text>
           <View style={styles.infoField}>
@@ -300,7 +299,6 @@ const PaymentSettingsScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('payment.fees')}</Text>
           <View style={styles.field}>

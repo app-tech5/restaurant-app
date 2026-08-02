@@ -56,7 +56,7 @@ const SupportScreen = ({ navigation }) => {
     },
     {
       title: i18n.t('support.liveChat'),
-      subtitle: 'Available 24/7',
+      subtitle: i18n.t('support.available247'),
       icon: 'chat',
       action: () => Alert.alert(i18n.t('support.liveChat'), i18n.t('support.chatComingSoon'))
     }
@@ -91,7 +91,6 @@ const SupportScreen = ({ navigation }) => {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.quickContact')}</Text>
           {contactMethods.map((method, index) => (
@@ -120,10 +119,8 @@ const SupportScreen = ({ navigation }) => {
             </TouchableOpacity>
           ))}
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.frequentlyAskedQuestions')}</Text>
-          {}
           <View style={styles.categoryFilters}>
             {supportCategories.map(category => (
               <TouchableOpacity
@@ -149,7 +146,6 @@ const SupportScreen = ({ navigation }) => {
               </TouchableOpacity>
             ))}
           </View>
-          {}
           {filteredFaq.map((faq, index) => (
             <Card key={index} containerStyle={styles.faqCard}>
               <Card.Title style={styles.faqQuestion}>{faq.question}</Card.Title>
@@ -157,7 +153,6 @@ const SupportScreen = ({ navigation }) => {
             </Card>
           ))}
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('support.contactForm.title')}</Text>
           <Card containerStyle={styles.contactForm}>
@@ -202,7 +197,6 @@ const SupportScreen = ({ navigation }) => {
             />
           </Card>
         </View>
-        {}
         <View style={styles.section}>
           <Card containerStyle={styles.infoCard}>
             <View style={styles.infoHeader}>

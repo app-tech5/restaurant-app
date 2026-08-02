@@ -11,9 +11,8 @@ import NotificationsScreen from '../screens/NotificationsScreen';
 import ProfileStackNavigator from './ProfileStackNavigator';
 import SettingsStackNavigator from './SettingsStackNavigator';
 import SupportScreen from '../screens/SupportScreen';
-import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import i18n from '../i18n';
-import { colors } from '../global';
 import { useRestaurant } from '../contexts/RestaurantContext';
 const Drawer = createDrawerNavigator();
 function CustomDrawerContent(props) {
@@ -34,7 +33,7 @@ function CustomDrawerContent(props) {
             try {
               await logout();
             } catch (error) {
-              Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion');
+              Alert.alert(i18n.t('common.error'), i18n.t('auth.logoutError'));
             }
           },
         },
@@ -97,7 +96,6 @@ export default function DrawerNavigator() {
         drawerInactiveBackgroundColor: 'transparent',
       }}
     >
-      {}
       <Drawer.Screen
         name="Dashboard"
         component={DashboardScreen}
@@ -112,7 +110,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Orders"
         component={OrdersStackNavigator}
@@ -127,7 +124,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Menu"
         component={MenuStackNavigator}
@@ -142,7 +138,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Analytics"
         component={AnalyticsScreen}
@@ -157,7 +152,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Reviews"
         component={ReviewsStackNavigator}
@@ -172,7 +166,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Reports"
         component={ReportsStackNavigator}
@@ -187,7 +180,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Notifications"
         component={NotificationsScreen}
@@ -202,7 +194,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Support"
         component={SupportScreen}
@@ -217,7 +208,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Profile"
         component={ProfileStackNavigator}
@@ -232,7 +222,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
       <Drawer.Screen
         name="Settings"
         component={SettingsStackNavigator}

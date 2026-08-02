@@ -13,7 +13,7 @@ Restaurant owners manage orders, menus, profile, delivery settings, and reviews 
 - Android Studio and/or Xcode (native toolchain for the **development build**)
 - Running **backend** API (`http://localhost:5000/api` by default)
 
-**Expo Go is not supported.** This app uses a custom native stack (`expo-dev-client`, Firebase messaging, maps, etc.). Install a **development build** once, then use Metro for day-to-day JS changes.
+**Expo Go is not supported.** This app uses a custom native stack (`expo-dev-client`, Firebase messaging, etc.). Install a **development build** once, then use Metro for day-to-day JS changes.
 
 ---
 
@@ -86,7 +86,7 @@ Edit `app.json` before store submission:
 
 ### Firebase (push)
 
-Replace the placeholder `android/app/google-services.json` with the file from **your** Firebase project (Android app package `com.goodfood.restaurant`, or update `app.json` / Gradle to match). Push will not work until this is configured.
+Replace the placeholder `android/app/google-services.json` with the file from **your** Firebase project (Android app package `com.goodfood.restaurant`, or update `app.json` / Gradle to match). Add the matching iOS `GoogleService-Info.plist` when you enable iOS push. Push will not work until this is configured.
 
 ---
 
@@ -108,7 +108,6 @@ restaurant-app/
 ├── navigation/         # Navigators
 ├── screens/            # Screens
 ├── services/           # Push notifications
-├── styles/             # Shared styles
 ├── utils/              # Helpers / cache
 ├── __tests__/          # Jest tests
 ├── android/            # Native Android project
@@ -139,9 +138,8 @@ Optional EAS builds: configure your own Expo account, then use `eas.json`.
 - Expo ~54 / React Native 0.81 / React 19
 - React Navigation 7
 - expo-dev-client
-- expo-location / expo-image-picker / expo-notifications
+- expo-image-picker / expo-notifications
 - Firebase Cloud Messaging
-- react-native-maps
 - socket.io-client
 - i18n-js (EN / FR)
 
@@ -154,6 +152,7 @@ Optional EAS builds: configure your own Expo account, then use `eas.json`.
 | Expo Go / QR only | Install the development build: `npm run android` or `npm run ios` |
 | Network request failed | Start backend; check `EXPO_PUBLIC_API_URL` |
 | Demo user missing | Run backend migrations / demo seed |
+| Push not working | Replace placeholder `google-services.json` with your Firebase file |
 | Stale bundle | `npx expo start --clear` |
 
 ---

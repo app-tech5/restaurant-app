@@ -26,10 +26,10 @@ const ReviewsScreen = ({ navigation }) => {
           setReviews(reviews);
           setStats(stats);
         } else {
-          Alert.alert('Erreur', 'Impossible de charger les avis clients');
+          Alert.alert(i18n.t('common.error'), i18n.t('reviews.loadError'));
         }
       } catch (error) {
-        Alert.alert('Erreur', 'Erreur de connexion au serveur');
+        Alert.alert(i18n.t('common.error'), i18n.t('errors.networkError'));
       } finally {
         setLoading(false);
       }
@@ -215,13 +215,10 @@ const ReviewsScreen = ({ navigation }) => {
         autoLeftNav
         rightComponent={renderSortButton()}
       />
-      {}
       {renderStatsHeader()}
-      {}
       <View style={styles.filtersContainer}>
         {filterOptions.map(renderFilterTab)}
       </View>
-      {}
       <FlatList
         data={filteredReviews}
         renderItem={renderReviewItem}

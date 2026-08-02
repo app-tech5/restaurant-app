@@ -71,12 +71,10 @@ const AnalyticsScreen = ({ navigation }) => {
           />
         }
       >
-        {}
         <PeriodSelector
           selectedPeriod={period}
           onPeriodChange={changePeriod}
         />
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.mainMetrics')}</Text>
           <AnalyticsGrid
@@ -84,12 +82,10 @@ const AnalyticsScreen = ({ navigation }) => {
             isLoading={isLoading}
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.evolution')}</Text>
           <ChartSection isLoading={isLoading} />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.performance')}</Text>
           <PerformanceMetrics
@@ -97,7 +93,6 @@ const AnalyticsScreen = ({ navigation }) => {
             isLoading={isLoading}
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.detailedStats')}</Text>
           <DetailedStats

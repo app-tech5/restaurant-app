@@ -38,7 +38,7 @@ const ReportsStackNavigator = () => {
         name="ReportDetails"
         component={ReportDetailsScreen}
         options={{
-          title: 'Détails du rapport',
+          title: i18n.t('reports.detailsTitle'),
         }}
       />
     </Stack.Navigator>

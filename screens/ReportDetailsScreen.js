@@ -46,17 +46,14 @@ const ReportDetailsScreen = ({ route, navigation }) => {
           />
         }
       >
-        {}
         <Card containerStyle={styles.headerCard}>
           <Text style={styles.reportTitle}>{reportInfo.title}</Text>
           <Text style={styles.reportPeriod}>{reportInfo.periodText}</Text>
         </Card>
-        {}
         <ReportMetricsCards
           baseMetrics={baseMetrics}
           reportType={reportType}
         />
-        {}
         <ReportCharts
           calculations={calculations}
           reportType={reportType}

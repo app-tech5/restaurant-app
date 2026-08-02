@@ -87,7 +87,7 @@ const SettingsStackNavigator = () => {
         name="RestaurantProfile"
         component={RestaurantProfileScreen}
         options={{
-          title: 'Profil restaurant',
+          title: i18n.t('restaurantProfile.title'),
           headerShown: false,
         }}
       />

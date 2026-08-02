@@ -58,7 +58,8 @@
     "alreadyHaveAccount": "Already have an account?",
     "signIn": "Sign in",
     "signupError": "Unable to create your account. Please try again.",
-    "signupSuccess": "Account created successfully"
+    "signupSuccess": "Account created successfully",
+    "logoutError": "An error occurred while logging out"
   },
   "onboarding": {
     "title": "Set up your restaurant",
@@ -361,13 +362,13 @@
   },
   "reports": {
     "title": "Reports",
-    "dailyReport": "Daily report",
+    "dailyReport": "{period} - Daily report",
     "dailyReportDescription": "Detailed daily report",
-    "weeklyReport": "Weekly report",
+    "weeklyReport": "{period} - Weekly report",
     "weeklyReportDescription": "Week analysis",
-    "monthlyReport": "Monthly report",
+    "monthlyReport": "{period} - Monthly report",
     "monthlyReportDescription": "Complete monthly report",
-    "revenueReport": "Revenue report",
+    "revenueReport": "{period} - Revenue analysis",
     "revenueReportDescription": "Detailed revenue analysis",
     "orderReport": "Order report",
     "orderReportDescription": "Order statistics",
@@ -422,9 +423,15 @@
         "orders": "orders",
         "ordersAbbrev": "ord"
       }
-    }
+    },
+    "detailsTitle": "Report details",
+    "today": "Today",
+    "thisWeek": "This week",
+    "thisMonth": "This month",
+    "customReport": "{period} - Report",
+    "ordersReport": "{period} - Order statistics",
+    "customersReport": "{period} - Customer report"
   },
-
   "notifications": {
     "title": "Notifications",
     "newOrder": "New order",
@@ -459,7 +466,6 @@
       "clearAllConfirm": "Delete"
     }
   },
-
   "charts": {
     "victoryIntegration": "Victory Native will be integrated here"
   },
@@ -530,7 +536,8 @@
         "comment": "Good restaurant with a nice wine list. Efficient service and well-presented dishes.",
         "date": "2024-01-05"
       }
-    }
+    },
+    "loadError": "Unable to load customer reviews"
   },
   "support": {
     "title": "Support",
@@ -574,9 +581,9 @@
       "saturday": "Saturday: 10:00 AM - 4:00 PM",
       "sunday": "Sunday: Closed",
       "responseTime": "Average response time: 2-4 hours on weekdays"
-    }
+    },
+    "available247": "Available 24/7"
   },
-
   "restaurantProfile": {
     "title": "Restaurant Profile",
     "edit": "Edit",
@@ -648,7 +655,6 @@
     "themeDark": "Dark",
     "themeLight": "Light"
   },
-
   "settings": {
     "title": "Settings",
     "profile": "Restaurant profile",
@@ -702,9 +708,7 @@
     "informationSection": "Information",
     "restaurantInfo": "Restaurant information",
     "restaurantInfoSubtitle": "Name, address, description",
-    "openingHours": "Opening hours",
     "openingHoursSubtitle": "Edit your schedule",
-    "autoAcceptOrders": "Auto-accept orders",
     "autoAcceptOrdersSubtitle": "Automatically accept orders",
     "deliverySettings": "Delivery settings",
     "deliverySettingsSubtitle": "Radius, fees, delays",
@@ -720,12 +724,14 @@
     "helpCenterSubtitle": "FAQ and usage guides",
     "contactUs": "Contact us",
     "contactUsSubtitle": "Technical support and assistance",
-    "informationSection": "Information",
     "aboutSubtitle": "Application version",
     "privacySubtitle": "How we use your data",
     "termsSubtitle": "Terms and conditions of use",
     "settingsUpdated": "Settings updated successfully",
-    "settingsUpdateError": "Failed to update settings"
+    "settingsUpdateError": "Failed to update settings",
+    "outOfStockAlerts": "Alerts when a dish is out of stock",
+    "promoAlerts": "Special offers and promotions",
+    "aboutVersion": "Good Food Pro Restaurant v1.0.0"
   },
   "payment": {
     "title": "Payment Settings",
@@ -893,7 +899,9 @@
     "latitude": "Latitude",
     "longitude": "Longitude",
     "hourRange": "{{start}}h - {{end}}h",
-    "itemQuantity": "{{quantity}}x {{name}}"
+    "itemQuantity": "{{quantity}}x {{name}}",
+    "openMenu": "Open menu",
+    "goBack": "Go back"
   },
   "errors": {
     "networkError": "Network error",

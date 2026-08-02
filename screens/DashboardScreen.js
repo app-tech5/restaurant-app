@@ -103,7 +103,6 @@ const DashboardScreen = ({ navigation }) => {
           />
         }
       >
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.title')}
@@ -122,7 +121,6 @@ const DashboardScreen = ({ navigation }) => {
             ))}
           </View>
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.quickActions')}
@@ -157,7 +155,6 @@ const DashboardScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.recentOrders')}
@@ -180,7 +177,6 @@ const DashboardScreen = ({ navigation }) => {
             />
           )}
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             {i18n.t('dashboard.restaurantStatus')}
