@@ -23,3 +23,4 @@ export { default as NotificationSettingsScreen } from './NotificationSettingsScr
 export { default as OrderHistoryScreen } from './OrderHistoryScreen';
 export { default as MenuCategoriesScreen } from './MenuCategoriesScreen';
 export { default as MenuAnalyticsScreen } from './MenuAnalyticsScreen';
+export { default as SubscriptionsScreen } from './SubscriptionsScreen';

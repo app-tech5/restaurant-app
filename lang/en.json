@@ -914,5 +914,26 @@
     "updated": "Updated successfully",
     "created": "Created successfully",
     "sent": "Sent successfully"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "menuSubtitle": "Lower commission and member perks",
+    "introTitle": "Restaurant Pro",
+    "introSub": "Reduce platform commission and unlock featured placement opportunities.",
+    "activePlan": "Active plan",
+    "validUntil": "Valid until {{date}}",
+    "subscribe": "Subscribe",
+    "free": "Free",
+    "noPlans": "No plans available right now.",
+    "confirmTitle": "Confirm subscription",
+    "confirmMessage": "Subscribe to {{name}} for {{price}} / {{cycle}}?",
+    "subscribeSuccess": "You are subscribed.",
+    "subscribeError": "Could not subscribe. Try again.",
+    "cancelTitle": "Cancel subscription",
+    "cancelMessage": "You will lose member benefits at the end of the current period.",
+    "cancelAction": "Cancel plan",
+    "cancelSuccess": "Subscription cancelled.",
+    "cancelError": "Could not cancel subscription.",
+    "loadError": "Could not load subscription plans."
   }
 }

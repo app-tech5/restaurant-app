@@ -17,6 +17,7 @@ const emptyState = () => ({
   paymentSettingsPatch: null,
   userSettingsPatch: null,
   settingsPatch: null,
+  subscriptionEnrollment: null,
 });
 
 export async function getDemoState() {

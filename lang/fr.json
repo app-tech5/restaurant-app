@@ -777,5 +777,26 @@
     "updated": "Mis à jour avec succès",
     "created": "Créé avec succès",
     "sent": "Envoyé avec succès"
+  },
+  "subscription": {
+    "title": "Abonnement",
+    "menuSubtitle": "Commission réduite et avantages",
+    "introTitle": "Restaurant Pro",
+    "introSub": "Réduisez la commission plateforme et débloquez des opportunités de mise en avant.",
+    "activePlan": "Plan actif",
+    "validUntil": "Valable jusqu'au {{date}}",
+    "subscribe": "S'abonner",
+    "free": "Gratuit",
+    "noPlans": "Aucun plan disponible pour le moment.",
+    "confirmTitle": "Confirmer l'abonnement",
+    "confirmMessage": "S'abonner à {{name}} pour {{price}} / {{cycle}} ?",
+    "subscribeSuccess": "Vous êtes abonné.",
+    "subscribeError": "Impossible de s'abonner. Réessayez.",
+    "cancelTitle": "Résilier l'abonnement",
+    "cancelMessage": "Vous perdrez les avantages à la fin de la période en cours.",
+    "cancelAction": "Résilier",
+    "cancelSuccess": "Abonnement résilié.",
+    "cancelError": "Impossible de résilier l'abonnement.",
+    "loadError": "Impossible de charger les plans d'abonnement."
   }
 }

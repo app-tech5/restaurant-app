@@ -8,6 +8,7 @@ import {
   PaymentSettingsScreen,
   LanguageSettingsScreen,
   NotificationSettingsScreen,
+  SubscriptionsScreen,
 } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
@@ -88,6 +89,14 @@ const SettingsStackNavigator = () => {
         component={RestaurantProfileScreen}
         options={{
           title: 'Profil restaurant',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Subscriptions"
+        component={SubscriptionsScreen}
+        options={{
+          title: i18n.t('subscription.title'),
           headerShown: false,
         }}
       />

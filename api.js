@@ -6,6 +6,7 @@ import { buildRestaurantReviewsResult } from './utils/restaurantReviewUtils';
 import { buildRestaurantStatsData } from './utils/restaurantStatsUtils';
 import { buildRestaurantAnalyticsData } from './utils/restaurantAnalyticsUtils';
 import { handleDemoWrite, handleDemoRead, mergeDemoRead } from './api/demo/handlers';
+import { handleDemoSubscription } from './api/demo/subscriptionHandlers';
 import { clearDemoState } from './api/demo/localStore';
 
 const API_BASE_URL = appConfig.API_BASE_URL;
@@ -87,6 +88,10 @@ class ApiClient {
       const localWrite = await handleDemoWrite(this, endpoint, method, options);
       if (localWrite !== null) {
         return localWrite;
+      }
+      const subscriptionDemo = await handleDemoSubscription(this, endpoint, method, options);
+      if (subscriptionDemo !== null) {
+        return subscriptionDemo;
       }
       if (method === 'GET') {
         const localRead = await handleDemoRead(this, endpoint, method);
@@ -499,6 +504,33 @@ class ApiClient {
       throw new Error('Order not found');
     }
     return order;
+  }
+
+  async listSubscriptionPlans(target) {
+    const query = target ? `?target=${encodeURIComponent(target)}` : '';
+    return await this.apiCall(`/subscriptions${query}`);
+  }
+
+  async getMySubscription() {
+    return await this.apiCall('/subscriptions/mine');
+  }
+
+  async getSubscriptionBenefits() {
+    return await this.apiCall('/subscriptions/mine/benefits');
+  }
+
+  async subscribeToPlan(planId) {
+    return await this.apiCall(`/subscriptions/${planId}/subscribe`, {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  }
+
+  async cancelMySubscription() {
+    return await this.apiCall('/subscriptions/mine/cancel', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
   }
 
   async createImageLink(imageUri) {

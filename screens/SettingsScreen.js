@@ -96,6 +96,9 @@ const SettingsScreen = ({ navigation }) => {
   const handlePaymentSettings = () => {
     navigation.navigate('PaymentSettings');
   };
+  const handleSubscriptions = () => {
+    navigation.navigate('Subscriptions');
+  };
   const handleAbout = () => {
     Alert.alert(
       i18n.t('settings.aboutTitle'),
@@ -184,6 +187,12 @@ const SettingsScreen = ({ navigation }) => {
             subtitle={i18n.t('settings.paymentSettingsSubtitle')}
             icon="payment"
             onPress={handlePaymentSettings}
+          />
+          <SettingRow
+            title={i18n.t('subscription.title')}
+            subtitle={i18n.t('subscription.menuSubtitle')}
+            icon="star"
+            onPress={handleSubscriptions}
           />
         </View>
         {}
