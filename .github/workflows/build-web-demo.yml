@@ -1,12 +1,15 @@
 name: Build and publish web demo
 
-# Manual only — a normal push does NOT run this (APK CI stays unchanged).
-# Actions registration bump
+# Manual only for real publishes. A push of THIS file alone registers the workflow in Actions.
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build-web-demo.yml'
 
 jobs:
   build-and-publish:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     name: Export web + publish demo
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -18,6 +21,7 @@ jobs:
       EXPO_PUBLIC_DEMO_PASSWORD: ${{ vars.EXPO_PUBLIC_DEMO_PASSWORD }}
       WEB_DEMO_SLUG: restaurant
       VPS_WEB_DEMO_DIR: /var/www/html/demo/restaurant
+      PUBLIC_DEMO_URL: https://good-foods.digitaldienste.fr/demo/restaurant/index.html
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -105,8 +109,14 @@ jobs:
             rsync -a --delete "$SRC/" "$WEB/"
             chmod -R a+rX "$WEB"
             test -f "$WEB/index.html"
+            grep -qi 'Admin Panel' "$WEB/index.html" && { echo 'Published admin SPA by mistake'; exit 1; } || true
+            head -c 200 "$WEB/index.html"
 
-      - name: Web demo published
+      - name: Verify public URL
         run: |
-          BASE="${PUBLIC_SITE_URL%/}"
-          echo "Restaurant web demo: ${BASE}/demo/restaurant/"
+          html="$(curl -fsSL "$PUBLIC_DEMO_URL")"
+          echo "$html" | head -c 240
+          echo
+          echo "$html" | grep -qi 'Admin Panel' && { echo 'URL still serves admin'; exit 1; }
+          echo "$html" | grep -qiE '_expo|react-native-web|Good Food' || { echo 'Unexpected demo HTML'; exit 1; }
+          echo "OK $PUBLIC_DEMO_URL"
