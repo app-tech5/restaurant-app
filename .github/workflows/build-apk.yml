@@ -10,9 +10,18 @@ on:
       # Web demo is workflow_dispatch-only; don't rebuild APK when only that file changes
       - '.github/workflows/build-web-demo.yml'
   workflow_dispatch:
+    inputs:
+      publish:
+        description: 'What to publish (apk keeps current pipeline; web exports browser demo only)'
+        required: true
+        type: choice
+        default: apk
+        options:
+          - apk
+          - web
 
 concurrency:
-  group: restaurant-apk-${{ github.ref }}
+  group: restaurant-${{ github.event.inputs.publish || 'apk' }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -29,6 +38,7 @@ jobs:
   # Jest suites currently fail under Expo/jest-expo import scope;
   # keep them informative only — Maestro smoke gates the APK publish.
   unit-tests:
+    if: ${{ github.event_name == 'push' || github.event.inputs.publish == 'apk' }}
     name: Unit tests (Jest, non-blocking)
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -50,6 +60,7 @@ jobs:
         run: npm test -- --ci --watchAll=false --passWithNoTests
 
   build-apk:
+    if: ${{ github.event_name == 'push' || github.event.inputs.publish == 'apk' }}
     name: Build release APK
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -160,6 +171,7 @@ jobs:
           retention-days: 7
 
   maestro-smoke:
+    if: ${{ github.event_name == 'push' || github.event.inputs.publish == 'apk' }}
     name: Maestro smoke (emulator)
     needs: [build-apk]
     runs-on: macos-14
@@ -243,6 +255,7 @@ jobs:
           retention-days: 14
 
   publish:
+    if: ${{ github.event_name == 'push' || github.event.inputs.publish == 'apk' }}
     name: Publish APK to VPS
     needs: [maestro-smoke]
     runs-on: ubuntu-latest
@@ -280,3 +293,103 @@ jobs:
           BASE="${PUBLIC_SITE_URL%/}"
           echo "APK available at ${BASE}/downloads/${APK_FILENAME}"
           echo "Published only after Jest + Maestro smoke passed."
+
+  publish-web-demo:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'web' }}
+    name: Export web + publish demo
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      VPS_WEB_DEMO_DIR: /var/www/html/demo/restaurant
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify GitHub Variables
+        run: |
+          missing=""
+          for var in PUBLIC_SITE_URL EXPO_PUBLIC_API_URL EXPO_PUBLIC_DEMO_EMAIL EXPO_PUBLIC_DEMO_PASSWORD; do
+            eval "val=\$$var"
+            if [ -z "$val" ]; then missing="$missing $var"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "Variables GitHub manquantes:$missing"
+            exit 1
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Ensure react-native-web (CI only, not on your Mac)
+        run: npx expo install react-native-web react-dom
+
+      - name: Set web baseUrl for /demo/restaurant
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'app.json';
+          const app = JSON.parse(fs.readFileSync(path, 'utf8'));
+          app.expo = app.expo || {};
+          app.expo.web = { ...(app.expo.web || {}), bundler: 'metro', output: 'single' };
+          app.expo.experiments = { ...(app.expo.experiments || {}), baseUrl: '/demo/restaurant' };
+          fs.writeFileSync(path, `${JSON.stringify(app, null, 2)}\n`);
+          console.log('baseUrl=/demo/restaurant');
+          NODE
+
+      - name: Export web build
+        run: |
+          npx expo export -p web --output-dir dist
+          test -f dist/index.html
+          ls -la dist | head -30
+
+      - name: Prepare remote staging dir
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script_stop: true
+          script: |
+            mkdir -p /tmp/web-demo-restaurant
+            rm -rf /tmp/web-demo-restaurant/*
+            chmod 755 /tmp/web-demo-restaurant
+
+      - name: Upload dist to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: dist/*
+          target: /tmp/web-demo-restaurant/
+          overwrite: true
+          strip_components: 1
+
+      - name: Publish to nginx demo path
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: VPS_WEB_DEMO_DIR
+          script_stop: true
+          script: |
+            set -e
+            SRC=/tmp/web-demo-restaurant
+            WEB="$VPS_WEB_DEMO_DIR"
+            test -f "$SRC/index.html"
+            mkdir -p "$WEB"
+            rsync -a --delete "$SRC/" "$WEB/"
+            chmod -R a+rX "$WEB"
+            test -f "$WEB/index.html"
+
+      - name: Web demo published
+        run: |
+          BASE="${PUBLIC_SITE_URL%/}"
+          echo "Restaurant web demo: ${BASE}/demo/restaurant/"
