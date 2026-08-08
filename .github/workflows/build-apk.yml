@@ -3,12 +3,9 @@ name: Build, test and publish APK
 # All heavy work (Gradle + Android emulator + Maestro) runs on GitHub Actions only.
 # APK is published to the VPS only if unit + Maestro smoke tests pass.
 
+# Manual only — same as web demo: no auto APK on every push.
+# Publish APK explicitly: gh workflow run build-apk.yml --ref main
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      # Web demo is workflow_dispatch-only; don't rebuild APK when only that file changes
-      - '.github/workflows/build-web-demo.yml'
   workflow_dispatch:
 
 concurrency:
