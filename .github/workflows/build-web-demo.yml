@@ -1,6 +1,7 @@
 name: Build and publish web demo
 
 # Manual only — a normal push does NOT run this (APK CI stays unchanged).
+# Actions registration bump
 on:
   workflow_dispatch:
 
