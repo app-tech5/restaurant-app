@@ -6,6 +6,9 @@ name: Build, test and publish APK
 on:
   push:
     branches: [main]
+    paths-ignore:
+      # Web demo is workflow_dispatch-only; don't rebuild APK when only that file changes
+      - '.github/workflows/build-web-demo.yml'
   workflow_dispatch:
 
 concurrency:

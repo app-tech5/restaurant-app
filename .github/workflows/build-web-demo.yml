@@ -1,0 +1,111 @@
+name: Build and publish web demo
+
+# Manual only — a normal push does NOT run this (APK CI stays unchanged).
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    name: Export web + publish demo
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+      EXPO_PUBLIC_API_URL: ${{ vars.EXPO_PUBLIC_API_URL }}
+      EXPO_PUBLIC_DEMO_MODE: 'true'
+      EXPO_PUBLIC_DEMO_EMAIL: ${{ vars.EXPO_PUBLIC_DEMO_EMAIL }}
+      EXPO_PUBLIC_DEMO_PASSWORD: ${{ vars.EXPO_PUBLIC_DEMO_PASSWORD }}
+      WEB_DEMO_SLUG: restaurant
+      VPS_WEB_DEMO_DIR: /var/www/html/demo/restaurant
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify GitHub Variables
+        run: |
+          missing=""
+          for var in PUBLIC_SITE_URL EXPO_PUBLIC_API_URL EXPO_PUBLIC_DEMO_EMAIL EXPO_PUBLIC_DEMO_PASSWORD; do
+            eval "val=\$$var"
+            if [ -z "$val" ]; then missing="$missing $var"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "Variables GitHub manquantes:$missing"
+            exit 1
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Ensure react-native-web (CI only, not on your Mac)
+        run: npx expo install react-native-web react-dom
+
+      - name: Set web baseUrl for /demo/restaurant
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'app.json';
+          const app = JSON.parse(fs.readFileSync(path, 'utf8'));
+          app.expo = app.expo || {};
+          app.expo.web = { ...(app.expo.web || {}), bundler: 'metro', output: 'single' };
+          app.expo.experiments = { ...(app.expo.experiments || {}), baseUrl: '/demo/restaurant' };
+          fs.writeFileSync(path, `${JSON.stringify(app, null, 2)}\n`);
+          console.log('baseUrl=/demo/restaurant');
+          NODE
+
+      - name: Export web build
+        run: |
+          npx expo export -p web --output-dir dist
+          test -f dist/index.html
+          ls -la dist | head -30
+
+      - name: Prepare remote staging dir
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script_stop: true
+          script: |
+            mkdir -p /tmp/web-demo-restaurant
+            rm -rf /tmp/web-demo-restaurant/*
+            chmod 755 /tmp/web-demo-restaurant
+
+      - name: Upload dist to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: dist/*
+          target: /tmp/web-demo-restaurant/
+          overwrite: true
+          strip_components: 1
+
+      - name: Publish to nginx demo path
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: VPS_WEB_DEMO_DIR
+          script_stop: true
+          script: |
+            set -e
+            SRC=/tmp/web-demo-restaurant
+            WEB="$VPS_WEB_DEMO_DIR"
+            test -f "$SRC/index.html"
+            mkdir -p "$WEB"
+            rsync -a --delete "$SRC/" "$WEB/"
+            chmod -R a+rX "$WEB"
+            test -f "$WEB/index.html"
+
+      - name: Web demo published
+        run: |
+          BASE="${PUBLIC_SITE_URL%/}"
+          echo "Restaurant web demo: ${BASE}/demo/restaurant/"
