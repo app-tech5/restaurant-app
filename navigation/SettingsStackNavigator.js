@@ -9,6 +9,7 @@ import {
   LanguageSettingsScreen,
   NotificationSettingsScreen,
   SubscriptionsScreen,
+  SponsoredListingsScreen,
 } from '../screens';
 import ScreenHeader from '../components/ScreenHeader';
 import { colors } from '../global';
@@ -97,6 +98,14 @@ const SettingsStackNavigator = () => {
         component={SubscriptionsScreen}
         options={{
           title: i18n.t('subscription.title'),
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SponsoredListings"
+        component={SponsoredListingsScreen}
+        options={{
+          title: i18n.t('sponsored.title'),
           headerShown: false,
         }}
       />

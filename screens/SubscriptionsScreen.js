@@ -18,14 +18,16 @@ import i18n from '../i18n';
 
 export default function SubscriptionsScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [plans, setPlans] = useState([]);
   const [enrollment, setEnrollment] = useState(null);
   const [benefits, setBenefits] = useState(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async ({ soft = false } = {}) => {
     try {
-      setLoading(true);
+      if (soft) setRefreshing(true);
+      else setLoading(true);
       const [plansRes, mineRes] = await Promise.all([
         apiClient.listSubscriptionPlans('restaurant'),
         apiClient.getMySubscription(),
@@ -37,6 +39,7 @@ export default function SubscriptionsScreen({ navigation }) {
       Alert.alert(i18n.t('common.error'), error?.message || i18n.t('subscription.loadError'));
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   }, []);
 
@@ -119,7 +122,7 @@ export default function SubscriptionsScreen({ navigation }) {
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={load} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load({ soft: true })} />}
       >
         {active ? (
           <View style={styles.activeCard}>
@@ -132,10 +135,10 @@ export default function SubscriptionsScreen({ navigation }) {
                   : '—',
               })}
             </Text>
-            {(enrollment?.plan?.benefits || benefits?.benefits || []).map((b) => (
-              <View key={b} style={styles.benefitRow}>
+            {(enrollment?.plan?.benefits || benefits?.benefits || []).map((b, idx) => (
+              <View key={typeof b === 'string' ? b : `b-${idx}`} style={styles.benefitRow}>
                 <MaterialIcons name="check-circle" size={18} color={colors.primary} />
-                <Text style={styles.benefitText}>{b}</Text>
+                <Text style={styles.benefitText}>{typeof b === 'string' ? b : String(b)}</Text>
               </View>
             ))}
             <TouchableOpacity style={styles.cancelBtn} onPress={onCancel} disabled={busy}>
@@ -150,18 +153,20 @@ export default function SubscriptionsScreen({ navigation }) {
         )}
 
         {!active &&
-          plans.map((plan) => (
+          plans.map((plan) => {
+            const priceNum = Number(plan.price);
+            const priceLabel =
+              !Number.isFinite(priceNum) || priceNum <= 0
+                ? i18n.t('subscription.free')
+                : `${priceNum.toFixed(2)} ${plan.currency || ''}/${plan.billingCycle || 'monthly'}`;
+            return (
             <View key={plan.id} style={styles.planCard}>
               <Text style={styles.planName}>{plan.name}</Text>
-              <Text style={styles.price}>
-                {plan.price <= 0
-                  ? i18n.t('subscription.free')
-                  : `${plan.price.toFixed(2)} ${plan.currency || ''}/${plan.billingCycle}`}
-              </Text>
-              {(plan.benefits || []).map((b) => (
-                <View key={b} style={styles.benefitRow}>
+              <Text style={styles.price}>{priceLabel}</Text>
+              {(plan.benefits || []).map((b, idx) => (
+                <View key={typeof b === 'string' ? b : `pb-${idx}`} style={styles.benefitRow}>
                   <MaterialIcons name="check" size={18} color={colors.primary} />
-                  <Text style={styles.benefitText}>{b}</Text>
+                  <Text style={styles.benefitText}>{typeof b === 'string' ? b : String(b)}</Text>
                 </View>
               ))}
               <TouchableOpacity
@@ -176,7 +181,8 @@ export default function SubscriptionsScreen({ navigation }) {
                 )}
               </TouchableOpacity>
             </View>
-          ))}
+            );
+          })}
 
         {!active && plans.length === 0 ? (
           <Text style={styles.empty}>{i18n.t('subscription.noPlans')}</Text>

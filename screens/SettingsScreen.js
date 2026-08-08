@@ -99,6 +99,9 @@ const SettingsScreen = ({ navigation }) => {
   const handleSubscriptions = () => {
     navigation.navigate('Subscriptions');
   };
+  const handleSponsored = () => {
+    navigation.navigate('SponsoredListings');
+  };
   const handleAbout = () => {
     Alert.alert(
       i18n.t('settings.aboutTitle'),
@@ -193,6 +196,12 @@ const SettingsScreen = ({ navigation }) => {
             subtitle={i18n.t('subscription.menuSubtitle')}
             icon="star"
             onPress={handleSubscriptions}
+          />
+          <SettingRow
+            title={i18n.t('sponsored.title')}
+            subtitle={i18n.t('sponsored.menuSubtitle')}
+            icon="campaign"
+            onPress={handleSponsored}
           />
         </View>
         {}

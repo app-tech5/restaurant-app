@@ -51,9 +51,7 @@
     "plugins": [
       "expo-font",
       "expo-localization",
-      "expo-location",
-      "@react-native-firebase/app",
-      "@react-native-firebase/messaging"
+      "expo-location"
     ],
     "jsEngine": "hermes",
     "locales": {

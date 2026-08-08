@@ -81,7 +81,7 @@ export const useSettingsManager = (isAuthenticated) => {
       };
     try {
       await AsyncStorage.setItem('userLanguage', String(languageCode));
-      changeI18nLanguage(String(languageCode));
+      await changeI18nLanguage(String(languageCode));
       setSettings((prev) => ({
         ...(prev || {}),
         language: {
@@ -97,19 +97,12 @@ export const useSettingsManager = (isAuthenticated) => {
     }
   };
   const getAvailableLanguages = async () => {
-    try {
-      const mockLanguages = [
-        { _id: '1', code: 'fr', name: 'Français', isDefault: true },
-        { _id: '2', code: 'en', name: 'English', isDefault: false }
-      ];
-      return mockLanguages;
-    } catch (error) {
-      console.error('Erreur récupération langues:', error);
-      return [
-        { _id: '1', code: 'fr', name: 'Français', isDefault: true },
-        { _id: '2', code: 'en', name: 'English', isDefault: false }
-      ];
-    }
+    return [
+      { _id: '1', code: 'en', name: 'English', isDefault: true, rtl: false },
+      { _id: '2', code: 'fr', name: 'Français', isDefault: false, rtl: false },
+      { _id: '3', code: 'es', name: 'Español', isDefault: false, rtl: false },
+      { _id: '4', code: 'ar', name: 'العربية', isDefault: false, rtl: true },
+    ];
   };
   const getAvailableCurrencies = async () => {
     try {

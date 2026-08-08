@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useNavigation, useNavigationState, useIsFocused, StackActions } from '@react-navigation/native';
 
 /**
@@ -11,57 +12,54 @@ import { useNavigation, useNavigationState, useIsFocused, StackActions } from '@
 export function useScreenHeaderNav() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const decision = useNavigationState((state) => {
-    if (!state) {
-      return { mode: 'none' };
-    }
-    if (state.type === 'drawer') {
-      return { mode: 'drawer' };
-    }
-    if (state.type === 'stack') {
-      return state.index > 0 ? { mode: 'back' } : { mode: 'drawer' };
-    }
-    return state.index > 0 ? { mode: 'back' } : { mode: 'none' };
+  // Primitive return — object literals from the selector re-trigger every render.
+  const mode = useNavigationState((state) => {
+    if (!state) return 'none';
+    if (state.type === 'drawer') return 'drawer';
+    if (state.type === 'stack') return state.index > 0 ? 'back' : 'drawer';
+    return state.index > 0 ? 'back' : 'none';
   });
 
-  if (!isFocused) {
+  return useMemo(() => {
+    if (!isFocused) {
+      return {
+        showDrawerMenu: false,
+        showBackButton: false,
+        onLeftPress: undefined,
+      };
+    }
+
+    if (mode === 'drawer') {
+      return {
+        showDrawerMenu: true,
+        showBackButton: false,
+        onLeftPress: undefined,
+      };
+    }
+
+    if (mode === 'back') {
+      return {
+        showDrawerMenu: false,
+        showBackButton: true,
+        onLeftPress: () => {
+          const state = navigation.getState?.();
+          if (state?.type === 'stack' && state.index > 0) {
+            navigation.dispatch(StackActions.pop(1));
+            return;
+          }
+          if (typeof navigation.pop === 'function') {
+            navigation.pop(1);
+          }
+        },
+      };
+    }
+
     return {
       showDrawerMenu: false,
       showBackButton: false,
       onLeftPress: undefined,
     };
-  }
-
-  if (decision.mode === 'drawer') {
-    return {
-      showDrawerMenu: true,
-      showBackButton: false,
-      onLeftPress: undefined,
-    };
-  }
-
-  if (decision.mode === 'back') {
-    return {
-      showDrawerMenu: false,
-      showBackButton: true,
-      onLeftPress: () => {
-        const state = navigation.getState?.();
-        if (state?.type === 'stack' && state.index > 0) {
-          navigation.dispatch(StackActions.pop(1));
-          return;
-        }
-        if (typeof navigation.pop === 'function') {
-          navigation.pop(1);
-        }
-      },
-    };
-  }
-
-  return {
-    showDrawerMenu: false,
-    showBackButton: false,
-    onLeftPress: undefined,
-  };
+  }, [isFocused, mode, navigation]);
 }
 
 export default useScreenHeaderNav;

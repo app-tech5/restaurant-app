@@ -7,6 +7,7 @@ import { buildRestaurantStatsData } from './utils/restaurantStatsUtils';
 import { buildRestaurantAnalyticsData } from './utils/restaurantAnalyticsUtils';
 import { handleDemoWrite, handleDemoRead, mergeDemoRead } from './api/demo/handlers';
 import { handleDemoSubscription } from './api/demo/subscriptionHandlers';
+import { handleDemoSponsored } from './api/demo/sponsoredHandlers';
 import { clearDemoState } from './api/demo/localStore';
 
 const API_BASE_URL = appConfig.API_BASE_URL;
@@ -92,6 +93,10 @@ class ApiClient {
       const subscriptionDemo = await handleDemoSubscription(this, endpoint, method, options);
       if (subscriptionDemo !== null) {
         return subscriptionDemo;
+      }
+      const sponsoredDemo = await handleDemoSponsored(this, endpoint, method, options);
+      if (sponsoredDemo !== null) {
+        return sponsoredDemo;
       }
       if (method === 'GET') {
         const localRead = await handleDemoRead(this, endpoint, method);
@@ -528,6 +533,24 @@ class ApiClient {
 
   async cancelMySubscription() {
     return await this.apiCall('/subscriptions/mine/cancel', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  }
+
+  async listMySponsoredListings() {
+    return await this.apiCall('/sponsored/mine');
+  }
+
+  async createSponsoredListing(payload) {
+    return await this.apiCall('/sponsored/mine', {
+      method: 'POST',
+      body: JSON.stringify(payload || {}),
+    });
+  }
+
+  async activateSponsoredListing(id) {
+    return await this.apiCall(`/sponsored/mine/${encodeURIComponent(String(id))}/activate`, {
       method: 'POST',
       body: JSON.stringify({}),
     });

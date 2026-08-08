@@ -14,6 +14,7 @@ export const ORDER_STATUSES = {
   ACCEPTED: 'accepted',
   PREPARING: 'preparing',
   READY: 'ready',
+  OUT_FOR_DELIVERY: 'out_for_delivery',
   DELIVERED: 'delivered',
   CANCELLED: 'cancelled'
 };
@@ -22,6 +23,9 @@ export const ORDER_STATUS_LABELS = {
   [ORDER_STATUSES.ACCEPTED]: i18n.t('orders.orderAccepted'),
   [ORDER_STATUSES.PREPARING]: i18n.t('orders.orderPreparing'),
   [ORDER_STATUSES.READY]: i18n.t('orders.orderReady'),
+  [ORDER_STATUSES.OUT_FOR_DELIVERY]: i18n.t('orders.orderOutForDelivery', {
+    defaultValue: 'Out for delivery',
+  }),
   [ORDER_STATUSES.DELIVERED]: i18n.t('orders.orderDelivered'),
   [ORDER_STATUSES.CANCELLED]: i18n.t('orders.orderCancelled')
 };
@@ -30,6 +34,7 @@ export const ORDER_STATUS_COLORS = {
   [ORDER_STATUSES.ACCEPTED]: '#2196F3',
   [ORDER_STATUSES.PREPARING]: '#FF9800',
   [ORDER_STATUSES.READY]: '#4CAF50',
+  [ORDER_STATUSES.OUT_FOR_DELIVERY]: '#00BCD4',
   [ORDER_STATUSES.DELIVERED]: '#9C27B0',
   [ORDER_STATUSES.CANCELLED]: '#F44336'
 };
@@ -248,10 +253,18 @@ export function buildRestaurantOnboardingPayload(formData) {
 }
 
 export const getOrderStatusLabel = (status) => {
-  return ORDER_STATUS_LABELS[status] || status;
+  const key = String(status || '').toLowerCase();
+  if (ORDER_STATUS_LABELS[key]) return ORDER_STATUS_LABELS[key];
+  if (!key) return i18n.t('orders.orderPending');
+  return key
+    .split(/[_-\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
 };
 export const getOrderStatusColor = (status) => {
-  return ORDER_STATUS_COLORS[status] || '#666';
+  const key = String(status || '').toLowerCase();
+  return ORDER_STATUS_COLORS[key] || '#666';
 };
 
 /** Maps API order shape (user, delivery, payment) to fields used by restaurant UI. */

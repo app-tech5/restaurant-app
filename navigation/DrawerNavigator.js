@@ -11,6 +11,7 @@ import NotificationsScreen from '../screens/NotificationsScreen';
 import ProfileStackNavigator from './ProfileStackNavigator';
 import SettingsStackNavigator from './SettingsStackNavigator';
 import SupportScreen from '../screens/SupportScreen';
+import KitchenDisplayScreen from '../screens/KitchenDisplayScreen';
 import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
 import i18n from '../i18n';
 import { colors } from '../global';
@@ -128,7 +129,20 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-      {}
+      <Drawer.Screen
+        name="KitchenDisplay"
+        component={KitchenDisplayScreen}
+        options={{
+          title: i18n.t('navigation.kds'),
+          drawerIcon: ({ focused, size }) => (
+            <MaterialIcons
+              name="kitchen"
+              color={focused ? '#FF6B35' : '#666'}
+              size={size}
+            />
+          ),
+        }}
+      />
       <Drawer.Screen
         name="Menu"
         component={MenuStackNavigator}

@@ -87,7 +87,7 @@ const OrderCard = ({
         <View style={styles.header}>
           <View style={styles.orderInfo}>
             <Text style={styles.orderNumber}>
-              #{_id?.slice(-6) || 'N/A'}
+              #{_id?.slice(-8) || 'N/A'}
             </Text>
             <Text style={styles.orderTime}>
               {formatTime(createdAt)}

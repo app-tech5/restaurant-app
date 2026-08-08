@@ -23,7 +23,8 @@
     "ordersHistory": "Historique des commandes",
     "languageSettings": "Paramètres de langue",
     "notificationSettings": "Paramètres de notifications",
-    "return": "Retour"
+    "return": "Retour",
+    "kds": "Écran cuisine"
   },
 
   "auth": {
@@ -172,6 +173,7 @@
     "orderAccepted": "Commande acceptée",
     "orderPreparing": "Commande en préparation",
     "orderReady": "Commande prête",
+    "orderOutForDelivery": "En livraison",
     "orderDelivered": "Commande livrée",
     "orderCancelled": "Commande annulée",
     "customerInfo": "Informations client",
@@ -780,9 +782,9 @@
   },
   "subscription": {
     "title": "Abonnement",
-    "menuSubtitle": "Commission réduite et avantages",
-    "introTitle": "Restaurant Pro",
-    "introSub": "Réduisez la commission plateforme et débloquez des opportunités de mise en avant.",
+    "menuSubtitle": "Accès SaaS ou commission réduite",
+    "introTitle": "Plans restaurant",
+    "introSub": "Payez chaque mois pour l'accès plateforme (zéro commission) ou gardez le modèle marketplace avec une commission réduite.",
     "activePlan": "Plan actif",
     "validUntil": "Valable jusqu'au {{date}}",
     "subscribe": "S'abonner",
@@ -798,5 +800,36 @@
     "cancelSuccess": "Abonnement résilié.",
     "cancelError": "Impossible de résilier l'abonnement.",
     "loadError": "Impossible de charger les plans d'abonnement."
+  },
+  "sponsored": {
+    "title": "Annonces sponsorisées",
+    "menuSubtitle": "Payez pour remonter en recherche et en bannière",
+    "lead": "Boostez votre visibilité : enchérissez pour la recherche ou une bannière d'accueil.",
+    "newCampaign": "Nouvelle campagne",
+    "headline": "Titre",
+    "bid": "Enchère journalière",
+    "placement": "Emplacement",
+    "placement_search": "Haut de recherche",
+    "placement_home_banner": "Bannière accueil",
+    "placement_both": "Recherche + bannière",
+    "launch": "Lancer la campagne",
+    "myCampaigns": "Mes campagnes",
+    "empty": "Aucune campagne pour le moment.",
+    "defaultCampaignName": "Boost de visibilité",
+    "defaultHeadline": "Sponsorisé · Commandez chez nous",
+    "createSuccess": "Campagne en ligne.",
+    "createError": "Impossible de créer la campagne.",
+    "loadError": "Impossible de charger les campagnes."
+  },
+  "kds": {
+    "title": "Écran cuisine",
+    "subtitle": "Accepter · préparer · prêt — sans papier",
+    "columnNew": "Nouvelles",
+    "columnPreparing": "En préparation",
+    "columnReady": "Prêtes",
+    "empty": "Aucun ticket",
+    "guest": "Client",
+    "items": "articles",
+    "item": "article"
   }
 }

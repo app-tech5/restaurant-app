@@ -34,8 +34,6 @@
     "@expo-google-fonts/roboto": "^0.2.3",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@react-native-firebase/app": "^24.0.0",
-    "@react-native-firebase/messaging": "^24.0.0",
     "@react-navigation/bottom-tabs": "^7.9.0",
     "@react-navigation/drawer": "^7.7.10",
     "@react-navigation/native": "^7.1.26",
