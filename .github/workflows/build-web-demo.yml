@@ -2,7 +2,7 @@ name: Build and publish web demo
 
 # Manual only for real publishes. A push of THIS file alone registers the workflow in Actions.
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
@@ -112,19 +112,17 @@ jobs:
             test -f "$WEB/index.html"
             grep -qi 'Admin Panel' "$WEB/index.html" && { echo 'Published admin SPA by mistake'; exit 1; } || true
             grep -q 'boot-shell' "$WEB/index.html" && echo 'boot-shell: yes' || echo 'boot-shell: missing'
-            # Ensure nginx gzips JS (2MB+ AppEntry is unusable uncompressed on mobile)
-            if command -v nginx >/dev/null 2>&1; then
-              sudo tee /etc/nginx/conf.d/goodfood-demo-gzip.conf >/dev/null <<'NGX'
-gzip on;
-gzip_vary on;
-gzip_proxied any;
-gzip_comp_level 5;
-gzip_min_length 860;
-gzip_types text/plain text/css application/javascript application/json application/wasm image/svg+xml;
-gzip_static on;
-NGX
-              sudo nginx -t && sudo systemctl reload nginx || true
-            fi
+            # Enable gzip for JS (nested heredoc broke Actions workflow parse before)
+            printf '%s\n' \
+              'gzip on;' \
+              'gzip_vary on;' \
+              'gzip_proxied any;' \
+              'gzip_comp_level 5;' \
+              'gzip_min_length 860;' \
+              'gzip_types text/plain text/css application/javascript application/json application/wasm image/svg+xml;' \
+              'gzip_static on;' \
+              | sudo tee /etc/nginx/conf.d/goodfood-demo-gzip.conf >/dev/null || true
+            sudo nginx -t && sudo systemctl reload nginx || true
             head -c 200 "$WEB/index.html"
 
       - name: Verify public URL
