@@ -16,6 +16,7 @@ import { useAnalytics } from '../hooks/useAnalytics';
 import i18n from '../i18n';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { safeBottomPad } from '../utils/safeBottom';
+
 const AnalyticsScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const { restaurant, isAuthenticated, orders } = useRestaurant();
@@ -59,6 +60,7 @@ const AnalyticsScreen = ({ navigation }) => {
       </View>
     );
   }
+
   if (isLoading && !metricsForUi) {
     return (
       <View style={styles.container}>
@@ -70,6 +72,7 @@ const AnalyticsScreen = ({ navigation }) => {
       </View>
     );
   }
+
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -89,12 +92,10 @@ const AnalyticsScreen = ({ navigation }) => {
           />
         }
       >
-        {}
         <PeriodSelector
           selectedPeriod={period}
           onPeriodChange={changePeriod}
         />
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.mainMetrics')}</Text>
           <AnalyticsGrid
@@ -102,12 +103,10 @@ const AnalyticsScreen = ({ navigation }) => {
             isLoading={isLoading}
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.evolution')}</Text>
           <ChartSection isLoading={isLoading} />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.performance')}</Text>
           <PerformanceMetrics
@@ -115,7 +114,6 @@ const AnalyticsScreen = ({ navigation }) => {
             isLoading={isLoading}
           />
         </View>
-        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{i18n.t('analytics.detailedStats')}</Text>
           <DetailedStats
@@ -128,89 +126,7 @@ const AnalyticsScreen = ({ navigation }) => {
     </View>
   );
 };
-    return (
-      <View style={styles.container}>
-        <ScreenHeader
-          title={i18n.t('navigation.analytics')}
-          autoLeftNav
-        />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>
-            {i18n.t('common.error')}: {error}
-          </Text>
-        </View>
-      </View>
-    );
-  }
-  if (isLoading && !derivedMetrics) {
-    return (
-      <View style={styles.container}>
-        <ScreenHeader
-          title={i18n.t('navigation.analytics')}
-          autoLeftNav
-        />
-        <Loading fullScreen text={i18n.t('common.loading')} />
-      </View>
-    );
-  }
-  return (
-    <View style={styles.container}>
-      <ScreenHeader
-        title={i18n.t('navigation.analytics')}
-        autoLeftNav
-      />
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={{
-          paddingBottom: safeBottomPad(insets.bottom, constants.SPACING.xl),
-        }}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={isLoading}
-            onRefresh={refreshAnalytics}
-          />
-        }
-      >
-        {}
-        <PeriodSelector
-          selectedPeriod={period}
-          onPeriodChange={changePeriod}
-        />
-        {}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{i18n.t('analytics.mainMetrics')}</Text>
-          <AnalyticsGrid
-            metrics={derivedMetrics}
-            isLoading={isLoading}
-          />
-        </View>
-        {}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{i18n.t('analytics.evolution')}</Text>
-          <ChartSection isLoading={isLoading} />
-        </View>
-        {}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{i18n.t('analytics.performance')}</Text>
-          <PerformanceMetrics
-            metrics={derivedMetrics}
-            isLoading={isLoading}
-          />
-        </View>
-        {}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{i18n.t('analytics.detailedStats')}</Text>
-          <DetailedStats
-            metrics={derivedMetrics}
-            isLoading={isLoading}
-          />
-        </View>
-      </ScrollView>
-      <View style={{ height: safeBottomPad(insets.bottom, 0) }} />
-    </View>
-  );
-};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -241,4 +157,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 export default AnalyticsScreen;
