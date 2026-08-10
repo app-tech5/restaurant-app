@@ -2,14 +2,10 @@ name: Build and publish web demo
 
 # Manual only for real publishes. A push of THIS file alone registers the workflow in Actions.
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/build-web-demo.yml'
+  workflow_dispatch: {}
 
 jobs:
   build-and-publish:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
     name: Export web + publish demo
     runs-on: ubuntu-latest
     timeout-minutes: 25
