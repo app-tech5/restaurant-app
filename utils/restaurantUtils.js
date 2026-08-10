@@ -343,7 +343,13 @@ export const calculateRestaurantStats = (orders = [], menu = []) => {
     order.status === ORDER_STATUSES.DELIVERED
   ).length;
   const pendingOrders = safeOrders.filter(order =>
-    [ORDER_STATUSES.PENDING, ORDER_STATUSES.ACCEPTED, ORDER_STATUSES.PREPARING].includes(order.status)
+    [
+      ORDER_STATUSES.PENDING,
+      ORDER_STATUSES.ACCEPTED,
+      ORDER_STATUSES.PREPARING,
+      ORDER_STATUSES.READY,
+      ORDER_STATUSES.OUT_FOR_DELIVERY,
+    ].includes(order.status)
   ).length;
   const activeMenuItems = menu.filter(item => item.available !== false).length;
   return {

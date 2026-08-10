@@ -876,6 +876,7 @@
     "show": "Show",
     "enable": "Enable",
     "disable": "Disable",
+    "all": "All",
     "start": "Start",
     "confirmDelete": "Are you sure you want to delete?",
     "noData": "No data available",

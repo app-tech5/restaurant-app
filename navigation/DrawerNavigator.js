@@ -1,6 +1,6 @@
 import React from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
-import { View, Alert } from 'react-native';
+import { View, Alert, Platform } from 'react-native';
 import DashboardScreen from '../screens/DashboardScreen';
 import OrdersStackNavigator from './OrdersStackNavigator';
 import MenuStackNavigator from './MenuStackNavigator';
@@ -16,32 +16,36 @@ import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
 import i18n from '../i18n';
 import { colors } from '../global';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import { confirmAction } from '../utils/confirmAction';
 const Drawer = createDrawerNavigator();
 function CustomDrawerContent(props) {
   const { logout } = useRestaurant();
   const handleLogout = async () => {
-    Alert.alert(
-      i18n.t('navigation.logout'),
-      i18n.t('common.confirmLogout'),
-      [
-        {
-          text: i18n.t('common.cancel'),
-          style: 'cancel',
-        },
-        {
-          text: i18n.t('navigation.logout'),
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await logout();
-            } catch (error) {
-              console.error('Erreur lors de la déconnexion:', error);
-              Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion');
-            }
-          },
-        },
-      ]
-    );
+    const confirmed = await confirmAction({
+      title: i18n.t('navigation.logout'),
+      message: i18n.t('common.confirmLogout'),
+      confirmText: i18n.t('navigation.logout'),
+      cancelText: i18n.t('common.cancel'),
+    });
+    if (!confirmed) return;
+    try {
+      await logout();
+      // Web: force leave drawer stack if auth reset is slow
+      if (Platform.OS === 'web' && props?.navigation?.getParent) {
+        try {
+          props.navigation.closeDrawer?.();
+        } catch (_) {
+          /* ignore */
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.alert('Une erreur est survenue lors de la déconnexion');
+      } else {
+        Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion');
+      }
+    }
   };
   return (
     <DrawerContentScrollView {...props}>

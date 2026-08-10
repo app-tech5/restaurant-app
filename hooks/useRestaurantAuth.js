@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Platform } from 'react-native';
 import apiClient from '../api';
 import { getNativePushToken } from '../services/pushNotifications';
 import {
@@ -89,14 +90,20 @@ export const useRestaurantAuth = () => {
           apiClient.token = cached.token;
           apiClient.userId = authenticatedUser._id || authenticatedUser.id || null;
           apiClient.restaurant = authenticatedUser;
+          setRestaurant(authenticatedUser);
           setIsAuthenticated(true);
+          setNeedsOnboarding(!userHasLinkedRestaurant(authenticatedUser));
+          // Unlock UI immediately — profile/push refresh in background
+          setIsLoading(false);
           try {
             await refreshRestaurantProfile(authenticatedUser, cached.token);
           } catch (refreshError) {
-            setRestaurant(authenticatedUser);
             setNeedsOnboarding(true);
           }
-          await syncPushToken();
+          if (Platform.OS !== 'web') {
+            await syncPushToken();
+          }
+          return;
         }
       } catch (error) {
         console.error('Error initializing restaurant:', error);
@@ -125,7 +132,9 @@ export const useRestaurantAuth = () => {
           setRestaurant(merged);
           setNeedsOnboarding(!userHasLinkedRestaurant(merged));
         }
-        await syncPushToken();
+        if (Platform.OS !== 'web') {
+          await syncPushToken();
+        }
         return { success: true, restaurant: merged };
       } else {
         throw new Error('Réponse de connexion invalide');
@@ -161,7 +170,9 @@ export const useRestaurantAuth = () => {
       setIsAuthenticated(true);
       setRestaurant(authenticatedUser);
       setNeedsOnboarding(true);
-      await syncPushToken();
+      if (Platform.OS !== 'web') {
+        await syncPushToken();
+      }
       return { success: true, user: authenticatedUser };
     } catch (error) {
       console.error('Signup error:', error);

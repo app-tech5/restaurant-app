@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native';
 import { colors, constants } from '../global';
+import i18n from '../i18n';
+
 const MenuCategoriesTabs = ({ categories, selectedCategory, setSelectedCategory }) => {
   const renderCategoryTab = (category) => {
     const isActive = selectedCategory === category;
-    const categoryLabel = category === 'all' ? 'Tous' : category;
+    const categoryLabel = category === 'all' ? i18n.t('common.all') : category;
     return (
       <TouchableOpacity
         style={[

@@ -540,6 +540,7 @@
     "phone": "Phone",
     "email": "Email",
     "liveChat": "Live chat",
+    "available247": "Available 24/7",
     "chatComingSoon": "Live chat will be available soon",
     "frequentlyAskedQuestions": "Frequently asked questions",
     "categories": {
@@ -883,6 +884,7 @@
     "show": "Show",
     "enable": "Enable",
     "disable": "Disable",
+    "all": "All",
     "start": "Start",
     "confirmDelete": "Are you sure you want to delete?",
     "noData": "No data available",

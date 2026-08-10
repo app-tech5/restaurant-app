@@ -56,7 +56,7 @@ const SupportScreen = ({ navigation }) => {
     },
     {
       title: i18n.t('support.liveChat'),
-      subtitle: 'Available 24/7',
+      subtitle: i18n.t('support.available247'),
       icon: 'chat',
       action: () => Alert.alert(i18n.t('support.liveChat'), i18n.t('support.chatComingSoon'))
     }
@@ -84,7 +84,7 @@ const SupportScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScreenHeader
-        title={`${i18n.t('navigation.support')} - ${appName || 'Good Food'}`}
+        title={i18n.t('navigation.support')}
         autoLeftNav
       />
       <ScrollView

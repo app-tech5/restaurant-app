@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { useRestaurant } from '../contexts/RestaurantContext';
+import { useSettings } from '../contexts/SettingContext';
 import {
   Loading,
   ScreenHeader,
@@ -17,7 +18,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { safeBottomPad } from '../utils/safeBottom';
 const AnalyticsScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const { restaurant, isAuthenticated } = useRestaurant();
+  const { restaurant, isAuthenticated, orders } = useRestaurant();
+  const { formatCurrency } = useSettings();
   const {
     derivedMetrics,
     period,
@@ -25,8 +27,107 @@ const AnalyticsScreen = ({ navigation }) => {
     error,
     changePeriod,
     refreshAnalytics
-  } = useAnalytics(restaurant, isAuthenticated);
-  if (error) {
+  } = useAnalytics(restaurant, isAuthenticated, orders);
+
+  const metricsForUi = React.useMemo(() => {
+    if (!derivedMetrics) return null;
+    return {
+      ...derivedMetrics,
+      revenue: {
+        ...derivedMetrics.revenue,
+        formatted: formatCurrency(derivedMetrics.revenue.value || 0),
+      },
+      averageOrderValue: {
+        ...derivedMetrics.averageOrderValue,
+        formatted: formatCurrency(derivedMetrics.averageOrderValue.value || 0),
+      },
+    };
+  }, [derivedMetrics, formatCurrency]);
+
+  if (error && !metricsForUi) {
+    return (
+      <View style={styles.container}>
+        <ScreenHeader
+          title={i18n.t('navigation.analytics')}
+          autoLeftNav
+        />
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            {i18n.t('common.error')}: {error}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+  if (isLoading && !metricsForUi) {
+    return (
+      <View style={styles.container}>
+        <ScreenHeader
+          title={i18n.t('navigation.analytics')}
+          autoLeftNav
+        />
+        <Loading fullScreen text={i18n.t('common.loading')} />
+      </View>
+    );
+  }
+  return (
+    <View style={styles.container}>
+      <ScreenHeader
+        title={i18n.t('navigation.analytics')}
+        autoLeftNav
+      />
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{
+          paddingBottom: safeBottomPad(insets.bottom, constants.SPACING.xl),
+        }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={refreshAnalytics}
+          />
+        }
+      >
+        {}
+        <PeriodSelector
+          selectedPeriod={period}
+          onPeriodChange={changePeriod}
+        />
+        {}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{i18n.t('analytics.mainMetrics')}</Text>
+          <AnalyticsGrid
+            metrics={metricsForUi}
+            isLoading={isLoading}
+          />
+        </View>
+        {}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{i18n.t('analytics.evolution')}</Text>
+          <ChartSection isLoading={isLoading} />
+        </View>
+        {}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{i18n.t('analytics.performance')}</Text>
+          <PerformanceMetrics
+            metrics={metricsForUi}
+            isLoading={isLoading}
+          />
+        </View>
+        {}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{i18n.t('analytics.detailedStats')}</Text>
+          <DetailedStats
+            metrics={metricsForUi}
+            isLoading={isLoading}
+          />
+        </View>
+      </ScrollView>
+      <View style={{ height: safeBottomPad(insets.bottom, 0) }} />
+    </View>
+  );
+};
     return (
       <View style={styles.container}>
         <ScreenHeader
